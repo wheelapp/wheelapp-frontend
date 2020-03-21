@@ -1,14 +1,14 @@
 import { t } from 'ttag';
 import * as React from 'react';
 
-import { accessibilityDescription, shortAccessibilityName } from '../../../lib/Feature';
-import { WheelmapFeature, YesNoLimitedUnknown } from '../../../lib/Feature';
+import { accessibilityDescription, shortAccessibilityName } from '../../../lib/types/Feature';
+import { WheelmapFeature, YesNoLimitedUnknown } from '../../../lib/types/Feature';
 import { saveWheelchairStatus } from './saveStatus';
 import RadioStatusEditor from './RadioStatusEditor';
 import Icon from '../../Icon';
-import { CategoryLookupTables } from '../../../lib/Categories';
+import { CategoryLookupTables } from '../../../lib/types/Categories';
 import { isOnSmallViewport } from '../../../lib/ViewportSize';
-import { AppContextConsumer } from '../../../AppContext';
+import { AppContextConsumer } from '../../../app/context/AppContext';
 
 type SaveOptions = {
   featureId: string,
@@ -32,8 +32,16 @@ export default function WheelchairStatusEditor(props: Props) {
           hideUnselectedCaptions={true}
           undefinedStringValue="unknown"
           getValueFromFeature={feature => feature.properties.wheelchair}
-          saveValue={(value: YesNoLimitedUnknown) => saveWheelchairStatus({ ...props, appContext, value })}
-          renderChildrenForValue={({ value, categoryId }: { value: YesNoLimitedUnknown, categoryId: string }) => (
+          saveValue={(value: YesNoLimitedUnknown) =>
+            saveWheelchairStatus({ ...props, appContext, value })
+          }
+          renderChildrenForValue={({
+            value,
+            categoryId,
+          }: {
+            value: YesNoLimitedUnknown,
+            categoryId: string,
+          }) => (
             <Icon
               accessibility={value}
               category={categoryId}

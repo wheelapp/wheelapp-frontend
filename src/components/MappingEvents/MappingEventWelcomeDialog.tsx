@@ -9,7 +9,7 @@ import colors from '../../lib/colors';
 
 import { getJoinedMappingEventData } from '../../lib/savedState';
 import queryString from 'query-string';
-import { MappingEvent } from '../../lib/MappingEvent';
+import { MappingEvent } from '../../lib/types/MappingEvent';
 
 type Props = {
   className?: string,

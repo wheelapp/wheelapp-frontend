@@ -2,13 +2,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import colors from '../../../lib/colors';
-import { EquipmentInfo } from '../../../lib/EquipmentInfo';
+import { EquipmentInfo } from '../../../lib/model/EquipmentInfo';
 import {
   isExistingInformationOutdated,
   equipmentStatusTitle,
   isEquipmentAccessible,
   lastUpdateString,
-} from '../../../lib/EquipmentInfo';
+} from '../../../lib/model/EquipmentInfo';
 
 import AccessibilityDetailsTree from './AccessibilityDetailsTree';
 

@@ -6,22 +6,18 @@ import AccessibleDescription from './AccessibleDescription';
 import AccessibilitySourceDisclaimer from './AccessibilitySourceDisclaimer';
 import WheelchairAndToiletAccessibility from './WheelchairAndToiletAccessibility';
 
-import { Feature, isWheelmapProperties } from '../../../lib/Feature';
-import { YesNoLimitedUnknown } from '../../../lib/Feature';
-import { Category } from '../../../lib/Categories';
-import filterAccessibility from '../../../lib/filterAccessibility';
-import { isWheelmapFeatureId } from '../../../lib/Feature';
+import { Feature, isWheelmapProperties } from '../../../lib/types/Feature';
+import { YesNoLimitedUnknown } from '../../../lib/types/Feature';
+import { Category } from '../../../lib/types/Categories';
+import filterAccessibility from '../../../lib/model/filterAccessibility';
+import { isWheelmapFeatureId } from '../../../lib/types/Feature';
 import Description from './Description';
-import { AppContextConsumer } from '../../../AppContext';
+import { AppContextConsumer } from '../../../app/context/AppContext';
 
 type Props = {
   featureId: string | number | null,
   category: Category | null,
   cluster: any,
-  onSelectWheelchairAccessibility?: (value: YesNoLimitedUnknown) => void,
-  onOpenWheelchairAccessibility: () => void,
-  onOpenToiletAccessibility: () => void,
-  onOpenToiletNearby: (feature: Feature) => void,
   presetStatus: YesNoLimitedUnknown | null,
   feature: Feature | null,
   toiletsNearby: Feature[] | null,
@@ -54,9 +50,6 @@ export default function PlaceAccessibilitySection(props: Props) {
         feature={feature}
         toiletsNearby={toiletsNearby}
         isLoadingToiletsNearby={isLoadingToiletsNearby}
-        onOpenWheelchairAccessibility={props.onOpenWheelchairAccessibility}
-        onOpenToiletAccessibility={props.onOpenToiletAccessibility}
-        onOpenToiletNearby={props.onOpenToiletNearby}
       />
       {description && descriptionElement}
       <AccessibleDescription properties={properties as any} />

@@ -1,22 +1,29 @@
+import compact from 'lodash/compact';
 import * as React from 'react';
 import styled from 'styled-components';
+import { getCategory } from '../../lib/api/model/Categories';
+import { categoryNameFor } from '../../lib/model/Categories';
+import {
+  Category,
+  CategoryLookupTables,
+  getCategoryId,
+} from '../../lib/types/Categories';
+import {
+  AccessibilityCloudProperties,
+  WheelmapProperties,
+} from '../../lib/types/Feature';
 import ChevronRight from '../ChevronRight';
-import { Category } from '../../lib/Categories';
-import Categories, { CategoryLookupTables } from '../../lib/Categories';
-import { translatedStringFromObject } from '../../lib/i18n';
-import { AccessibilityCloudProperties, WheelmapProperties } from '../../lib/Feature';
-import { getCategoryId } from '../../lib/Categories';
 
 type Props = {
-  className?: string,
-  category: Category | null,
-  categories: CategoryLookupTables,
-  parentCategory: Category | null,
-  properties: WheelmapProperties | AccessibilityCloudProperties,
+  className?: string;
+  category: Category | null;
+  categories: CategoryLookupTables;
+  parentCategory: Category | null;
+  properties: WheelmapProperties | AccessibilityCloudProperties;
 };
 
 type State = {
-  displayedCategoryNames: string[],
+  displayedCategoryNames: string[];
 };
 
 class BreadCrumbs extends React.Component<Props, State> {
@@ -30,7 +37,9 @@ class BreadCrumbs extends React.Component<Props, State> {
   }
 
   UNSAFE_componentWillMount() {
-    this.setState({ displayedCategoryNames: this.getCategoryNames(this.props) });
+    this.setState({
+      displayedCategoryNames: this.getCategoryNames(this.props),
+    });
   }
 
   UNSAFE_componentWillReceiveProps(props: Props) {
@@ -43,12 +52,11 @@ class BreadCrumbs extends React.Component<Props, State> {
   }
 
   getCategoryNames(props: Props) {
-    return this.categoryIds(props)
-      .filter(Boolean)
-      .map(id => {
-        const category = Categories.getCategory(props.categories, id);
-        return translatedStringFromObject(category.translations._id);
-      });
+    return compact(
+      this.categoryIds(props).map(id => {
+        return categoryNameFor(getCategory(props.categories, id));
+      }),
+    );
   }
 
   render() {

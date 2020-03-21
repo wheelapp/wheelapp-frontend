@@ -2,15 +2,15 @@ import * as React from 'react';
 import { t } from 'ttag';
 
 import useImperialUnits from '../../../lib/useImperialUnits';
-import { accessibleToiletDescription } from '../../../lib/Feature';
-import { WheelmapFeature, YesNoUnknown } from '../../../lib/Feature';
+import { accessibleToiletDescription } from '../../../lib/types/Feature';
+import { WheelmapFeature, YesNoUnknown } from '../../../lib/types/Feature';
 
 import { saveToiletStatus } from './saveStatus';
 import RadioStatusEditor from './RadioStatusEditor';
 import ToiletStatusAccessibleIcon from '../../icons/accessibility/ToiletStatusAccessible';
 import ToiletStatusNotAccessibleIcon from '../../icons/accessibility/ToiletStatusNotAccessible';
-import { CategoryLookupTables } from '../../../lib/Categories';
-import { AppContextConsumer } from '../../../AppContext';
+import { CategoryLookupTables } from '../../../lib/types/Categories';
+import { AppContextConsumer } from '../../../app/context/AppContext';
 
 type SaveOptions = {
   featureId: string,

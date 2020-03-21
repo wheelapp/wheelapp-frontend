@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import colors from '../../lib/colors';
 import AccessibilityFilterButton from './AccessibilityFilterButton';
 import { PlaceFilter } from './AccessibilityFilterModel';
-import { YesNoLimitedUnknown } from '../../lib/Feature';
-import { yesNoUnknownArray } from '../../lib/Feature';
+import { YesNoLimitedUnknown } from '../../lib/types/Feature';
+import { yesNoUnknownArray } from '../../lib/types/Feature';
 
 type Props = PlaceFilter & {
   className?: string,

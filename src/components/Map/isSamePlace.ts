@@ -1,7 +1,7 @@
 import includes from 'lodash/includes';
 import levenshtein from 'fast-levenshtein';
 import { translatedStringFromObject } from '../../lib/i18n';
-import { NodeProperties } from '../../lib/Feature';
+import { NodeProperties } from '../../lib/types/Feature';
 
 export default function isSamePlace(propertiesArray: NodeProperties[]) {
   const hasTwoPlaces = propertiesArray.length === 2;

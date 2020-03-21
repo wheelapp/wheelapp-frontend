@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { t } from 'ttag';
 
-import { Feature, isWheelmapProperties } from '../../../lib/Feature';
-import { Category, getCategoryId } from '../../../lib/Categories';
+import { Feature, isWheelmapProperties } from '../../../lib/types/Feature';
+import { Category, getCategoryId } from '../../../lib/types/Categories';
 import ShareBar from '../../ShareBar/ShareBar';
 
 type Props = {

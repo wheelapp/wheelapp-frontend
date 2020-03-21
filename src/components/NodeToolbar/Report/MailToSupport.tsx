@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Feature } from '../../../lib/Feature';
-import { getCategoryId, Category } from '../../../lib/Categories';
+import { Feature } from '../../../lib/types/Feature';
+import { getCategoryId, Category } from '../../../lib/types/Categories';
 import strings from './strings';
 
 type Props = {

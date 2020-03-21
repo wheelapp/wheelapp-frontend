@@ -3,18 +3,19 @@ import SearchIcon from './SearchIcon';
 import MapButton from '../MapButton';
 import { t } from 'ttag';
 import styled from 'styled-components';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
-import { isAccessibilityFiltered } from '../../lib/Feature';
-import Categories from '../../lib/Categories';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
+import { isAccessibilityFiltered } from '../../lib/types/Feature';
+import Categories from '../../lib/types/Categories';
 import CombinedIcon from './CombinedIcon';
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+import { translatedRootCategoryName } from '../../lib/api/model/Categories';
 
 type Props = {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
-  className?: string,
-  category: string | null,
-  accessibilityFilter: YesNoLimitedUnknown[],
-  toiletFilter: YesNoUnknown[],
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
+  category: string | null;
+  accessibilityFilter: YesNoLimitedUnknown[];
+  toiletFilter: YesNoUnknown[];
 };
 
 const Caption = styled.div.attrs({ className: 'caption' })`
@@ -28,7 +29,8 @@ function SearchButton(props: Props) {
   const classNames = ['btn-unstyled', 'search-button', props.className];
 
   const { toiletFilter, accessibilityFilter, category } = props;
-  const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
+  const isAnyFilterSet =
+    isAccessibilityFiltered(accessibilityFilter) || category;
   // translator: Shown in collapsed search/filter combi button when there is no category filter set
   const allPlacesCaption = t`All places`;
 
@@ -44,11 +46,18 @@ function SearchButton(props: Props) {
       <BreadcrumbChevron />
 
       {isAnyFilterSet && (
-        <CombinedIcon {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }} />
+        <CombinedIcon
+          {...{
+            toiletFilter,
+            accessibilityFilter,
+            category,
+            isMainCategory: true,
+          }}
+        />
       )}
 
       <Caption>
-        {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
+        {category ? translatedRootCategoryName(category) : allPlacesCaption}
       </Caption>
     </MapButton>
   );

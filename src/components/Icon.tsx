@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import * as React from 'react';
-import { YesNoLimitedUnknown } from '../lib/Feature';
+import { YesNoLimitedUnknown } from '../lib/types/Feature';
 import colors from '../lib/colors';
 import * as categoryIcons from './icons/categories';
 import * as mainCategoryIcons from './icons/mainCategories';
@@ -41,11 +41,7 @@ function fontSize(size: Size) {
 }
 
 function Figure(props: Partial<Props>) {
-  return (
-    <figure className={props.className}>
-      {props.children}
-    </figure>
-  );
+  return <figure className={props.className}>{props.children}</figure>;
 }
 
 export const StyledIconContainer = styled(Figure)`

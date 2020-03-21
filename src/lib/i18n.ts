@@ -128,7 +128,10 @@ export function addTranslationsToTTag(translations: Translations[]) {
     localesToUse.push(locale);
   }
 
-  console.log('Available locales:', localesToUse.map(l => l.string));
+  console.log(
+    'Available locales:',
+    localesToUse.map(l => l.string)
+  );
 
   // set locale in ttag
   useLocales(localesToUse.map(locale => locale.string));
@@ -271,19 +274,4 @@ export function getAvailableTranslationsByPreference(
   }
 
   return localesToUse.map(l => getTranslationsForLocale(allTranslations, l)).filter(Boolean);
-}
-
-export function parseAcceptLanguageString(acceptLanguage: string): string[] {
-  return acceptLanguage
-    .split(',')
-    .map(item => {
-      const [locale, q] = item.split(';');
-
-      return {
-        locale: locale.trim(),
-        score: q ? parseFloat(q.slice(2)) || 0 : 1,
-      };
-    })
-    .sort((a, b) => b.score - a.score)
-    .map(item => item.locale);
 }

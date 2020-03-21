@@ -6,22 +6,23 @@ import map from 'lodash/map';
 
 import { Circle } from '../IconButton';
 import CategoryButton from './CategoryButton';
-import { isAccessibilityFiltered } from '../../lib/Feature';
-import Categories from '../../lib/Categories';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
+import { isAccessibilityFiltered } from '../../lib/types/Feature';
+import Categories from '../../lib/types/Categories';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
+import { getRootCategories } from '../../lib/api/model/Categories';
 
 type Props = {
-  onFocus: () => void,
-  category: string | null,
-  accessibilityFilter?: YesNoLimitedUnknown[],
-  toiletFilter?: YesNoUnknown[],
-  className?: string,
+  onFocus: () => void;
+  category: string | null;
+  accessibilityFilter?: YesNoLimitedUnknown[];
+  toiletFilter?: YesNoUnknown[];
+  className?: string;
 };
 
 function CategoryMenu(props: Props) {
   const { category } = props;
 
-  let rootCategories = Categories.getRootCategories();
+  let rootCategories = getRootCategories();
 
   if (category) {
     rootCategories = { [category]: rootCategories[category] };
@@ -35,7 +36,10 @@ function CategoryMenu(props: Props) {
         <CategoryButton
           onFocus={props.onFocus}
           showCloseButton={showCloseButton}
-          hasCircle={!showCloseButton && !isAccessibilityFiltered(props.accessibilityFilter)}
+          hasCircle={
+            !showCloseButton &&
+            !isAccessibilityFiltered(props.accessibilityFilter)
+          }
           accessibilityFilter={props.accessibilityFilter}
           toiletFilter={props.toiletFilter}
           key={categoryId}

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { t } from 'ttag';
 
 import SourceLink, { PropertyName } from '../SourceLink';
-import { Feature, AccessibilityCloudProperties } from '../../../lib/Feature';
+import { Feature, AccessibilityCloudProperties } from '../../../lib/types/Feature';
 import { DataSource } from '../../../lib/cache/DataSourceCache';
 import strings from './strings';
-import { AppContextConsumer } from '../../../AppContext';
+import { AppContextConsumer } from '../../../app/context/AppContext';
 
 type Props = {
   feature: Feature,

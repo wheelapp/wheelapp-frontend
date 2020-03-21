@@ -4,14 +4,14 @@ import {
   NodeProperties,
   AccessibilityCloudProperties,
   isWheelmapProperties,
-} from '../../../lib/Feature';
+} from '../../../lib/types/Feature';
 
-import getAddressString from '../../../lib/getAddressString';
-import { generateMapsUrl } from '../../../lib/generateMapsUrls';
-import { generateShowOnOsmUrl } from '../../../lib/generateOsmUrls';
-import { placeNameFor } from '../../../lib/Feature';
-import openButtonCaption from '../../../lib/openButtonCaption';
-import { Category } from '../../../lib/Categories';
+import getAddressString from '../../../lib/model/getAddressString';
+import { generateMapsUrl } from '../../../lib/geo/generateMapsUrls';
+import { generateShowOnOsmUrl } from '../../../lib/geo/generateOsmUrls';
+import { placeNameFor } from '../../../lib/types/Feature';
+import openButtonCaption from '../../../lib/geo/openButtonCaption';
+import { Category } from '../../../lib/types/Categories';
 import PlaceIcon from '../../icons/actions/Place';
 import RouteIcon from '../../icons/actions/Route';
 

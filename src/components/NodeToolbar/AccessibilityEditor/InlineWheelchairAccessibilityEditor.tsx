@@ -3,14 +3,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Icon from '../../Icon';
-import { shortAccessibilityName } from '../../../lib/Feature';
-import { YesNoLimitedUnknown } from '../../../lib/Feature';
+import { shortAccessibilityName } from '../../../lib/types/Feature';
+import { YesNoLimitedUnknown } from '../../../lib/types/Feature';
 import IconButton, { Caption } from '../../IconButton';
 import colors from '../../../lib/colors';
 
 type Props = {
   onChange: (newValue: YesNoLimitedUnknown) => void,
-  category: string | null
+  category: string | null,
 };
 
 const Row = styled.section`

@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'ttag';
 import ShareBar from '../ShareBar/ShareBar';
-import { MappingEvent } from '../../lib/MappingEvent';
+import { MappingEvent } from '../../lib/types/MappingEvent';
 
 type MappingEventShareBarProps = {
   className?: string,
@@ -29,9 +29,7 @@ const MappingEventShareBar = ({
   const mailSubject = sharedObjectTitle;
   const productNameString = productName ? ` on ${productName}` : '';
   // translator: Email text used when sharing a mapping event via email.
-  let mailBody = t`Help us out and join the ${
-    mappingEvent.name
-  } mapping event${productNameString}. You can find more info here: ${url}`;
+  let mailBody = t`Help us out and join the ${mappingEvent.name} mapping event${productNameString}. You can find more info here: ${url}`;
 
   const mailToLink = `mailto:?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(
     mailBody

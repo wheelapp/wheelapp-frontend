@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import * as React from 'react';
-import { EquipmentInfo } from '../../../lib/EquipmentInfo';
+import { EquipmentInfo } from '../../../lib/model/EquipmentInfo';
 import * as equipmentIcons from '../../icons/equipment';
 import colors from '../../../lib/colors';
 import get from 'lodash/get';
 import { ngettext, msgid } from 'ttag';
-import getHumanEnumeration from '../../../lib/getHumanEnumeration';
+import getHumanEnumeration from '../../../lib/util/getHumanEnumeration';
 
 type Props = {
   equipmentInfos: EquipmentInfo[],
@@ -103,7 +103,9 @@ function EquipmentItem(props: Props) {
   );
   const hasBrokenEquipment = broken.length > 0;
 
-  const itemSelectedHandler = (event: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
+  const itemSelectedHandler = (
+    event: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.stopPropagation();
     event.preventDefault();
     props.onSelected(props.placeInfoId, equipmentInfos[0]);

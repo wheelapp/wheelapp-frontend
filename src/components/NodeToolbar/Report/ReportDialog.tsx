@@ -7,15 +7,15 @@ import {
   accessibilityName,
   isWheelchairAccessible,
   isWheelmapProperties,
-} from '../../../lib/Feature';
+} from '../../../lib/types/Feature';
 import {
   Feature,
   NodeProperties,
   AccessibilityCloudProperties,
   WheelmapProperties,
-} from '../../../lib/Feature';
-import { CategoryLookupTables } from '../../../lib/Categories';
-import { AppContext } from '../../../AppContext';
+} from '../../../lib/types/Feature';
+import { CategoryLookupTables } from '../../../lib/types/Categories';
+import { AppContext } from '../../../app/context/AppContext';
 
 import strings from './strings';
 import FixOsmComment from './FixOsmComment';

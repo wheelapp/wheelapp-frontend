@@ -10,7 +10,7 @@ import CloseLink from '../CloseLink';
 import CustomRadio from '../NodeToolbar/AccessibilityEditor/CustomRadio';
 import StyledRadioGroup from '../NodeToolbar/AccessibilityEditor/StyledRadioGroup';
 
-import { PhotoModel } from '../../lib/PhotoModel';
+import { PhotoModel } from '../../lib/model/PhotoModel';
 import CloseButton from '../CloseButton';
 
 export type ReportOptions = 'wrong-place' | 'outdated' | 'offensive' | 'other';
@@ -78,7 +78,9 @@ class ReportPhotoToolbar extends React.Component<Props, State> {
     return <CloseLink onClick={this.onClose} />;
   }
 
-  onSubmit = (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>) => {
+  onSubmit = (
+    event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (this.props.onCompleted && this.props.photo && this.state.selectedValue) {
       this.props.onCompleted(this.props.photo, this.state.selectedValue);
       event.preventDefault();

@@ -2,7 +2,7 @@ import { t } from 'ttag';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Feature } from '../../lib/Feature';
+import { Feature } from '../../lib/types/Feature';
 import LicenseHint from './LicenseHint';
 import { SourceWithLicense } from '../../app/PlaceDetailsProps';
 

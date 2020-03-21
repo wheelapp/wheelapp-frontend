@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { t } from 'ttag';
 
 import EquipmentList from './EquipmentList';
-import { EquipmentInfo } from '../../../lib/EquipmentInfo';
+import { EquipmentInfo } from '../../../lib/model/EquipmentInfo';
 
 type Props = {
   equipmentInfos: { [key: string]: EquipmentInfo },

@@ -10,16 +10,16 @@ import {
   toiletDescription,
   isWheelmapFeature,
   normalizedCoordinatesForFeature,
-} from '../../../lib/Feature';
+} from '../../../lib/types/Feature';
 import colors from '../../../lib/colors';
 import PenIcon from '../../icons/actions/PenIcon';
-import { Feature } from '../../../lib/Feature';
-import { getCategoryIdFromProperties } from '../../../lib/Categories';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../../lib/Feature';
+import { Feature } from '../../../lib/types/Feature';
+import { getCategoryIdFromProperties } from '../../../lib/types/Categories';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../../lib/types/Feature';
 import ToiletStatusAccessibleIcon from '../../icons/accessibility/ToiletStatusAccessible';
 import ToiletStatusNotAccessibleIcon from '../../icons/accessibility/ToiletStatusNotAccessible';
-import { geoDistance } from '../../../lib/geoDistance';
-import { formatDistance } from '../../../lib/formatDistance';
+import { geoDistance } from '../../../lib/geo/geoDistance';
+import { formatDistance } from '../../../lib/geo/formatDistance';
 import { Dots } from 'react-activity';
 
 // Don't incentivize people to add toilet status to places of these categories
@@ -71,8 +71,6 @@ type Props = {
   toiletsNearby: Feature[] | null,
   isLoadingToiletsNearby: boolean,
   onOpenWheelchairAccessibility: () => void,
-  onOpenToiletAccessibility: () => void,
-  onOpenToiletNearby: (feature: Feature) => void,
   className?: string,
   isEditingEnabled: boolean,
 };

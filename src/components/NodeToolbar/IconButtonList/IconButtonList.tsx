@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Feature } from '../../../lib/Feature';
-import { Category } from '../../../lib/Categories';
+import { Feature } from '../../../lib/types/Feature';
+import { Category } from '../../../lib/types/Categories';
 
 import ShareButtons from './ShareButtons';
 import PhoneNumberLink from './PhoneNumberLink';
@@ -21,7 +21,7 @@ type Props = {
   className?: string,
   equipmentInfoId: string | null,
   userAgent: UAResult,
-  onToggle?: () => void
+  onToggle?: () => void,
 };
 
 function UnstyledIconButtonList(props: Props): JSX.Element {

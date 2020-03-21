@@ -1,21 +1,18 @@
-import * as React from 'react';
 import { hsl } from 'd3-color';
+import FocusTrap from 'focus-trap-react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { t } from 'ttag';
-
-import FocusTrap from 'focus-trap-react';
-
-import { translatedStringFromObject, LocalizedString } from '../../lib/i18n';
-import { insertPlaceholdersToAddPlaceUrl } from '../../lib/insertPlaceholdersToAddPlaceUrl';
+import { LinkData } from '../../lib/model/ClientSideConfiguration';
 import colors from '../../lib/colors';
-import { MappingEvent } from '../../lib/MappingEvent';
+import { LocalizedString, translatedStringFromObject } from '../../lib/i18n';
+import { insertPlaceholdersToAddPlaceUrl } from '../../lib/insertPlaceholdersToAddPlaceUrl';
+import { MappingEvent } from '../../lib/types/MappingEvent';
 
-import GlobalActivityIndicator from './GlobalActivityIndicator';
-import { LinkData } from '../../App';
-import Link, { RouteConsumer } from '../Link/Link';
-import { AppContextConsumer } from '../../AppContext';
-
-import CloseIcon from '../icons/actions/Close';
+import EventsOrJoinedEventLink from './EventsOrJoinedEventLink';
+import classnames from 'classnames';
+import Link from 'next/link';
+import HomeLink from './HomeLink';
 
 type State = {
   isMenuButtonVisible: boolean,
@@ -26,9 +23,7 @@ type Props = {
   productName: string,
   uniqueSurveyId: string,
   onToggle: (isMainMenuOpen: boolean) => void,
-  onHomeClick: () => void,
   onMappingEventsLinkClick: () => void,
-  onAddPlaceLinkClick: () => void,
   joinedMappingEvent: MappingEvent | null,
   isOpen: boolean,
   lat: number | null,
@@ -38,26 +33,6 @@ type Props = {
   claim: LocalizedString,
   links: Array<LinkData>,
 };
-
-function MenuIcon(props) {
-  return (
-    <svg
-      className="menu-icon"
-      width="25px"
-      height="18px"
-      viewBox="0 0 25 18"
-      version="1.1"
-      alt="Toggle menu"
-      {...props}
-    >
-      <g stroke="none" strokeWidth={1} fillRule="evenodd">
-        <rect x="0" y="0" width="25" height="3" />
-        <rect x="0" y="7" width="25" height="3" />
-        <rect x="0" y="14" width="25" height="3" />
-      </g>
-    </svg>
-  );
-}
 
 const Badge = styled.span`
   background-color: ${colors.warningColor};
@@ -110,115 +85,50 @@ class MainMenu extends React.Component<Props, State> {
     }
   };
 
-  renderHomeLink(extraProps = {}) {
-    return (
-      <div className="home-link">
-        <button
-          className="btn-unstyled home-button"
-          onClick={this.props.onHomeClick}
-          aria-label={t`Home`}
-          onKeyDown={this.handleKeyDown}
-          {...extraProps}
-        >
-          {/* translator: The alternative desription of the app logo for screenreaders */}
-          <img
-            className="logo"
-            src={this.props.logoURL}
-            width={156}
-            height={30}
-            alt={this.props.productName}
-          />
-        </button>
-      </div>
-    );
-  }
-
   renderAppLinks(baseUrl: string) {
     return this.props.links
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .map(link => {
-        const url = insertPlaceholdersToAddPlaceUrl(
-          baseUrl,
-          translatedStringFromObject(link.url) || '',
-          this.props.uniqueSurveyId
-        );
+        const url = baseUrl;
         const label = translatedStringFromObject(link.label) || '';
         const badgeLabel = translatedStringFromObject(link.badgeLabel);
-        const classNamesFromTags = link.tags && link.tags.map(tag => `${tag}-link`);
-        const className = ['nav-link'].concat(classNamesFromTags).join(' ');
-
-        const isAddPlaceLink = link.tags && link.tags.indexOf('add-place') !== -1;
-        if (isAddPlaceLink) {
+        const className = classnames(
+          'nav-link',
+          link.tags?.map(tag => `${tag}-link`)
+        );
+        if (link.tags?.includes('add-place')) {
+          const urlWithReplacedTemplateStrings = insertPlaceholdersToAddPlaceUrl(
+            baseUrl,
+            translatedStringFromObject(link.url) || '',
+            this.props.uniqueSurveyId
+          );
           return (
-            <Link
-              key={url}
-              className={className}
-              to={url}
-              role="menuitem"
-              onClick={this.props.onAddPlaceLinkClick}
-            >
-              {label}
-              {badgeLabel && <Badge>{badgeLabel}</Badge>}
+            <Link key={urlWithReplacedTemplateStrings} href={urlWithReplacedTemplateStrings}>
+              <a className={className} role="menuitem">
+                {label}
+                {badgeLabel && <Badge>{badgeLabel}</Badge>}
+              </a>
             </Link>
           );
         }
 
-        const isEventsLink = link.tags && link.tags.indexOf('events') !== -1;
-        if (isEventsLink) {
-          return this.renderEventsOrJoinedEventLink(label, url, className);
+        if (link.tags?.includes('events')) {
+          return <EventsOrJoinedEventLink {...{ label, className }} />;
         }
 
         if (typeof url === 'string') {
           return (
-            <Link key={url} className={className} to={url} role="menuitem">
-              {label}
-              {badgeLabel && <Badge>{badgeLabel}</Badge>}
+            <Link key={url} href={url}>
+              <a className={className} role="menuitem">
+                {label}
+                {badgeLabel && <Badge>{badgeLabel}</Badge>}
+              </a>
             </Link>
           );
         }
 
         return null;
       });
-  }
-
-  renderEventsOrJoinedEventLink(label: string | null, url: string | null, className: string) {
-    const joinedMappingEvent = this.props.joinedMappingEvent;
-    if (joinedMappingEvent) {
-      return (
-        <Link
-          key={url}
-          className={className}
-          to="mappingEventDetail"
-          params={{ id: joinedMappingEvent._id }}
-          role="menuitem"
-          onClick={this.props.onMappingEventsLinkClick}
-        >
-          {joinedMappingEvent.name}
-        </Link>
-      );
-    } else {
-      return (
-        <RouteConsumer key={url}>
-          {context => {
-            let params = { ...context.params };
-
-            delete params.id;
-
-            return (
-              <Link
-                className={className}
-                to="mappingEvents"
-                params={params}
-                role="menuitem"
-                onClick={this.props.onMappingEventsLinkClick}
-              >
-                {label}
-              </Link>
-            );
-          }}
-        </RouteConsumer>
-      );
-    }
   }
 
   renderCloseButton() {
@@ -256,7 +166,7 @@ class MainMenu extends React.Component<Props, State> {
     return (
       <FocusTrap active={focusTrapIsActive}>
         <nav className={classList.join(' ')}>
-          {this.renderHomeLink()}
+          {<HomeLink onKeyDown={this.handleKeyDown} />}
 
           <div className="claim">{translatedStringFromObject(claim)}</div>
 
@@ -351,7 +261,9 @@ const StyledMainMenu = styled(MainMenu)`
     }
     &:active {
       color: ${colors.linkColor};
-      background-color: ${hsl(colors.linkColor).brighter(1.7).toString()};
+      background-color: ${hsl(colors.linkColor)
+        .brighter(1.7)
+        .toString()};
     }
   }
 
@@ -488,13 +400,17 @@ const StyledMainMenu = styled(MainMenu)`
         &:hover {
           background-color: ${openMenuHoverColor.toString()};
           svg g {
-            fill: ${hsl(colors.primaryColor).darker(1).toString()};
+            fill: ${hsl(colors.primaryColor)
+              .darker(1)
+              .toString()};
           }
         }
         &:active {
           background-color: ${openMenuHoverColor.toString()};
           svg g {
-            color: ${hsl(openMenuHoverColor).darker(2).toString()};
+            color: ${hsl(openMenuHoverColor)
+              .darker(2)
+              .toString()};
           }
         }
       }
@@ -528,3 +444,7 @@ const StyledMainMenu = styled(MainMenu)`
 `;
 
 export default StyledMainMenu;
+
+{
+  inEmbedMode && this.renderWheelmapHomeLink();
+}

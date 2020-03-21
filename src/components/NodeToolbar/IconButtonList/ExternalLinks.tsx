@@ -1,9 +1,9 @@
 import { t } from 'ttag';
 import * as React from 'react';
 import SourceLink, { PropertyName } from '../SourceLink';
-import { accessibilityCloudFeatureFrom } from '../../../lib/Feature';
-import { Feature } from '../../../lib/Feature';
-import { AppContextConsumer } from '../../../AppContext';
+import { accessibilityCloudFeatureFrom } from '../../../lib/types/Feature';
+import { Feature } from '../../../lib/types/Feature';
+import { AppContextConsumer } from '../../../app/context/AppContext';
 
 type Props = {
   feature: Feature | null,

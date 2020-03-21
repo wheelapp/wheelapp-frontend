@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalDialog from './ModalDialog';
-import Link from './Link/Link';
+import Link from 'next/link';
 import { t } from 'ttag';
 
 type Props = {
@@ -24,7 +24,7 @@ const EmbedModeDeniedDialog = ({ language }: Props) => {
       ariaLabel={embedModeDeniedDialogAriaLabel}
     >
       <p id="embed-mode-denied-description">{embedModeDeniedDescription}</p>
-      <Link to={contactUrl}>{contactUrl}</Link>
+      <Link href={contactUrl}>{contactUrl}</Link>
     </ModalDialog>
   );
 };

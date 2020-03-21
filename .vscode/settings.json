@@ -3,14 +3,18 @@
   "flow.useNPMPackagedFlow": true,
   "search.exclude": {
     "build/**/*": true,
+    "dist/**/*": true,
     "lib/**/*": true,
-    "src/.next/**/*": true,
+    "src/.next/**/*": true
   },
   // Custom formatting rules
   "editor.wordWrapColumn": 100,
   "javascript.validate.enable": false,
   "editor.formatOnSave": true,
-  "eslint.autoFixOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll": true
+  },
   "prettier.requireConfig": true,
   "eslint.enable": true,
   "tslint.jsEnable": false,

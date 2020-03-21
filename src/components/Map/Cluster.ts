@@ -1,5 +1,5 @@
-import { EquipmentInfo } from '../../lib/EquipmentInfo';
-import { Feature, YesNoLimitedUnknown } from '../../lib/Feature';
+import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
+import { Feature, YesNoLimitedUnknown } from '../../lib/types/Feature';
 
 export type Cluster = {
   features: Array<Feature | EquipmentInfo>,

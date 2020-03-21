@@ -3,9 +3,9 @@ import isEqual from 'lodash/isEqual';
 import styled from 'styled-components';
 
 import Icon from '../Icon';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
 import ToiletStatusAccessible from '../icons/accessibility/ToiletStatusAccessible';
-import { isAccessibilityFiltered } from '../../lib/Feature';
+import { isAccessibilityFiltered } from '../../lib/types/Feature';
 
 type Props = {
   accessibilityFilter?: YesNoLimitedUnknown[],

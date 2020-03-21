@@ -6,13 +6,16 @@ import FocusTrap from 'focus-trap-react';
 import StyledToolbar from '../NodeToolbar/StyledToolbar';
 import MappingEventShareBar from './MappingEventShareBar';
 import Statistics from './Statistics';
-import Link from '../Link/Link';
-import { RouteConsumer, RouteContext } from '../Link/RouteContext';
-import { AppContextConsumer } from '../../AppContext';
+import Link from 'next/link';
+import { AppContextConsumer } from '../../app/context/AppContext';
 import ChevronLeft from './ChevronLeft';
 import CloseButton from './CloseButton';
 import { buildFullImageUrl } from '../../lib/Image';
-import { MappingEvent, isMappingEventVisible, canMappingEventBeJoined } from '../../lib/MappingEvent';
+import {
+  MappingEvent,
+  isMappingEventVisible,
+  canMappingEventBeJoined,
+} from '../../lib/types/MappingEvent';
 import { RouteParams } from '../../lib/RouterHistory';
 import Button, { PrimaryButton, ChromelessButton, DangerButton } from '../Button';
 import MapPinIcon from '../icons/ui-elements/MapPinIcon';
@@ -134,18 +137,9 @@ const MappingEventToolbar = ({
         <CloseButton onClick={onClose} />
         <header>
           {!joinedMappingEventId && (
-            <RouteConsumer>
-              {(context: RouteContext) => {
-                const params: RouteParams = { ...context.params };
-                delete params.id;
-
-                return (
-                  <Link to="mappingEvents" params={params} aria-label={backLinkAriaLabel}>
-                    <ChevronLeft />
-                  </Link>
-                );
-              }}
-            </RouteConsumer>
+            <Link href={'/events'} aria-label={backLinkAriaLabel}>
+              <ChevronLeft />
+            </Link>
           )}
           <div>
             <h2>

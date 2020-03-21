@@ -2,9 +2,9 @@ import { t } from 'ttag';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { CategoryLookupTables } from '../../../lib/Categories';
+import { CategoryLookupTables } from '../../../lib/types/Categories';
 import getIconNameForProperties from '../../Map/getIconNameForProperties';
-import { WheelmapFeature } from '../../../lib/Feature';
+import { WheelmapFeature } from '../../../lib/types/Feature';
 import FocusTrap from 'focus-trap-react';
 import CustomRadio from './CustomRadio';
 import StyledRadioGroup from './StyledRadioGroup';

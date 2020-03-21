@@ -7,7 +7,7 @@ import colors from '../../lib/colors';
 import {
   generateOsmNoteUrlForCoords,
   generateOsmEditorUrlForCoords,
-} from '../../lib/generateOsmUrls';
+} from '../../lib/geo/generateOsmUrls';
 import Toolbar from '../Toolbar';
 import ChevronRight from '../ChevronRight';
 import CloseLink from '../CloseButton';

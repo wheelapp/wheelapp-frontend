@@ -1,7 +1,7 @@
 import * as React from 'react';
 import WorldIcon from '../../icons/actions/World';
 import styled from 'styled-components';
-import { Feature, isWheelmapProperties } from '../../../lib/Feature';
+import { Feature, isWheelmapProperties } from '../../../lib/types/Feature';
 
 const NonBreakingLink = styled.a`
   span {
@@ -21,7 +21,7 @@ export default function PlaceWebsiteLink(props: Props) {
   const { properties } = feature || {};
   if (!properties) return null;
 
-  let placeWebsiteUrl = null
+  let placeWebsiteUrl = null;
   if (!isWheelmapProperties(properties)) {
     placeWebsiteUrl = properties.placeWebsiteUrl;
   } else {

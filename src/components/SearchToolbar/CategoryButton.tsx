@@ -6,8 +6,8 @@ import CombinedIcon from './CombinedIcon';
 import colors from '../../lib/colors';
 import IconButton, { Circle, Caption } from '../IconButton';
 import CloseIcon from '../icons/actions/Close';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
-import { isAccessibilityFiltered } from '../../lib/Feature';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
+import { isAccessibilityFiltered } from '../../lib/types/Feature';
 import Link, { RouteConsumer } from '../Link/Link';
 
 type Props = {

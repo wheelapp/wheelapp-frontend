@@ -2,10 +2,10 @@ import { t } from 'ttag';
 import * as React from 'react';
 import styled from 'styled-components';
 import { dataSourceCache } from '../../lib/cache/DataSourceCache';
-import { AccessibilityCloudProperties } from '../../lib/Feature';
+import { AccessibilityCloudProperties } from '../../lib/types/Feature';
 import WorldIcon from '../icons/actions/World';
 
-export type PropertyName = 'infoPageUrl' | 'editPageUrl'
+export type PropertyName = 'infoPageUrl' | 'editPageUrl';
 
 type Props = {
   properties: AccessibilityCloudProperties,

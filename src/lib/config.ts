@@ -3,6 +3,7 @@ import env from './env';
 // use base url on server, otherwise use the proxy running on the hosting server
 const useAbsoluteWheelmapBaseUrl = typeof window === 'undefined';
 
+// TODO: Move these tings to env
 export default {
   locateTimeout: 60 * 60 * 1000,
   // If no location is known, start at the Cologne cathedral landmark

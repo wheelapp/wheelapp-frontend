@@ -2,20 +2,48 @@ import { t } from 'ttag';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { SearchResultCollection } from '../../lib/searchPlaces';
+import { SearchResultCollection } from '../../lib/model/searchPlaces';
 import colors from '../../lib/colors';
-import { SearchResultFeature } from '../../lib/searchPlaces';
-import { WheelmapFeature } from '../../lib/Feature';
+import { SearchResultFeature } from '../../lib/model/searchPlaces';
+import { WheelmapFeature, getFeatureId } from '../../lib/types/Feature';
 import SearchResult from './SearchResult';
-import { CategoryLookupTables } from '../../lib/Categories';
+import { CategoryLookupTables } from '../../lib/types/Categories';
 
 type Props = {
   searchResults: SearchResultCollection,
   categories: CategoryLookupTables,
   className?: string,
   hidden: boolean | null,
-  onSearchResultClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => void,
   refFirst: (result: SearchResult | null) => void | null,
+};
+
+const onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+  const params = this.getCurrentParams() as any;
+  let routeName = 'map';
+
+  if (wheelmapFeature) {
+    let id = getFeatureId(wheelmapFeature);
+    if (id) {
+      params.id = id;
+      delete params.eid;
+      routeName = 'placeDetail';
+    }
+  }
+
+  if (routeName === 'map') {
+    delete params.id;
+    delete params.eid;
+  }
+
+  if (feature.properties.extent) {
+    const extent = feature.properties.extent;
+    this.setState({ lat: null, lon: null, extent });
+  } else {
+    const [lon, lat] = feature.geometry.coordinates;
+    this.setState({ lat, lon, extent: null });
+  }
+
+  this.props.routerHistory.push(routeName, params);
 };
 
 function SearchResults(props: Props) {
@@ -51,7 +79,7 @@ function SearchResults(props: Props) {
             feature={feature}
             wheelmapFeature={wheelmapFeatures && wheelmapFeatures[index]}
             key={featureId}
-            onClick={props.onSearchResultClick}
+            onClick={onSearchResultClick}
             hidden={!!props.hidden}
             categories={props.categories}
             ref={ref => {

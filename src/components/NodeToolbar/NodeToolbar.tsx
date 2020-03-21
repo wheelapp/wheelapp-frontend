@@ -19,17 +19,17 @@ import EquipmentAccessibility from './AccessibilitySection/EquipmentAccessibilit
 import PlaceAccessibilitySection from './AccessibilitySection/PlaceAccessibilitySection';
 import Button from '../Button';
 
-import { PhotoModel } from '../../lib/PhotoModel';
+import { PhotoModel } from '../../lib/model/PhotoModel';
 import {
   Feature,
   YesNoLimitedUnknown,
   YesNoUnknown,
   isWheelmapFeature,
-} from '../../lib/Feature';
-import { isWheelmapFeatureId, placeNameFor, wheelmapFeatureFrom } from '../../lib/Feature';
-import { Category, CategoryLookupTables, getCategoryId } from '../../lib/Categories';
+} from '../../lib/types/Feature';
+import { isWheelmapFeatureId, placeNameFor, wheelmapFeatureFrom } from '../../lib/types/Feature';
+import { Category, CategoryLookupTables, getCategoryId } from '../../lib/types/Categories';
 import { hasBigViewport } from '../../lib/ViewportSize';
-import { EquipmentInfo } from '../../lib/EquipmentInfo';
+import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
 import { ModalNodeState } from '../../lib/ModalNodeState';
 import ToiletStatusEditor from './AccessibilityEditor/ToiletStatusEditor';
 import WheelchairStatusEditor from './AccessibilityEditor/WheelchairStatusEditor';
@@ -37,7 +37,7 @@ import InlineWheelchairAccessibilityEditor from './AccessibilityEditor/InlineWhe
 import IconButtonList from './IconButtonList/IconButtonList';
 import { SourceWithLicense } from '../../app/PlaceDetailsProps';
 import { Cluster } from '../Map/Cluster';
-import { AppContextConsumer } from '../../AppContext';
+import { AppContextConsumer } from '../../app/context/AppContext';
 import { equipmentInfoCache } from '../../lib/cache/EquipmentInfoCache';
 import { UAResult } from '../../lib/userAgent';
 
@@ -66,17 +66,12 @@ type Props = {
   inEmbedMode: boolean,
   userAgent: UAResult,
   onClose?: () => void,
-  onOpenReportMode: () => void | null,
-  onOpenToiletAccessibility: () => void,
-  onOpenWheelchairAccessibility: () => void,
-  onOpenToiletNearby: (feature: Feature) => void,
   onCloseWheelchairAccessibility: () => void,
   onCloseToiletAccessibility: () => void,
   onClickCurrentCluster?: () => void,
   onShowPlaceDetails?: (featureId: string | number) => void,
   // Simple 3-button wheelchair status editor
   accessibilityPresetStatus?: YesNoLimitedUnknown | null,
-  onSelectWheelchairAccessibility?: (value: YesNoLimitedUnknown) => void,
   onEquipmentSelected?: (placeInfoId: string, equipmentInfo: EquipmentInfo) => void,
 
   // photo feature
@@ -323,7 +318,6 @@ class NodeToolbar extends React.Component<Props, State> {
       equipmentInfoId,
       feature,
       featureId,
-      onOpenReportMode,
       sources,
     } = this.props;
 
@@ -348,7 +342,6 @@ class NodeToolbar extends React.Component<Props, State> {
       equipmentInfoId,
       feature,
       featureId,
-      onOpenReportMode,
       sources,
     };
 

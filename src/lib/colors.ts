@@ -1,7 +1,7 @@
 import reduce from 'lodash/reduce';
 import { scaleLinear } from 'd3-scale';
 import { interpolateLab } from 'd3-interpolate';
-import { NodeProperties, YesNoLimitedUnknown, isWheelchairAccessible } from './Feature';
+import { NodeProperties, YesNoLimitedUnknown, isWheelchairAccessible } from './types/Feature';
 import { hsl } from 'd3-color';
 
 const colors = {
@@ -114,7 +114,11 @@ function calculateWheelchairAccessibility(propertiesArray: NodeProperties[]) {
   return { definedCount, averageRatingForDefined, clampedDefinedRatio };
 }
 
-const definedAccessibilityMapping: [YesNoLimitedUnknown, number][] = [['yes', 0.8], ['limited', 0.2], ['no', 0]];
+const definedAccessibilityMapping: [YesNoLimitedUnknown, number][] = [
+  ['yes', 0.8],
+  ['limited', 0.2],
+  ['no', 0],
+];
 
 function getWheelchairAccessibility(
   definedCount: number,

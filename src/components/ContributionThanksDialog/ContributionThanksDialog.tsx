@@ -8,17 +8,16 @@ import ChevronRight from '../icons/actions/ChevronRight';
 import CloseLink from '../CloseButton';
 import queryString from 'query-string';
 import { ChromelessButton, CallToActionLink } from '../Button';
-import { trackingEventBackend } from '../../lib/TrackingEventBackend';
-import { AppContext } from '../../AppContext';
+import { trackingEventBackend } from '../../lib/global-context/api/TrackingEventBackend';
+import { AppContext } from '../../app/context/AppContext';
 import { trackEvent } from '../../lib/Analytics';
 
 export type Props = {
-  hidden: boolean,
-  isExpanded?: boolean,
-  onClose: () => void,
-  addPlaceUrl: string | null,
-  onAddPlaceLinkClick?: () => void,
-  appContext: AppContext,
+  hidden: boolean;
+  isExpanded?: boolean;
+  onClose: () => void;
+  addPlaceUrl: string | null;
+  appContext: AppContext;
 };
 
 const StyledToolbar = styled(Toolbar)`
@@ -88,7 +87,10 @@ export default class ContributionThanksDialog extends React.Component<Props> {
   }
 
   render() {
-    const className = ['contribution-thanks-dialog', this.props.isExpanded && 'is-expanded']
+    const className = [
+      'contribution-thanks-dialog',
+      this.props.isExpanded && 'is-expanded',
+    ]
       .filter(Boolean)
       .join(' ');
 
@@ -112,14 +114,15 @@ export default class ContributionThanksDialog extends React.Component<Props> {
               data-focus-visible-added
               href={this.props.addPlaceUrl}
               target="_blank"
-              onClick={this.props.onAddPlaceLinkClick}
             >
               {addNextPlaceButtonCaption}
               <ChevronRight />
             </CallToActionLink>
           )}
 
-          <ChromelessButton onClick={this.props.onClose}>{backToMapButtonCaption}</ChromelessButton>
+          <ChromelessButton onClick={this.props.onClose}>
+            {backToMapButtonCaption}
+          </ChromelessButton>
         </section>
       </StyledToolbar>
     );

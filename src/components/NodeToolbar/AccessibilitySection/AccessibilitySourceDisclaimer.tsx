@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { dataSourceCache } from '../../../lib/cache/DataSourceCache';
-import { AccessibilityCloudProperties } from '../../../lib/Feature';
+import { AccessibilityCloudProperties } from '../../../lib/types/Feature';
 import { LocalizedString } from '../../../lib/i18n';
 
 type Props = {

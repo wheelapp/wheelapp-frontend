@@ -1,7 +1,7 @@
 import * as React from 'react';
 import strings from './strings';
-import { generateOsmEditUrl, generateOsmNoteUrl } from '../../../lib/generateOsmUrls';
-import { Feature } from '../../../lib/Feature';
+import { generateOsmEditUrl, generateOsmNoteUrl } from '../../../lib/geo/generateOsmUrls';
+import { Feature } from '../../../lib/types/Feature';
 
 type Props = {
   feature: Feature,

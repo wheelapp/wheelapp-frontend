@@ -1,11 +1,13 @@
 import * as React from 'react';
 import includes from 'lodash/includes';
 import styled from 'styled-components';
-import { isTouchDevice } from '../../lib/userAgent';
+import { isTouchDevice } from '../../context/UserAgentContext';
 
 type Props = {
   caption: string,
-  onActivate: (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => void,
+  onActivate: (
+    event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>
+  ) => void,
   isHidden?: boolean,
   ariaHidden?: boolean,
   topPosition: number,

@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import FocusTrap from 'focus-trap-react';
 import sortBy from 'lodash/sortBy';
 
-import { Feature, placeNameFor, getFeatureId } from '../../lib/Feature';
-import { EquipmentInfo } from '../../lib/EquipmentInfo';
+import { Feature, placeNameFor, getFeatureId } from '../../lib/types/Feature';
+import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
 import StyledToolbar from '../NodeToolbar/StyledToolbar';
 import ErrorBoundary from '../ErrorBoundary';
 import { hasBigViewport } from '../../lib/ViewportSize';
@@ -16,24 +16,25 @@ import PlaceName from '../PlaceName';
 import { Circle } from '../IconButton';
 import { StyledIconContainer } from '../Icon';
 import colors from '../../lib/colors';
-import Categories, { CategoryLookupTables } from '../../lib/Categories';
+import Categories, { CategoryLookupTables } from '../../lib/types/Categories';
 import { Cluster } from '../Map/Cluster';
 import * as markers from '../icons/markers';
+import { getCategoriesForFeature } from '../../lib/api/model/Categories';
 
 type Props = {
-  hidden?: boolean,
-  inEmbedMode?: boolean,
-  modalNodeState?: boolean,
-  cluster: Cluster | null,
-  categories: CategoryLookupTables,
-  onClose: () => void,
-  onSelectClusterIcon: () => void,
-  onFeatureSelected: (feature: Feature | EquipmentInfo) => void,
-  className?: string,
+  hidden?: boolean;
+  inEmbedMode?: boolean;
+  modalNodeState?: boolean;
+  cluster: Cluster | null;
+  categories: CategoryLookupTables;
+  onClose: () => void;
+  onSelectClusterIcon: () => void;
+  onFeatureSelected: (feature: Feature | EquipmentInfo) => void;
+  className?: string;
 };
 
 type State = {
-  isScrollable?: boolean,
+  isScrollable?: boolean;
 };
 
 const PositionedCloseLink = styled(StyledCloseLink)`
@@ -43,12 +44,20 @@ const PositionedCloseLink = styled(StyledCloseLink)`
 `;
 PositionedCloseLink.displayName = 'PositionedCloseLink';
 
-const ClusterIcon = function({ cluster, className, onSelectClusterIcon }: Partial<Props>) {
+const ClusterIcon = function({
+  cluster,
+  className,
+  onSelectClusterIcon,
+}: Partial<Props>) {
   const accessibility = cluster.accessibility || 'unknown';
   const MarkerComponent = markers[`${accessibility}WithoutArrow`] || Circle;
 
   return (
-    <StyledIconContainer className={className} size="medium" onClick={onSelectClusterIcon}>
+    <StyledIconContainer
+      className={className}
+      size="medium"
+      onClick={onSelectClusterIcon}
+    >
       <MarkerComponent />
       <div>{cluster.features.length}</div>
     </StyledIconContainer>
@@ -62,7 +71,8 @@ export const StyledClusterIcon = styled(ClusterIcon)`
   cursor: pointer;
 
   > div {
-    color: ${props => (props.cluster && props.cluster.foregroundColor) || 'white'};
+    color: ${props =>
+      (props.cluster && props.cluster.foregroundColor) || 'white'};
     font-size: 24px;
     z-index: 300;
   }
@@ -81,7 +91,8 @@ export const StyledClusterIcon = styled(ClusterIcon)`
   svg circle,
   svg rect {
     fill: ${props =>
-      (props.cluster && props.cluster.backgroundColor) || colors.tonedDownSelectedColor};
+      (props.cluster && props.cluster.backgroundColor) ||
+      colors.tonedDownSelectedColor};
   }
 `;
 
@@ -91,13 +102,15 @@ class UnstyledFeatureClusterPanel extends React.Component<Props, State> {
   renderCloseLink() {
     const { onClose, modalNodeState } = this.props;
 
-    return modalNodeState ? null : <PositionedCloseLink {...{ onClick: onClose }} />;
+    return modalNodeState ? null : (
+      <PositionedCloseLink {...{ onClick: onClose }} />
+    );
   }
 
   renderClusterEntry(feature: Feature | EquipmentInfo) {
-    const { category, parentCategory } = Categories.getCategoriesForFeature(
+    const { category, parentCategory } = getCategoriesForFeature(
       this.props.categories,
-      feature
+      feature,
     );
 
     return (
@@ -118,15 +131,18 @@ class UnstyledFeatureClusterPanel extends React.Component<Props, State> {
   renderClusterEntries(features: ArrayLike<Feature | EquipmentInfo>) {
     const sortedFeatures = sortBy(features, feature => {
       if (!feature.properties) {
-        return getFeatureId(feature)
+        return getFeatureId(feature);
       }
-      const { category, parentCategory } = Categories.getCategoriesForFeature(
+      const { category, parentCategory } = getCategoriesForFeature(
         this.props.categories,
-        feature
+        feature,
       );
 
       // TODO comment that this should be typed
-      return placeNameFor(feature.properties as any, category || parentCategory);
+      return placeNameFor(
+        feature.properties as any,
+        category || parentCategory,
+      );
     });
 
     return sortedFeatures.map(feature => (
@@ -137,7 +153,9 @@ class UnstyledFeatureClusterPanel extends React.Component<Props, State> {
   render() {
     const { cluster } = this.props;
     const hasWindow = typeof window !== 'undefined';
-    const offset = hasBigViewport() ? 0 : 0.4 * (hasWindow ? window.innerHeight : 0);
+    const offset = hasBigViewport()
+      ? 0
+      : 0.4 * (hasWindow ? window.innerHeight : 0);
 
     if (!cluster || cluster.features.length === 0) {
       return null;

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import * as React from 'react';
-import { EquipmentInfo } from '../../../lib/EquipmentInfo';
+import { EquipmentInfo } from '../../../lib/model/EquipmentInfo';
 import EquipmentItem from './EquipmentItem';
 import styled from 'styled-components';
 import colors from '../../../lib/colors';

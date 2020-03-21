@@ -16,13 +16,13 @@ import SearchInputField from './SearchInputField';
 import AccessibilityFilterMenu from './AccessibilityFilterMenu';
 
 import colors from '../../lib/colors';
-import { isAccessibilityFiltered } from '../../lib/Feature';
-import { SearchResultCollection } from '../../lib/searchPlaces';
+import { isAccessibilityFiltered } from '../../lib/types/Feature';
+import { SearchResultCollection } from '../../lib/model/searchPlaces';
 import { PlaceFilter } from './AccessibilityFilterModel';
 import { isOnSmallViewport } from '../../lib/ViewportSize';
-import { SearchResultFeature } from '../../lib/searchPlaces';
-import { WheelmapFeature } from '../../lib/Feature';
-import { CategoryLookupTables } from '../../lib/Categories';
+import { SearchResultFeature } from '../../lib/model/searchPlaces';
+import { WheelmapFeature } from '../../lib/types/Feature';
+import { CategoryLookupTables } from '../../lib/types/Categories';
 import ErrorBoundary from '../ErrorBoundary';
 
 export type Props = PlaceFilter & {
@@ -32,7 +32,6 @@ export type Props = PlaceFilter & {
   category: string | null,
   showCategoryMenu?: boolean,
   searchQuery: string | null,
-  onSearchResultClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => void,
   onChangeSearchQuery: (newSearchQuery: string) => void,
   onSubmit: (searchQuery: string) => void,
   onAccessibilityFilterButtonClick: (filter: PlaceFilter) => void,
@@ -375,10 +374,9 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
       <div aria-live="assertive">
         <SearchResults
           searchResults={searchResults}
-          onSearchResultClick={this.props.onSearchResultClick}
           hidden={this.props.hidden}
           categories={this.props.categories}
-          refFirst={(ref: SearchResult) => this.firstResult = ref}
+          refFirst={(ref: SearchResult) => (this.firstResult = ref)}
         />
       </div>
     );

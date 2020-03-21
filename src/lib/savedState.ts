@@ -68,15 +68,6 @@ export function shouldLocate() {
   return storage.getItem('wheelmap.map.locate') === 'true';
 }
 
-export function hasAllowedAnalytics() {
-  return storage.getItem('wheelmap.analyticsAllowed') === 'true';
-}
-
-export function setThirdPartyAnalyticsAllowed(value: boolean) {
-  storage.setItem('wheelmap.analyticsAllowed', value ? 'true' : 'false');
-  notifyListeners();
-}
-
 export function getUUID() {
   let result = storage.getItem('wheelmap.userUUID');
   if (!result) {
@@ -118,7 +109,10 @@ export function getJoinedMappingEventData(): EventJoinData {
   }
 }
 
-export function setJoinedMappingEventData(emailAddress: string = null, invitationToken: string = null) {
+export function setJoinedMappingEventData(
+  emailAddress: string = null,
+  invitationToken: string = null
+) {
   const current = getJoinedMappingEventData();
   current.invitationToken = invitationToken;
   current.emailAddress = emailAddress || current.emailAddress;

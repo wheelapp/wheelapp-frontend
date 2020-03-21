@@ -1,7 +1,7 @@
 import { t } from 'ttag';
 import * as React from 'react';
 import PhoneIcon from '../../icons/actions/Phone';
-import { Feature, isWheelmapProperties } from '../../../lib/Feature';
+import { Feature, isWheelmapProperties } from '../../../lib/types/Feature';
 
 type Props = {
   feature: Feature | null,
@@ -12,10 +12,10 @@ export default function PhoneNumberLink(props: Props) {
   const { properties } = feature || {};
   if (!properties) return null;
 
-  let phoneNumber: string = null
+  let phoneNumber: string = null;
 
   if (!isWheelmapProperties(properties)) {
-    phoneNumber = properties.phoneNumber || properties.phone
+    phoneNumber = properties.phoneNumber || properties.phone;
   } else {
     phoneNumber = properties.phone;
   }

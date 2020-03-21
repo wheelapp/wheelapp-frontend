@@ -2,7 +2,7 @@ import { t } from 'ttag';
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
+import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
 import Button from '../Button';
 import colors from '../../lib/colors';
 import CombinedIcon from './CombinedIcon';

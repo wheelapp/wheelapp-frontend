@@ -1,18 +1,21 @@
 import debounce from 'lodash/debounce';
 import { Dots } from 'react-activity';
 import * as React from 'react';
-import { globalFetchManager } from '../../lib/FetchManager';
+import { globalFetchManager } from '../../lib/global-context/api/FetchManager';
 
 type Props = {
-  className?: string,
+  className?: string;
 };
 
 type State = {
-  isShown: boolean,
-  lastError?: Error | null,
+  isShown: boolean;
+  lastError?: Error | null;
 };
 
-export default class GlobalActivityIndicator extends React.Component<Props, State> {
+export default class GlobalActivityIndicator extends React.Component<
+  Props,
+  State
+> {
   state = { isShown: false };
 
   updateState = debounce(
@@ -22,7 +25,7 @@ export default class GlobalActivityIndicator extends React.Component<Props, Stat
       this.setState({ isShown, lastError });
     },
     50,
-    { maxWait: 50, leading: true }
+    { maxWait: 50, leading: true },
   );
 
   componentDidMount() {

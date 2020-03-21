@@ -1,33 +1,38 @@
-import { t } from 'ttag';
 import * as React from 'react';
-
-import getAddressString from '../../lib/getAddressString';
-import Categories, {
-  getCategoryId,
+import { t } from 'ttag';
+import { PotentialPromise } from '../../app/PlaceDetailsProps';
+import { getCategoriesForFeature } from '../../lib/api/model/Categories';
+import getAddressString from '../../lib/model/getAddressString';
+import { SearchResultFeature } from '../../lib/model/searchPlaces';
+import {
   Category,
   CategoryLookupTables,
-} from '../../lib/Categories';
-import { isWheelchairAccessible, WheelmapFeature } from '../../lib/Feature';
-import { SearchResultFeature } from '../../lib/searchPlaces';
-
+  getCategoryId,
+} from '../../lib/types/Categories';
+import {
+  isWheelchairAccessible,
+  WheelmapFeature,
+} from '../../lib/types/Feature';
 import Icon from '../Icon';
 import Address from '../NodeToolbar/Address';
 import PlaceName from '../PlaceName';
-import { PotentialPromise } from '../../app/PlaceDetailsProps';
 
 type Props = {
-  feature: SearchResultFeature,
-  categories: CategoryLookupTables,
-  onClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => void,
-  hidden: boolean,
-  wheelmapFeature: PotentialPromise<WheelmapFeature | null>,
+  feature: SearchResultFeature;
+  categories: CategoryLookupTables;
+  onClick: (
+    feature: SearchResultFeature,
+    wheelmapFeature: WheelmapFeature | null,
+  ) => void;
+  hidden: boolean;
+  wheelmapFeature: PotentialPromise<WheelmapFeature | null>;
 };
 
 type State = {
-  category: Category | null,
-  parentCategory: Category | null,
-  wheelmapFeature: WheelmapFeature | null,
-  wheelmapFeaturePromise: Promise<WheelmapFeature | null> | null,
+  category: Category | null;
+  parentCategory: Category | null;
+  wheelmapFeature: WheelmapFeature | null;
+  wheelmapFeaturePromise: Promise<WheelmapFeature | null> | null;
 };
 
 export default class SearchResult extends React.Component<Props, State> {
@@ -51,7 +56,7 @@ export default class SearchResult extends React.Component<Props, State> {
     }
 
     if (wheelmapFeature instanceof Promise) {
-      const rawCategoryLists = Categories.getCategoriesForFeature(categories, feature);
+      const rawCategoryLists = getCategoriesForFeature(categories, feature);
       return {
         wheelmapFeature: null,
         wheelmapFeaturePromise: wheelmapFeature,
@@ -59,11 +64,11 @@ export default class SearchResult extends React.Component<Props, State> {
       };
     }
 
-    const wheelmapCategoryData = Categories.getCategoriesForFeature(categories, feature);
+    const classicCategoryData = getCategoriesForFeature(categories, feature);
     return {
       wheelmapFeature: wheelmapFeature,
       wheelmapFeaturePromise: null,
-      ...wheelmapCategoryData,
+      ...classicCategoryData,
     };
   }
 
@@ -72,7 +77,10 @@ export default class SearchResult extends React.Component<Props, State> {
 
     if (wheelmapFeaturePromise) {
       wheelmapFeaturePromise.then(wheelmapFeature =>
-        this.handleWheelmapFeatureFetched(wheelmapFeaturePromise, wheelmapFeature)
+        this.handleWheelmapFeatureFetched(
+          wheelmapFeaturePromise,
+          wheelmapFeature,
+        ),
       );
     }
   }
@@ -80,30 +88,37 @@ export default class SearchResult extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     const { wheelmapFeaturePromise } = this.state;
 
-    if (wheelmapFeaturePromise && prevState.wheelmapFeaturePromise !== wheelmapFeaturePromise) {
+    if (
+      wheelmapFeaturePromise &&
+      prevState.wheelmapFeaturePromise !== wheelmapFeaturePromise
+    ) {
       wheelmapFeaturePromise.then(wheelmapFeature =>
-        this.handleWheelmapFeatureFetched(wheelmapFeaturePromise, wheelmapFeature)
+        this.handleWheelmapFeatureFetched(
+          wheelmapFeaturePromise,
+          wheelmapFeature,
+        ),
       );
     }
   }
 
   handleWheelmapFeatureFetched = (
     prevWheelmapFeaturePromise: Promise<WheelmapFeature | null>,
-    wheelmapFeature: WheelmapFeature | null
+    wheelmapFeature: WheelmapFeature | null,
   ) => {
     if (this.state.wheelmapFeaturePromise !== prevWheelmapFeaturePromise) {
       return;
     }
 
     const { categories, feature } = this.props;
-    const wheelmapCategoryData = Categories.getCategoriesForFeature(
+    const classicCategoryData = getCategoriesForFeature(
       categories,
-      wheelmapFeature || feature
+      wheelmapFeature || feature,
     );
     this.setState({
       wheelmapFeature,
-      category: wheelmapCategoryData.category || this.state.category,
-      parentCategory: wheelmapCategoryData.parentCategory || this.state.parentCategory,
+      category: classicCategoryData.category || this.state.category,
+      parentCategory:
+        classicCategoryData.parentCategory || this.state.parentCategory,
     });
   };
 
@@ -130,15 +145,18 @@ export default class SearchResult extends React.Component<Props, State> {
     const shownCategory = category || parentCategory;
     const shownCategoryId = shownCategory && getCategoryId(shownCategory);
 
-    const wheelmapFeatureProperties = wheelmapFeature ? wheelmapFeature.properties : null;
+    const wheelmapFeatureProperties = wheelmapFeature
+      ? wheelmapFeature.properties
+      : null;
     const accessibility =
-      wheelmapFeatureProperties && isWheelchairAccessible(wheelmapFeatureProperties);
+      wheelmapFeatureProperties &&
+      isWheelchairAccessible(wheelmapFeatureProperties);
 
     return (
       <li
         ref={this.root}
-        className={`osm-category-${feature.properties.osm_key || 'unknown'}-${feature.properties
-          .osm_value || 'unknown'}`}
+        className={`osm-category-${feature.properties.osm_key ||
+          'unknown'}-${feature.properties.osm_value || 'unknown'}`}
       >
         <button
           onClick={() => {

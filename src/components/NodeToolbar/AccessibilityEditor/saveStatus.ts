@@ -1,36 +1,51 @@
 import { t } from 'ttag';
-import fetch from '../../../lib/fetch';
+import fetch from '../../../lib/global-context/api/fetch';
 import get from 'lodash/get';
 import config from '../../../lib/config';
-import { trackingEventBackend } from '../../../lib/TrackingEventBackend';
+import { trackingEventBackend } from '../../../lib/global-context/api/TrackingEventBackend';
 import { wheelmapFeatureCache } from '../../../lib/cache/WheelmapFeatureCache';
 import { wheelmapLightweightFeatureCache } from '../../../lib/cache/WheelmapLightweightFeatureCache';
-import { Feature, YesNoLimitedUnknown, YesNoUnknown } from '../../../lib/Feature';
+import {
+  Feature,
+  YesNoLimitedUnknown,
+  YesNoUnknown,
+} from '../../../lib/types/Feature';
 import { trackEvent } from '../../../lib/Analytics';
-import Categories, { getCategoryId } from '../../../lib/Categories';
-import { CategoryLookupTables } from '../../../lib/Categories';
-import { AppContext } from '../../../AppContext';
+import Categories, { getCategoryId } from '../../../lib/types/Categories';
+import { CategoryLookupTables } from '../../../lib/types/Categories';
+import { AppContext } from '../../../app/context/AppContext';
+import { getCategoriesForFeature } from '../../../lib/api/model/Categories';
 
 type ExternalSaveOptions<T> = {
-  featureId: string,
-  categories: CategoryLookupTables,
-  feature: Feature,
-  value: T,
-  onSave: (value: T) => void | null,
-  onClose: () => void,
-  appContext: AppContext,
+  featureId: string;
+  categories: CategoryLookupTables;
+  feature: Feature;
+  value: T;
+  onSave: (value: T) => void | null;
+  onClose: () => void;
+  appContext: AppContext;
 };
 
 type SaveOptions<T> = ExternalSaveOptions<T> & {
-  url: string,
-  propertyName: string,
-  jsonPropertyName: string,
+  url: string;
+  propertyName: string;
+  jsonPropertyName: string;
 };
 
 function trackAttributeChanged<T>(options: SaveOptions<T>) {
-  const { value, categories, feature, featureId, propertyName, appContext } = options;
+  const {
+    value,
+    categories,
+    feature,
+    featureId,
+    propertyName,
+    appContext,
+  } = options;
 
-  const { category, parentCategory } = Categories.getCategoriesForFeature(categories, feature);
+  const { category, parentCategory } = getCategoriesForFeature(
+    categories,
+    feature,
+  );
 
   const categoryId = getCategoryId(category);
   const parentCategoryId = getCategoryId(parentCategory);
@@ -80,7 +95,9 @@ function save<T>(options: SaveOptions<T>): Promise<void> {
       trackAttributeChanged(options);
       [wheelmapFeatureCache, wheelmapLightweightFeatureCache].forEach(cache => {
         if (cache.getCachedFeature(String(featureId))) {
-          cache.updateFeatureAttribute(String(featureId), { [propertyName]: value });
+          cache.updateFeatureAttribute(String(featureId), {
+            [propertyName]: value,
+          });
         }
       });
       if (typeof options.onSave === 'function') options.onSave(value);
@@ -88,7 +105,9 @@ function save<T>(options: SaveOptions<T>): Promise<void> {
     .catch(e => {
       if (typeof options.onClose === 'function') options.onClose();
       // translator: Shown after marking a place did not work, for example because the connection was interrupted
-      window.alert(t`Sorry, this place could not be marked because of an error: ${e}`);
+      window.alert(
+        t`Sorry, this place could not be marked because of an error: ${e}`,
+      );
 
       trackEvent({
         category: 'UpdateAccessibilityData',
@@ -99,11 +118,23 @@ function save<T>(options: SaveOptions<T>): Promise<void> {
 }
 
 export function saveToiletStatus(options: ExternalSaveOptions<YesNoUnknown>) {
-  const url = `${config.wheelmapApiBaseUrl}/nodes/${options.featureId}/update_toilet.js?api_key=${config.wheelmapApiKey}`;
-  return save({ ...options, url, propertyName: 'wheelchair_toilet', jsonPropertyName: 'toilet' });
+  const url = `${config.wheelmapApiBaseUrl}/api/nodes/${options.featureId}/update_toilet.js?api_key=${config.wheelmapApiKey}`;
+  return save({
+    ...options,
+    url,
+    propertyName: 'wheelchair_toilet',
+    jsonPropertyName: 'toilet',
+  });
 }
 
-export function saveWheelchairStatus(options: ExternalSaveOptions<YesNoLimitedUnknown>) {
-  const url = `${config.wheelmapApiBaseUrl}/nodes/${options.featureId}/update_wheelchair.js?api_key=${config.wheelmapApiKey}`;
-  return save({ ...options, url, propertyName: 'wheelchair', jsonPropertyName: 'wheelchair' });
+export function saveWheelchairStatus(
+  options: ExternalSaveOptions<YesNoLimitedUnknown>,
+) {
+  const url = `${config.wheelmapApiBaseUrl}/api/nodes/${options.featureId}/update_wheelchair.js?api_key=${config.wheelmapApiKey}`;
+  return save({
+    ...options,
+    url,
+    propertyName: 'wheelchair',
+    jsonPropertyName: 'wheelchair',
+  });
 }

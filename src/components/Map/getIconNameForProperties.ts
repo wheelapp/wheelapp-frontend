@@ -1,14 +1,17 @@
-import Categories, { CategoryLookupTables } from '../../lib/Categories';
-import { NodeProperties, isWheelmapProperties } from '../../lib/Feature';
+import Categories, { CategoryLookupTables } from '../../lib/types/Categories';
+import { NodeProperties, isWheelmapProperties } from '../../lib/types/Feature';
 import includes from 'lodash/includes';
+import { getCategory } from '../../lib/api/model/Categories';
 
 export default function getIconNameForProperties(
   lookup: CategoryLookupTables,
-  properties: NodeProperties
+  properties: NodeProperties,
 ) {
-  let givenNodeTypeId = null
+  let givenNodeTypeId = null;
   if (isWheelmapProperties(properties)) {
-    givenNodeTypeId = properties.node_type ? properties.node_type.identifier : null;
+    givenNodeTypeId = properties.node_type
+      ? properties.node_type.identifier
+      : null;
   }
 
   let givenCategoryId = null;
@@ -26,6 +29,8 @@ export default function getIconNameForProperties(
     categoryIdOrSynonym = 'second_hand';
   }
 
-  const category = categoryIdOrSynonym ? Categories.getCategory(lookup, categoryIdOrSynonym) : null;
+  const category = categoryIdOrSynonym
+    ? getCategory(lookup, categoryIdOrSynonym)
+    : null;
   return category ? category._id : null;
 }

@@ -1,12 +1,15 @@
-import { CustomEvent } from '../../lib/EventTarget';
-import { globalFetchManager, FetchManager } from '../../lib/FetchManager';
+import { CustomEvent } from '../../lib/util/EventTarget';
+import {
+  globalFetchManager,
+  FetchManager,
+} from '../../lib/global-context/api/FetchManager';
 
 import L from 'leaflet';
 
 type LayerEvent = Event & {
-  layer: L.Layer,
-  id: string | null,
-  target: L.Layer
+  layer: L.Layer;
+  id: string | null;
+  target: L.Layer;
 };
 
 export default class TileLoadingStatus {
@@ -25,7 +28,7 @@ export default class TileLoadingStatus {
           loading: this._handleLoading,
           load: this._handleLoad,
         },
-        this
+        this,
       );
     }, this);
 
@@ -45,7 +48,7 @@ export default class TileLoadingStatus {
           loading: this.onLayerLoadingStarted,
           load: this.onLayerLoaded,
         },
-        this
+        this,
       );
     }, this);
 
@@ -62,7 +65,7 @@ export default class TileLoadingStatus {
         loading: this.onLayerLoadingStarted,
         load: this.onLayerLoaded,
       },
-      this
+      this,
     );
   }
 
@@ -74,7 +77,7 @@ export default class TileLoadingStatus {
         loading: this.onLayerLoadingStarted,
         load: this.onLayerLoaded,
       },
-      this
+      this,
     );
   }
 
@@ -82,7 +85,9 @@ export default class TileLoadingStatus {
     const id = this.getEventTargetId(e);
 
     this._fetchManager.injectExternalStatus(id, true);
-    this._fetchManager.dispatchEvent(new CustomEvent('start', { target: this }));
+    this._fetchManager.dispatchEvent(
+      new CustomEvent('start', { target: this }),
+    );
   }
 
   onLayerLoaded(e: LayerEvent) {

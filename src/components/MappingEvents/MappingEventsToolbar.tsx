@@ -6,8 +6,8 @@ import FocusTrap from 'focus-trap-react';
 import StyledToolbar from '../NodeToolbar/StyledToolbar';
 import Link, { RouteConsumer } from '../Link/Link';
 import CloseButton from './CloseButton';
-import { MappingEvents } from '../../lib/MappingEvent';
-import { App } from '../../lib/App';
+import { MappingEvents } from '../../lib/types/MappingEvent';
+import { App } from '../../lib/types/App';
 
 type MappingEventsToolbarProps = {
   app: App,

@@ -1,20 +1,20 @@
 import get from 'lodash/get';
 import * as React from 'react';
 import styled from 'styled-components';
-import { Feature } from '../../lib/Feature';
-import { isWheelchairAccessible, placeNameFor } from '../../lib/Feature';
-import { EquipmentInfo } from '../../lib/EquipmentInfo';
+import { Feature } from '../../lib/types/Feature';
+import { isWheelchairAccessible, placeNameFor } from '../../lib/types/Feature';
+import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
 
 import {
   categoryNameFor,
   getCategoryId,
   CategoryLookupTables,
   Category,
-} from '../../lib/Categories';
+} from '../../lib/types/Categories';
 import Icon from '../Icon';
 import PlaceName from '../PlaceName';
 import BreadCrumbs from './BreadCrumbs';
-import { equipmentInfoNameFor, isEquipmentAccessible } from '../../lib/EquipmentInfo';
+import { equipmentInfoNameFor, isEquipmentAccessible } from '../../lib/model/EquipmentInfo';
 import colors from '../../lib/colors';
 import { Cluster } from '../Map/Cluster';
 import ChevronRight from '../ChevronRight';

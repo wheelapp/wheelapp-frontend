@@ -35,8 +35,8 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 // import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import geoTileToBbox from './geoTileToBbox';
 import highlightMarkers from './highlightMarkers';
-import { CustomEvent } from '../../lib/EventTarget';
-import { Feature, getFeatureId } from '../../lib/Feature';
+import { CustomEvent } from '../../lib/util/EventTarget';
+import { Feature, getFeatureId } from '../../lib/types/Feature';
 
 const TileLayer = L.TileLayer;
 

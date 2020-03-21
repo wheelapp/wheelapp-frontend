@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Gallery, { PhotoClickHandler, GalleryProps } from 'react-photo-gallery';
 import Lightbox from 'react-images';
 
-import { PhotoModel } from '../../../lib/PhotoModel';
+import { PhotoModel } from '../../../lib/model/PhotoModel';
 
 import PhotoUploadButton from '../../PhotoUpload/PhotoUploadButton';
 import PhotoNotification from '../../NodeToolbar/Photos/PhotoNotification';
