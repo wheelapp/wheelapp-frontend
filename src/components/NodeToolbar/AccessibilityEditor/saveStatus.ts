@@ -1,20 +1,22 @@
-import { t } from 'ttag';
-import fetch from '../../../lib/global-context/api/fetch';
 import get from 'lodash/get';
-import config from '../../../lib/config';
-import { trackingEventBackend } from '../../../lib/global-context/api/TrackingEventBackend';
+import { t } from 'ttag';
+import { AppContext } from '../../../app/context/AppContext';
+import { trackEvent } from '../../../lib/Analytics';
+import { getCategoriesForFeature } from '../../../lib/api/model/Categories';
 import { wheelmapFeatureCache } from '../../../lib/cache/WheelmapFeatureCache';
 import { wheelmapLightweightFeatureCache } from '../../../lib/cache/WheelmapLightweightFeatureCache';
+import config from '../../../lib/config';
+import fetch from '../../../lib/global-context/api/fetch';
+import { trackingEventBackend } from '../../../lib/global-context/api/TrackingEventBackend';
+import {
+  CategoryLookupTables,
+  getCategoryId,
+} from '../../../lib/types/Categories';
 import {
   Feature,
   YesNoLimitedUnknown,
   YesNoUnknown,
 } from '../../../lib/types/Feature';
-import { trackEvent } from '../../../lib/Analytics';
-import Categories, { getCategoryId } from '../../../lib/types/Categories';
-import { CategoryLookupTables } from '../../../lib/types/Categories';
-import { AppContext } from '../../../app/context/AppContext';
-import { getCategoriesForFeature } from '../../../lib/api/model/Categories';
 
 type ExternalSaveOptions<T> = {
   featureId: string;

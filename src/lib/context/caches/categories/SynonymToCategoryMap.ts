@@ -3,7 +3,7 @@ import { EquipmentInfo } from '../../../model/EquipmentInfo';
 import { Feature } from '../../../model/Feature';
 import { SearchResultFeature } from '../../api/searchPlaces';
 
-type SynonymToCategoryMap = {
+export type SynonymToCategoryMap = {
   [key: string]: ACCategory;
 };
 

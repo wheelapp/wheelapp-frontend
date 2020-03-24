@@ -40,20 +40,3 @@ if (!isServer) {
 }
 
 let cachedTranslations: Translations[] = [];
-const { Provider, Consumer } = createContext<AppContext>({
-  app: {
-    _id: '',
-    organizationId: '',
-    name: '',
-    clientSideConfiguration: {} as any,
-    tokenString: '',
-  },
-  baseUrl: '',
-  categories: {
-    synonymCache: {},
-    idsToWheelmapCategories: {},
-    classicCategoryNamesToCategories: {},
-    classicRootCategoryNamesToCategories: {},
-  },
-  preferredLanguage: '',
-});

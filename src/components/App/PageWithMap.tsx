@@ -1,57 +1,35 @@
-import * as React from 'react';
-import includes from 'lodash/includes';
+import 'focus-visible';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
-import Router from 'next/router'
+import includes from 'lodash/includes';
 import dynamic from 'next/dynamic';
-
 import queryString from 'query-string';
-
-import config from '../../lib/config';
-import savedState, {
-  saveState,
-  isFirstStart,
-  setJoinedMappingEventData,
-  getJoinedMappingEventId as readStoredJoinedMappingEventId,
-  setJoinedMappingEventId as storeJoinedMappingEventId,
-} from '../../lib/savedState';
-import { hasBigViewport } from '../../lib/ViewportSize';
-
-import { RouterHistory } from '../../lib/RouterHistory';
-import { SearchResultCollection } from '../../lib/model/searchPlaces';
-import { Feature } from '../../lib/types/Feature';
-import { EquipmentInfo, EquipmentInfoProperties } from '../../lib/model/EquipmentInfo';
-import {
-  MappingEvents,
-  MappingEvent,
-  isMappingEventVisible,
-  canMappingEventBeJoined,
-} from '../../lib/types/MappingEvent';
-import { Cluster } from '../Map/Cluster';
-import { App as AppModel } from '../../lib/types/App';
-
-import MainView, { UnstyledMainView } from './MainView';
-
-import {
-  NodeProperties,
-  YesNoLimitedUnknown,
-  YesNoUnknown,
-  isAccessibilityFiltered,
-  isToiletFiltered,
-  getFeatureId,
-} from '../../lib/types/Feature';
-
-import { ModalNodeState } from '../../lib/ModalNodeState';
-import { CategoryLookupTables } from '../../lib/types/Categories';
-import { PlaceFilter } from '../SearchToolbar/AccessibilityFilterModel';
-
+import * as React from 'react';
 import 'react-activity/dist/react-activity.css';
+import { trackModalView } from '../../lib/Analytics';
+import config from '../../lib/config';
+import { trackingEventBackend } from '../../lib/global-context/api/TrackingEventBackend';
+import { ModalNodeState } from '../../lib/ModalNodeState';
+import { EquipmentInfo, EquipmentInfoProperties } from '../../lib/model/EquipmentInfo';
+import { SearchResultCollection } from '../../lib/model/searchPlaces';
+import { RouterHistory } from '../../lib/RouterHistory';
+import savedState, { getJoinedMappingEventId as readStoredJoinedMappingEventId, saveState, setJoinedMappingEventData, setJoinedMappingEventId as storeJoinedMappingEventId } from '../../lib/savedState';
+import { App as AppModel } from '../../lib/types/App';
+import { Feature, getFeatureId, isAccessibilityFiltered, isToiletFiltered, NodeProperties, YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
+import { canMappingEventBeJoined, isMappingEventVisible, MappingEvent, MappingEvents } from '../../lib/types/MappingEvent';
+import { hasBigViewport } from '../../lib/ViewportSize';
+import { Cluster } from '../Map/Cluster';
+import { PlaceFilter } from '../SearchToolbar/AccessibilityFilterModel';
 import './App.css';
 import './Global.css';
-import 'focus-visible';
-import { trackModalView } from '../../lib/Analytics';
-import { trackingEventBackend } from '../../lib/global-context/api/TrackingEventBackend';
-import { isTouchDevice } from '../../context/UserAgentContext';
+import MainView, { UnstyledMainView } from './MainView';
+
+
+
+
+
+
+
 const DynamicMap = dynamic(import('../Map/Map'), {
   ssr: false,
   loading: () => <MapLoading />,
@@ -62,7 +40,6 @@ interface Props extends PlaceDetailsProps {
   router: Router,
   routerHistory: RouterHistory,
   routeName: string,
-  categories?: CategoryLookupTables,
   userAgent: UAResult,
   searchQuery?: string | null,
   searchResults?: SearchResultCollection | Promise<SearchResultCollection>,

@@ -33,20 +33,3 @@ newState.lon =
   null;
 
 newState.isSpecificLatLonProvided = Boolean(parsedLat) && Boolean(parsedLon);
-const { Provider, Consumer } = createContext<AppContext>({
-  app: {
-    _id: '',
-    organizationId: '',
-    name: '',
-    clientSideConfiguration: {} as any,
-    tokenString: '',
-  },
-  baseUrl: '',
-  categories: {
-    synonymCache: {},
-    idsToWheelmapCategories: {},
-    classicCategoryNamesToCategories: {},
-    classicRootCategoryNamesToCategories: {},
-  },
-  preferredLanguage: '',
-});

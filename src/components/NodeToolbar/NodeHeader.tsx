@@ -1,23 +1,27 @@
 import get from 'lodash/get';
 import * as React from 'react';
 import styled from 'styled-components';
-import { Feature } from '../../lib/types/Feature';
-import { isWheelchairAccessible, placeNameFor } from '../../lib/types/Feature';
-import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
-
+import colors from '../../lib/colors';
 import {
+  Category,
   categoryNameFor,
   getCategoryId,
-  CategoryLookupTables,
-  Category,
-} from '../../lib/types/Categories';
+} from '../../lib/model/Categories';
+import {
+  EquipmentInfo,
+  equipmentInfoNameFor,
+  isEquipmentAccessible,
+} from '../../lib/model/EquipmentInfo';
+import {
+  Feature,
+  isWheelchairAccessible,
+  placeNameFor,
+} from '../../lib/types/Feature';
+import ChevronRight from '../ChevronRight';
 import Icon from '../Icon';
+import { Cluster } from '../Map/Cluster';
 import PlaceName from '../PlaceName';
 import BreadCrumbs from './BreadCrumbs';
-import { equipmentInfoNameFor, isEquipmentAccessible } from '../../lib/model/EquipmentInfo';
-import colors from '../../lib/colors';
-import { Cluster } from '../Map/Cluster';
-import ChevronRight from '../ChevronRight';
 import { StyledClusterIcon } from './FeatureClusterPanel';
 
 export const StyledNodeHeader = styled.header.attrs({ hasShadow: false })`
@@ -32,7 +36,9 @@ export const StyledNodeHeader = styled.header.attrs({ hasShadow: false })`
   background-color: ${colors.colorizedBackgroundColor};
   transition: box-shadow 0.3s ease-out;
   box-shadow: ${props =>
-    props.hasShadow ? '0 0 33px rgba(0, 0, 0, 0.1)' : '0 0 33px rgba(0, 0, 0, 0)'};
+    props.hasShadow
+      ? '0 0 33px rgba(0, 0, 0, 0.1)'
+      : '0 0 33px rgba(0, 0, 0, 0)'};
 
   ${PlaceName} {
     flex-grow: 2;
@@ -45,18 +51,17 @@ const StyledBreadCrumbs = styled(BreadCrumbs).attrs({ hasPadding: false })`
 `;
 
 type Props = {
-  children?: React.ReactNode,
-  feature: Feature | null,
-  equipmentInfoId?: string | null,
-  equipmentInfo?: EquipmentInfo | null,
-  cluster?: Cluster | null,
-  category: Category | null,
-  categories: CategoryLookupTables,
-  parentCategory: Category | null,
-  hasIcon: boolean,
-  onClickCurrentCluster?: () => void,
-  onClickCurrentMarkerIcon?: (feature: Feature) => void,
-  hasShadow: boolean,
+  children?: React.ReactNode;
+  feature: Feature | null;
+  equipmentInfoId?: string | null;
+  equipmentInfo?: EquipmentInfo | null;
+  cluster?: Cluster | null;
+  category: Category | null;
+  parentCategory: Category | null;
+  hasIcon: boolean;
+  onClickCurrentCluster?: () => void;
+  onClickCurrentMarkerIcon?: (feature: Feature) => void;
+  hasShadow: boolean;
 };
 
 export default class NodeHeader extends React.Component<Props> {
@@ -82,8 +87,14 @@ export default class NodeHeader extends React.Component<Props> {
     let placeName = placeNameFor(properties, category || parentCategory);
     let ariaLabel = [placeName, categoryName].filter(Boolean).join(', ');
     if (isEquipment) {
-      placeName = equipmentInfoNameFor(get(this.props, ['equipmentInfo', 'properties']), false);
-      ariaLabel = equipmentInfoNameFor(get(this.props, ['equipmentInfo', 'properties']), true);
+      placeName = equipmentInfoNameFor(
+        get(this.props, ['equipmentInfo', 'properties']),
+        false,
+      );
+      ariaLabel = equipmentInfoNameFor(
+        get(this.props, ['equipmentInfo', 'properties']),
+        true,
+      );
     }
 
     const accessibility = isEquipment
@@ -105,7 +116,6 @@ export default class NodeHeader extends React.Component<Props> {
       <StyledBreadCrumbs
         properties={properties}
         category={this.props.category}
-        categories={this.props.categories}
         parentCategory={this.props.parentCategory}
       />
     ) : null;
@@ -123,7 +133,10 @@ export default class NodeHeader extends React.Component<Props> {
     const { cluster, onClickCurrentCluster } = this.props;
     const clusterElement = cluster && (
       <React.Fragment>
-        <StyledClusterIcon cluster={cluster} onSelectClusterIcon={onClickCurrentCluster} />
+        <StyledClusterIcon
+          cluster={cluster}
+          onSelectClusterIcon={onClickCurrentCluster}
+        />
         <ChevronRight style={{ marginRight: '4px' }} />
       </React.Fragment>
     );

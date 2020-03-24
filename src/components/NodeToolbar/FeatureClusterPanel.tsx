@@ -1,25 +1,24 @@
-import { t } from 'ttag';
-import * as React from 'react';
-import styled from 'styled-components';
 import FocusTrap from 'focus-trap-react';
 import sortBy from 'lodash/sortBy';
-
-import { Feature, placeNameFor, getFeatureId } from '../../lib/types/Feature';
+import * as React from 'react';
+import styled from 'styled-components';
+import { t } from 'ttag';
+import { getCategoriesForFeature } from '../../lib/api/model/Categories';
+import colors from '../../lib/colors';
 import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
-import StyledToolbar from '../NodeToolbar/StyledToolbar';
-import ErrorBoundary from '../ErrorBoundary';
+import { CategoryLookupTables } from '../../lib/types/Categories';
+import { Feature, getFeatureId, placeNameFor } from '../../lib/types/Feature';
 import { hasBigViewport } from '../../lib/ViewportSize';
 import StyledCloseLink from '../CloseLink';
+import ErrorBoundary from '../ErrorBoundary';
+import { StyledIconContainer } from '../Icon';
+import { Circle } from '../IconButton';
+import * as markers from '../icons/markers';
+import { Cluster } from '../Map/Cluster';
+import StyledToolbar from '../NodeToolbar/StyledToolbar';
+import PlaceName from '../PlaceName';
 import StyledFrame from './AccessibilitySection/StyledFrame';
 import NodeHeader, { StyledNodeHeader } from './NodeHeader';
-import PlaceName from '../PlaceName';
-import { Circle } from '../IconButton';
-import { StyledIconContainer } from '../Icon';
-import colors from '../../lib/colors';
-import Categories, { CategoryLookupTables } from '../../lib/types/Categories';
-import { Cluster } from '../Map/Cluster';
-import * as markers from '../icons/markers';
-import { getCategoriesForFeature } from '../../lib/api/model/Categories';
 
 type Props = {
   hidden?: boolean;

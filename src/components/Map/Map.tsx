@@ -7,17 +7,16 @@ import isEqual from 'lodash/isEqual';
 import * as React from 'react';
 import { t } from 'ttag';
 import { accessibilityCloudFeatureCache } from '../../lib/caches/AccessibilityCloudFeatureCache';
-import { classicCategoryWithName } from '../../lib/caches/CategoryCache';
 import { equipmentInfoCache } from '../../lib/caches/EquipmentInfoCache';
 import { wheelmapLightweightFeatureCache } from '../../lib/caches/WheelmapLightweightFeatureCache';
 import colors, { interpolateWheelchairAccessibility } from '../../lib/colors';
+import { globalFetchManager } from '../../lib/context/api/FetchManager';
+import { CategoryLookupTables } from '../../lib/context/caches/categories/ClassicCategories';
+import { UserAgent } from '../../lib/context/UserAgent';
 import goToLocationSettings from '../../lib/geo/goToLocationSettings';
 import { normalizeCoordinate, normalizeCoordinates } from '../../lib/geo/normalizeCoordinates';
-import { globalFetchManager } from '../../lib/global-context/api/FetchManager';
-import { classicRootCategoryWithName } from '../../lib/global-context/caches/categories/ClassicCategoryCache';
-import { UserAgent } from '../../lib/global-context/UserAgent';
 import { currentLocales } from '../../lib/i18n';
-import { CategoryLookupTables, getRootCategory, RootCategoryEntry } from '../../lib/model/Categories';
+import { getRootCategory, RootCategoryEntry } from '../../lib/model/Categories';
 import { CategoryStrings as EquipmentCategoryStrings, EquipmentInfo } from '../../lib/model/EquipmentInfo';
 import { hasOpenedLocationHelp, saveState } from '../../lib/savedState';
 import { accessibilityCloudFeatureCollectionFromResponse, Feature, getFeatureId, hasAccessibleToilet, hrefForFeature, isWheelchairAccessible, isWheelmapProperties, NodeProperties, wheelmapFeatureCollectionFromResponse, YesNoLimitedUnknown, YesNoUnknown } from '../../lib/types/Feature';
@@ -1170,34 +1169,14 @@ export default class Map extends React.Component<Props, State> {
 
   wheelmapTileUrl(
     props: Props = this.props,
-    state: State = this.state,
   ): string | null {
     // For historical reasons: 'Classic' Wheelmap way of fetching GeoJSON tiles:
     // const wheelmapTileUrl = '/nodes/{x}/{y}/{z}.geojson?limit=25';
     const baseUrl = props.wheelmapApiBaseUrl;
     if (typeof baseUrl !== 'string') return null;
     const wheelmapApiKey = props.wheelmapApiKey;
-    const categoryName = props.categoryId;
     if (!wheelmapApiKey) {
       return null;
-    }
-    const isMetaCategory = state.category && state.category.isMetaCategory;
-    if (categoryName && !isMetaCategory) {
-      const rootCategory = classicRootCategoryWithName(
-        props.categories,
-        categoryName,
-      );
-      if (!rootCategory) {
-        const subCategory = classicCategoryWithName(
-          props.categories,
-          categoryName,
-        );
-        if (!subCategory) {
-          return null;
-        }
-        return `${baseUrl}/api/node_types/${subCategory.id}/nodes/?api_key=${wheelmapApiKey}&per_page=100&bbox={bbox}&limit=100`;
-      }
-      return `${baseUrl}/api/categories/${rootCategory.id}/nodes/?api_key=${wheelmapApiKey}&per_page=100&bbox={bbox}&limit=100`;
     }
     return `${baseUrl}/api/nodes/?api_key=${wheelmapApiKey}&per_page=25&bbox={bbox}&per_page=100&limit=100`;
   }

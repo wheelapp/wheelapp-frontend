@@ -37,7 +37,8 @@ export interface ClassicCategory {
   localized_name: string;
 }
 
-export type Category = ClassicCategory | ACCategory | ClassicNodeType;
+// export type Category = ClassicCategory | ACCategory | ClassicNodeType;
+export type Category = ACCategory;
 
 export type RootCategoryEntry = {
   name: string;
@@ -167,3 +168,5 @@ export function getCategoryIdFromProperties(
 
   return getCategoryId(props.category);
 }
+
+export function getCategoryIdFromWheelmapProperties() {}

@@ -1,42 +1,42 @@
-import { t } from 'ttag';
+import FocusTrap from 'focus-trap-react';
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { CategoryLookupTables } from '../../../lib/types/Categories';
-import getIconNameForProperties from '../../Map/getIconNameForProperties';
+import { t } from 'ttag';
+import { getCategoryIdFromProperties } from '../../../lib/model/Categories';
 import { WheelmapFeature } from '../../../lib/types/Feature';
-import FocusTrap from 'focus-trap-react';
+import CloseLink from '../../CloseLink';
 import CustomRadio from './CustomRadio';
 import StyledRadioGroup from './StyledRadioGroup';
-import CloseLink from '../../CloseLink';
 
 type Props = {
-  featureId: string | number,
-  feature: WheelmapFeature, // eslint-disable-line react/no-unused-prop-types
-  categories: CategoryLookupTables,
-  hideUnselectedCaptions?: Boolean,
+  featureId: string | number;
+  feature: WheelmapFeature; // eslint-disable-line react/no-unused-prop-types
+  hideUnselectedCaptions?: Boolean;
 
-  onSave: (value: string) => void | null,
-  onClose: () => void,
+  onSave: (value: string) => void | null;
+  onClose: () => void;
 
-  inline?: boolean | null,
-  shownStatusOptions: string[],
-  presetStatus?: string | null,
-  undefinedStringValue: string,
-  renderChildrenForValue: (value: { value: string, categoryId: string }) => React.ReactNode,
-  getValueFromFeature: (feature: WheelmapFeature) => string,
-  saveValue: (selectedValue: string) => Promise<void>,
-  descriptionForValue: (value: string) => string,
-  captionForValue: (value: string) => string,
+  inline?: boolean | null;
+  shownStatusOptions: string[];
+  presetStatus?: string | null;
+  undefinedStringValue: string;
+  renderChildrenForValue: (value: {
+    value: string;
+    categoryId: string;
+  }) => React.ReactNode;
+  getValueFromFeature: (feature: WheelmapFeature) => string;
+  saveValue: (selectedValue: string) => Promise<void>;
+  descriptionForValue: (value: string) => string;
+  captionForValue: (value: string) => string;
 
-  children: React.ReactNode,
-  className?: string,
+  children: React.ReactNode;
+  className?: string;
 };
 
 type State = {
-  selectedValue: string | null,
-  categoryId: string | null,
-  busy: boolean,
+  selectedValue: string | null;
+  categoryId: string | null;
+  busy: boolean;
 };
 
 function getSelectedValueFromProps(props: Props): string | null {
@@ -44,7 +44,8 @@ function getSelectedValueFromProps(props: Props): string | null {
     return props.presetStatus;
   }
 
-  const featureValue = props.getValueFromFeature(props.feature) || props.presetStatus;
+  const featureValue =
+    props.getValueFromFeature(props.feature) || props.presetStatus;
 
   if (featureValue === props.undefinedStringValue) {
     return props.presetStatus || featureValue;
@@ -69,29 +70,10 @@ class RadioStatusEditor extends React.Component<Props, State> {
       this.state = {
         ...this.state,
         selectedValue,
-        categoryId: this.fetchCategory(props.categories, props.feature) || 'other',
+        categoryId:
+          getCategoryIdFromProperties(props.feature.properties) || 'other',
       };
     }
-  }
-
-  // @TODO Refactor into util function.
-  fetchCategory(categories: CategoryLookupTables, feature: WheelmapFeature) {
-    if (!feature) {
-      return;
-    }
-    const properties = feature.properties;
-    if (!properties) {
-      return;
-    }
-
-    const categoryId =
-      (properties.node_type && properties.node_type.identifier) || properties.category;
-
-    if (!categoryId) {
-      return;
-    }
-
-    return getIconNameForProperties(categories, properties);
   }
 
   onRadioGroupKeyDown = ({ nativeEvent }) => {
@@ -139,7 +121,9 @@ class RadioStatusEditor extends React.Component<Props, State> {
         onChange={newValue => {
           this.setState({ selectedValue: newValue });
         }}
-        className={`${selectedValue || ''} ${valueIsDefined ? 'has-selection' : ''} radio-group`}
+        className={`${selectedValue || ''} ${
+          valueIsDefined ? 'has-selection' : ''
+        } radio-group`}
         onKeyDown={this.onRadioGroupKeyDown}
         role="radiogroup"
         aria-label={ariaLabel}
@@ -180,7 +164,9 @@ class RadioStatusEditor extends React.Component<Props, State> {
 
     const selectedValue = getSelectedValueFromProps(this.props);
     const valueHasChanged = this.state.selectedValue !== selectedValue;
-    const backOrCancelButtonCaption = valueHasChanged ? cancelButtonCaption : backButtonCaption;
+    const backOrCancelButtonCaption = valueHasChanged
+      ? cancelButtonCaption
+      : backButtonCaption;
     const hasBeenUnknownBefore = selectedValue === 'unknown';
     const isUnknown = this.state.selectedValue === 'unknown';
 

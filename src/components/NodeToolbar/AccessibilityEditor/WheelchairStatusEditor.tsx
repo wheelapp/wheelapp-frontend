@@ -1,26 +1,27 @@
-import { t } from 'ttag';
 import * as React from 'react';
-
-import { accessibilityDescription, shortAccessibilityName } from '../../../lib/types/Feature';
-import { WheelmapFeature, YesNoLimitedUnknown } from '../../../lib/types/Feature';
-import { saveWheelchairStatus } from './saveStatus';
-import RadioStatusEditor from './RadioStatusEditor';
-import Icon from '../../Icon';
-import { CategoryLookupTables } from '../../../lib/types/Categories';
-import { isOnSmallViewport } from '../../../lib/ViewportSize';
+import { t } from 'ttag';
 import { AppContextConsumer } from '../../../app/context/AppContext';
+import {
+  accessibilityDescription,
+  shortAccessibilityName,
+  WheelmapFeature,
+  YesNoLimitedUnknown,
+} from '../../../lib/types/Feature';
+import { isOnSmallViewport } from '../../../lib/ViewportSize';
+import Icon from '../../Icon';
+import RadioStatusEditor from './RadioStatusEditor';
+import { saveWheelchairStatus } from './saveStatus';
 
 type SaveOptions = {
-  featureId: string,
-  onSave: (value: YesNoLimitedUnknown) => void | null,
-  onClose: () => void,
+  featureId: string;
+  onSave: (value: YesNoLimitedUnknown) => void | null;
+  onClose: () => void;
 };
 
 type Props = SaveOptions & {
-  categories: CategoryLookupTables,
-  feature: WheelmapFeature, // eslint-disable-line react/no-unused-prop-types
-  className?: string,
-  presetStatus?: YesNoLimitedUnknown | null,
+  feature: WheelmapFeature; // eslint-disable-line react/no-unused-prop-types
+  className?: string;
+  presetStatus?: YesNoLimitedUnknown | null;
 };
 
 export default function WheelchairStatusEditor(props: Props) {
@@ -39,8 +40,8 @@ export default function WheelchairStatusEditor(props: Props) {
             value,
             categoryId,
           }: {
-            value: YesNoLimitedUnknown,
-            categoryId: string,
+            value: YesNoLimitedUnknown;
+            categoryId: string;
           }) => (
             <Icon
               accessibility={value}
@@ -52,8 +53,12 @@ export default function WheelchairStatusEditor(props: Props) {
             />
           )}
           shownStatusOptions={['yes', 'limited', 'no']}
-          captionForValue={(value: YesNoLimitedUnknown) => shortAccessibilityName(value)}
-          descriptionForValue={(value: YesNoLimitedUnknown) => accessibilityDescription(value)}
+          captionForValue={(value: YesNoLimitedUnknown) =>
+            shortAccessibilityName(value)
+          }
+          descriptionForValue={(value: YesNoLimitedUnknown) =>
+            accessibilityDescription(value)
+          }
         >
           <header id="wheelchair-accessibility-header">{t`How wheelchair accessible is this place?`}</header>
         </RadioStatusEditor>

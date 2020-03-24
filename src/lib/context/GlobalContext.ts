@@ -38,7 +38,6 @@ export async function getGlobalContext(
     typeof embedToken === 'string' &&
     setResponseHeadersForEmbedMode(embedToken, currentApp, ctx.res);
   const mappingEvents = await getMappingEvents(currentApp);
-  const categoryLookupTable = '';
 
   return {
     currentApp,

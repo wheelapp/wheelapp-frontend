@@ -1,41 +1,41 @@
+import { map } from 'lodash';
 import * as React from 'react';
 import styled from 'styled-components';
 import { t } from 'ttag';
-import { map } from 'lodash';
-
+import { AppContext } from '../../../app/context/AppContext';
 import {
+  DataSource,
+  dataSourceCache,
+} from '../../../lib/cache/DataSourceCache';
+import {
+  AccessibilityCloudProperties,
   accessibilityName,
+  Feature,
   isWheelchairAccessible,
   isWheelmapProperties,
-} from '../../../lib/types/Feature';
-import {
-  Feature,
   NodeProperties,
-  AccessibilityCloudProperties,
   WheelmapProperties,
 } from '../../../lib/types/Feature';
-import { CategoryLookupTables } from '../../../lib/types/Categories';
-import { AppContext } from '../../../app/context/AppContext';
-
-import strings from './strings';
-import FixOsmComment from './FixOsmComment';
-import MailToSupport from './MailToSupport';
-import SendReportToAc, { reportStrings, ReportReasons } from './SendReportToAc';
-import FixOsmPlacePosition from './FixOsmPlacePosition';
-import FixOnExternalPage from './FixOnExternalPage';
-import FixOsmNonExistingPlace from './FixOsmNonExistingPlace';
-import WheelchairStatusEditor from '../AccessibilityEditor/WheelchairStatusEditor';
 import ToiletStatusEditor from '../AccessibilityEditor/ToiletStatusEditor';
-import { DataSource, dataSourceCache } from '../../../lib/cache/DataSourceCache';
+import WheelchairStatusEditor from '../AccessibilityEditor/WheelchairStatusEditor';
+import FixOnExternalPage from './FixOnExternalPage';
+import FixOsmComment from './FixOsmComment';
+import FixOsmNonExistingPlace from './FixOsmNonExistingPlace';
+import FixOsmPlacePosition from './FixOsmPlacePosition';
+import MailToSupport from './MailToSupport';
+import SendReportToAc, { ReportReasons, reportStrings } from './SendReportToAc';
+import strings from './strings';
 
 type IssueEntry = {
-  className?: string,
-  issueHeader?: () => React.ReactNode,
-  issueLink?: () => React.ReactNode,
-  component?: React.ComponentType<any>,
+  className?: string;
+  issueHeader?: () => React.ReactNode;
+  issueLink?: () => React.ReactNode;
+  component?: React.ComponentType<any>;
 };
 
-const generateWheelmapClassicIssues = (properties: WheelmapProperties): IssueEntry[] =>
+const generateWheelmapClassicIssues = (
+  properties: WheelmapProperties,
+): IssueEntry[] =>
   [
     {
       className: 'wrong-wheelchair-accessibility',
@@ -86,11 +86,15 @@ const generateAcIssues = (
   properties: AccessibilityCloudProperties,
   appContext: AppContext,
   source: DataSource | null,
-  appToken: string
+  appToken: string,
 ): IssueEntry[] => {
-  const isExternal = source && source.organizationId !== appContext.app.organizationId;
-  const hasExternalPage = Boolean(properties['infoPageUrl'] || properties['editPageUrl']);
-  const sourceName = (source && (source.shortName || source.name)) || t`Unknown`;
+  const isExternal =
+    source && source.organizationId !== appContext.app.organizationId;
+  const hasExternalPage = Boolean(
+    properties['infoPageUrl'] || properties['editPageUrl'],
+  );
+  const sourceName =
+    (source && (source.shortName || source.name)) || t`Unknown`;
 
   const sendReportToAcStrings = reportStrings();
 
@@ -115,7 +119,7 @@ const generateAcIssues = (
       return {
         className: key,
         issueLink: () => value,
-        component: (props: { featureId: string, onClose: () => void }) => (
+        component: (props: { featureId: string; onClose: () => void }) => (
           <SendReportToAc {...props} reportReason={key} appToken={appToken} />
         ),
       };
@@ -130,20 +134,19 @@ const generateAcIssues = (
 };
 
 type Props = {
-  appContext: AppContext,
-  categories: CategoryLookupTables,
-  feature: Feature,
-  featureId: string | number | null,
-  className?: string,
-  onClose: () => void,
-  onCloseButtonChanged?: () => void,
-  onReportComponentChanged: () => void,
+  appContext: AppContext;
+  feature: Feature;
+  featureId: string | number | null;
+  className?: string;
+  onClose: () => void;
+  onCloseButtonChanged?: () => void;
+  onReportComponentChanged: () => void;
 };
 
 type State = {
-  lastFeatureId: string | number | null,
-  SelectedComponentClass: React.ComponentType<any> | null,
-  source: DataSource | null,
+  lastFeatureId: string | number | null;
+  SelectedComponentClass: React.ComponentType<any> | null;
+  source: DataSource | null;
 };
 
 class ReportDialog extends React.Component<Props, State> {
@@ -175,18 +178,29 @@ class ReportDialog extends React.Component<Props, State> {
     document.removeEventListener('keydown', this.escapeHandler);
   }
 
-  generateIssues(_featureId: string | number, props: NodeProperties, appToken: string) {
+  generateIssues(
+    _featureId: string | number,
+    props: NodeProperties,
+    appToken: string,
+  ) {
     if (isWheelmapProperties(props)) {
       return generateWheelmapClassicIssues(props);
     }
 
     if (!this.state.source) {
-      dataSourceCache.getDataSourceWithId(props.sourceId, appToken).then(source => {
-        this.setState({ source });
-      });
+      dataSourceCache
+        .getDataSourceWithId(props.sourceId, appToken)
+        .then(source => {
+          this.setState({ source });
+        });
     }
 
-    return generateAcIssues(props, this.props.appContext, this.state.source, appToken);
+    return generateAcIssues(
+      props,
+      this.props.appContext,
+      this.state.source,
+      appToken,
+    );
   }
 
   escapeHandler = (event: KeyboardEvent) => {
@@ -210,14 +224,20 @@ class ReportDialog extends React.Component<Props, State> {
     }
   };
 
-  onSelectComponentClass = (component: React.ComponentType<any>, event: UIEvent) => {
-    this.setState({ SelectedComponentClass: component }, this.props.onReportComponentChanged);
+  onSelectComponentClass = (
+    component: React.ComponentType<any>,
+    event: UIEvent,
+  ) => {
+    this.setState(
+      { SelectedComponentClass: component },
+      this.props.onReportComponentChanged,
+    );
     event.stopPropagation();
     event.preventDefault();
   };
 
   render() {
-    const { featureId, feature, categories } = this.props;
+    const { featureId, feature } = this.props;
     const { properties } = feature;
     if (!featureId || !feature || !properties) return null;
 
@@ -226,7 +246,6 @@ class ReportDialog extends React.Component<Props, State> {
     if (ComponentClass) {
       return (
         <ComponentClass
-          categories={categories}
           feature={feature}
           properties={properties}
           featureId={featureId}
@@ -241,11 +260,15 @@ class ReportDialog extends React.Component<Props, State> {
     const issues = this.generateIssues(
       featureId,
       properties,
-      this.props.appContext.app.tokenString
+      this.props.appContext.app.tokenString,
     );
 
     return (
-      <div className={this.props.className} role="dialog" aria-labelledby="report-dialog-header">
+      <div
+        className={this.props.className}
+        role="dialog"
+        aria-labelledby="report-dialog-header"
+      >
         <header id="report-dialog-header">{reportIssueHeader}</header>
         <ul className="issue-types">
           {issues.map((issue, index) => {
@@ -253,7 +276,10 @@ class ReportDialog extends React.Component<Props, State> {
             const header = issue.issueHeader ? issue.issueHeader() : null;
             const { component } = issue;
             return (
-              <li key={issue.className || index} className={issue.className || ''}>
+              <li
+                key={issue.className || index}
+                className={issue.className || ''}
+              >
                 {header && <p>{header}</p>}
                 {link && component && (
                   <button

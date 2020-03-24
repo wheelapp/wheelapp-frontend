@@ -1,28 +1,27 @@
 import * as React from 'react';
 import { t } from 'ttag';
-
+import { AppContextConsumer } from '../../../app/context/AppContext';
+import {
+  accessibleToiletDescription,
+  WheelmapFeature,
+  YesNoUnknown,
+} from '../../../lib/types/Feature';
 import useImperialUnits from '../../../lib/useImperialUnits';
-import { accessibleToiletDescription } from '../../../lib/types/Feature';
-import { WheelmapFeature, YesNoUnknown } from '../../../lib/types/Feature';
-
-import { saveToiletStatus } from './saveStatus';
-import RadioStatusEditor from './RadioStatusEditor';
 import ToiletStatusAccessibleIcon from '../../icons/accessibility/ToiletStatusAccessible';
 import ToiletStatusNotAccessibleIcon from '../../icons/accessibility/ToiletStatusNotAccessible';
-import { CategoryLookupTables } from '../../../lib/types/Categories';
-import { AppContextConsumer } from '../../../app/context/AppContext';
+import RadioStatusEditor from './RadioStatusEditor';
+import { saveToiletStatus } from './saveStatus';
 
 type SaveOptions = {
-  featureId: string,
-  onSave: (value: YesNoUnknown) => void | null,
-  onClose: () => void,
+  featureId: string;
+  onSave: (value: YesNoUnknown) => void | null;
+  onClose: () => void;
 };
 
 type Props = SaveOptions & {
-  categories: CategoryLookupTables,
-  feature: WheelmapFeature, // eslint-disable-line react/no-unused-prop-types
-  className?: string,
-  presetStatus?: YesNoUnknown | null,
+  feature: WheelmapFeature; // eslint-disable-line react/no-unused-prop-types
+  className?: string;
+  presetStatus?: YesNoUnknown | null;
 };
 
 function AccessibleToiletDescription() {
@@ -63,7 +62,9 @@ export default function ToiletStatusEditor(props: Props) {
           {...props}
           undefinedStringValue="unknown"
           getValueFromFeature={feature => feature.properties.wheelchair_toilet}
-          saveValue={(value: YesNoUnknown) => saveToiletStatus({ ...props, appContext, value })}
+          saveValue={(value: YesNoUnknown) =>
+            saveToiletStatus({ ...props, appContext, value })
+          }
           renderChildrenForValue={({ value, categoryId }) => icons[value]}
           shownStatusOptions={['yes', 'no']}
           captionForValue={value => captions[value]}

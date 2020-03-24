@@ -1,45 +1,45 @@
-import * as React from 'react';
-import { t } from 'ttag';
 import FocusTrap from 'focus-trap-react';
+import fromPairs from 'lodash/fromPairs';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import fromPairs from 'lodash/fromPairs';
+import * as React from 'react';
 import styled from 'styled-components';
-
-import { Toolbar as ToolbarClass } from '../Toolbar';
-import CloseLink from '../CloseLink';
-import ErrorBoundary from '../ErrorBoundary';
-import NodeHeader from './NodeHeader';
-import SourceList from './SourceList';
-import StyledToolbar from './StyledToolbar';
-import ReportDialog from './Report/ReportDialog';
-import PhotoSection from './Photos/PhotoSection';
-import EquipmentOverview from './Equipment/EquipmentOverview';
-import EquipmentAccessibility from './AccessibilitySection/EquipmentAccessibility';
-import PlaceAccessibilitySection from './AccessibilitySection/PlaceAccessibilitySection';
-import Button from '../Button';
-
+import { t } from 'ttag';
+import { AppContextConsumer } from '../../app/context/AppContext';
+import { SourceWithLicense } from '../../app/PlaceDetailsProps';
+import { equipmentInfoCache } from '../../lib/cache/EquipmentInfoCache';
+import { ModalNodeState } from '../../lib/ModalNodeState';
+import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
 import { PhotoModel } from '../../lib/model/PhotoModel';
+import { Category, getCategoryId } from '../../lib/types/Categories';
 import {
   Feature,
+  isWheelmapFeature,
+  isWheelmapFeatureId,
+  placeNameFor,
+  wheelmapFeatureFrom,
   YesNoLimitedUnknown,
   YesNoUnknown,
-  isWheelmapFeature,
 } from '../../lib/types/Feature';
-import { isWheelmapFeatureId, placeNameFor, wheelmapFeatureFrom } from '../../lib/types/Feature';
-import { Category, CategoryLookupTables, getCategoryId } from '../../lib/types/Categories';
+import { UAResult } from '../../lib/userAgent';
 import { hasBigViewport } from '../../lib/ViewportSize';
-import { EquipmentInfo } from '../../lib/model/EquipmentInfo';
-import { ModalNodeState } from '../../lib/ModalNodeState';
+import Button from '../Button';
+import CloseLink from '../CloseLink';
+import ErrorBoundary from '../ErrorBoundary';
+import { Cluster } from '../Map/Cluster';
+import { Toolbar as ToolbarClass } from '../Toolbar';
+import InlineWheelchairAccessibilityEditor from './AccessibilityEditor/InlineWheelchairAccessibilityEditor';
 import ToiletStatusEditor from './AccessibilityEditor/ToiletStatusEditor';
 import WheelchairStatusEditor from './AccessibilityEditor/WheelchairStatusEditor';
-import InlineWheelchairAccessibilityEditor from './AccessibilityEditor/InlineWheelchairAccessibilityEditor';
+import EquipmentAccessibility from './AccessibilitySection/EquipmentAccessibility';
+import PlaceAccessibilitySection from './AccessibilitySection/PlaceAccessibilitySection';
+import EquipmentOverview from './Equipment/EquipmentOverview';
 import IconButtonList from './IconButtonList/IconButtonList';
-import { SourceWithLicense } from '../../app/PlaceDetailsProps';
-import { Cluster } from '../Map/Cluster';
-import { AppContextConsumer } from '../../app/context/AppContext';
-import { equipmentInfoCache } from '../../lib/cache/EquipmentInfoCache';
-import { UAResult } from '../../lib/userAgent';
+import NodeHeader from './NodeHeader';
+import PhotoSection from './Photos/PhotoSection';
+import ReportDialog from './Report/ReportDialog';
+import SourceList from './SourceList';
+import StyledToolbar from './StyledToolbar';
 
 const PositionedCloseLink = styled(CloseLink)`
   align-self: flex-start;
@@ -49,46 +49,52 @@ const PositionedCloseLink = styled(CloseLink)`
 PositionedCloseLink.displayName = 'PositionedCloseLink';
 
 type Props = {
-  equipmentInfoId: string | null,
-  equipmentInfo: EquipmentInfo | null,
-  feature: Feature,
-  featureId: string | number,
-  cluster: Cluster | null,
-  sources: SourceWithLicense[],
-  photos: PhotoModel[],
-  toiletsNearby: Feature[] | null,
-  isLoadingToiletsNearby: boolean,
-  categories: CategoryLookupTables,
-  category: Category | null,
-  parentCategory: Category | null,
-  hidden: boolean,
-  modalNodeState: ModalNodeState,
-  inEmbedMode: boolean,
-  userAgent: UAResult,
-  onClose?: () => void,
-  onCloseWheelchairAccessibility: () => void,
-  onCloseToiletAccessibility: () => void,
-  onClickCurrentCluster?: () => void,
-  onShowPlaceDetails?: (featureId: string | number) => void,
+  equipmentInfoId: string | null;
+  equipmentInfo: EquipmentInfo | null;
+  feature: Feature;
+  featureId: string | number;
+  cluster: Cluster | null;
+  sources: SourceWithLicense[];
+  photos: PhotoModel[];
+  toiletsNearby: Feature[] | null;
+  isLoadingToiletsNearby: boolean;
+  category: Category | null;
+  parentCategory: Category | null;
+  hidden: boolean;
+  modalNodeState: ModalNodeState;
+  inEmbedMode: boolean;
+  userAgent: UAResult;
+  onClose?: () => void;
+  onCloseWheelchairAccessibility: () => void;
+  onCloseToiletAccessibility: () => void;
+  onClickCurrentCluster?: () => void;
+  onShowPlaceDetails?: (featureId: string | number) => void;
   // Simple 3-button wheelchair status editor
-  accessibilityPresetStatus?: YesNoLimitedUnknown | null,
-  onEquipmentSelected?: (placeInfoId: string, equipmentInfo: EquipmentInfo) => void,
+  accessibilityPresetStatus?: YesNoLimitedUnknown | null;
+  onEquipmentSelected?: (
+    placeInfoId: string,
+    equipmentInfo: EquipmentInfo,
+  ) => void;
 
   // photo feature
-  onStartPhotoUploadFlow: () => void,
-  onReportPhoto: (photo: PhotoModel) => void,
-  photoFlowNotification?: 'uploadProgress' | 'uploadFailed' | 'reported' | 'waitingForReview',
-  photoFlowErrorMessage: string | null,
-  onClickCurrentMarkerIcon?: (feature: Feature) => void,
+  onStartPhotoUploadFlow: () => void;
+  onReportPhoto: (photo: PhotoModel) => void;
+  photoFlowNotification?:
+    | 'uploadProgress'
+    | 'uploadFailed'
+    | 'reported'
+    | 'waitingForReview';
+  photoFlowErrorMessage: string | null;
+  onClickCurrentMarkerIcon?: (feature: Feature) => void;
 };
 
 type State = {
-  isScrollable: boolean,
+  isScrollable: boolean;
 };
 
 interface Focusable {
   focus(): void;
-};
+}
 
 class NodeToolbar extends React.Component<Props, State> {
   toolbar = React.createRef<ToolbarClass & Focusable>();
@@ -110,7 +116,10 @@ class NodeToolbar extends React.Component<Props, State> {
   }
 
   placeName() {
-    return placeNameFor(get(this.props, 'feature.properties'), this.props.category);
+    return placeNameFor(
+      get(this.props, 'feature.properties'),
+      this.props.category,
+    );
   }
 
   focus() {
@@ -123,7 +132,6 @@ class NodeToolbar extends React.Component<Props, State> {
         {appContext => (
           <ReportDialog
             appContext={appContext}
-            categories={this.props.categories}
             feature={this.props.feature}
             featureId={this.props.featureId}
             onReportComponentChanged={() => {
@@ -156,20 +164,21 @@ class NodeToolbar extends React.Component<Props, State> {
       equipmentInfoId,
       cluster,
       category,
-      categories,
       parentCategory,
       onClickCurrentMarkerIcon,
       onClickCurrentCluster,
     } = this.props;
 
     const statesWithIcon = ['edit-toilet-accessibility', 'report'];
-    const isModalStateWithPlaceIcon = includes(statesWithIcon, this.props.modalNodeState);
+    const isModalStateWithPlaceIcon = includes(
+      statesWithIcon,
+      this.props.modalNodeState,
+    );
     const hasIcon = !this.props.modalNodeState || isModalStateWithPlaceIcon;
 
     return (
       <NodeHeader
         feature={feature}
-        categories={categories}
         equipmentInfo={equipmentInfo}
         equipmentInfoId={equipmentInfoId}
         cluster={cluster}
@@ -222,7 +231,6 @@ class NodeToolbar extends React.Component<Props, State> {
     if (isWheelmapFeature(this.props.feature)) {
       return (
         <ToiletStatusEditor
-          categories={this.props.categories}
           featureId={this.props.featureId as any}
           feature={this.props.feature}
           onSave={(newValue: YesNoUnknown) => {
@@ -239,7 +247,6 @@ class NodeToolbar extends React.Component<Props, State> {
     if (isWheelmapFeature(this.props.feature)) {
       return (
         <WheelchairStatusEditor
-          categories={this.props.categories}
           featureId={this.props.featureId as any}
           feature={this.props.feature}
           onSave={(newValue: YesNoLimitedUnknown) => {
@@ -288,7 +295,7 @@ class NodeToolbar extends React.Component<Props, State> {
 
     const equipmentInfoSet = equipmentInfoCache.getIndexedFeatures(
       'properties.placeInfoId',
-      featureId
+      featureId,
     );
     if (!equipmentInfoSet) {
       return;
@@ -298,7 +305,7 @@ class NodeToolbar extends React.Component<Props, State> {
       Array.from(equipmentInfoSet).map(equipmentInfo => [
         get(equipmentInfo, 'properties._id'),
         equipmentInfo,
-      ])
+      ]),
     );
 
     return (
@@ -348,7 +355,10 @@ class NodeToolbar extends React.Component<Props, State> {
     const accessibilitySection = isEquipment ? (
       <EquipmentAccessibility equipmentInfo={equipmentInfo} />
     ) : (
-      <PlaceAccessibilitySection presetStatus={accessibilityPresetStatus} {...this.props} />
+      <PlaceAccessibilitySection
+        presetStatus={accessibilityPresetStatus}
+        {...this.props}
+      />
     );
 
     const inlineWheelchairAccessibilityEditor = this.renderInlineWheelchairAccessibilityEditor();
@@ -371,12 +381,16 @@ class NodeToolbar extends React.Component<Props, State> {
   renderCloseLink() {
     const { onClose, modalNodeState } = this.props;
 
-    return modalNodeState ? null : <PositionedCloseLink {...{ onClick: onClose }} />;
+    return modalNodeState ? null : (
+      <PositionedCloseLink {...{ onClick: onClose }} />
+    );
   }
 
   render() {
     const hasWindow = typeof window !== 'undefined';
-    const offset = hasBigViewport() ? 0 : 0.4 * (hasWindow ? window.innerHeight : 0);
+    const offset = hasBigViewport()
+      ? 0
+      : 0.4 * (hasWindow ? window.innerHeight : 0);
 
     return (
       <FocusTrap

@@ -1,18 +1,10 @@
 import * as React from 'react';
 import { t } from 'ttag';
-import { PotentialPromise } from '../../app/PlaceDetailsProps';
-import { getCategoriesForFeature } from '../../lib/api/model/Categories';
+import { SearchResultFeature } from '../../lib/context/api/searchPlaces';
+import { getCategoriesForFeature } from '../../lib/context/caches/categories/SynonymToCategoryMap';
+import { Category, getCategoryId } from '../../lib/model/Categories';
+import { isWheelchairAccessible, WheelmapFeature } from '../../lib/model/Feature';
 import getAddressString from '../../lib/model/getAddressString';
-import { SearchResultFeature } from '../../lib/model/searchPlaces';
-import {
-  Category,
-  CategoryLookupTables,
-  getCategoryId,
-} from '../../lib/types/Categories';
-import {
-  isWheelchairAccessible,
-  WheelmapFeature,
-} from '../../lib/types/Feature';
 import Icon from '../Icon';
 import Address from '../NodeToolbar/Address';
 import PlaceName from '../PlaceName';
@@ -22,17 +14,16 @@ type Props = {
   categories: CategoryLookupTables;
   onClick: (
     feature: SearchResultFeature,
-    wheelmapFeature: WheelmapFeature | null,
+    wheelmapFeature?: WheelmapFeature,
   ) => void;
   hidden: boolean;
-  wheelmapFeature: PotentialPromise<WheelmapFeature | null>;
+  wheelmapFeature?: WheelmapFeature;
 };
 
 type State = {
-  category: Category | null;
-  parentCategory: Category | null;
-  wheelmapFeature: WheelmapFeature | null;
-  wheelmapFeaturePromise: Promise<WheelmapFeature | null> | null;
+  category?: Category;
+  parentCategory?: Category;
+  wheelmapFeature?: WheelmapFeature;
 };
 
 export default class SearchResult extends React.Component<Props, State> {
@@ -42,7 +33,6 @@ export default class SearchResult extends React.Component<Props, State> {
     category: null,
     parentCategory: null,
     wheelmapFeature: null,
-    wheelmapFeaturePromise: null,
   };
 
   root = React.createRef<HTMLLIElement>();
@@ -50,62 +40,26 @@ export default class SearchResult extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
     const { categories, feature, wheelmapFeature } = props;
 
-    // Do not update anything when the wheelmap feature promise is already in use.
-    if (wheelmapFeature === state.wheelmapFeaturePromise) {
-      return null;
-    }
-
-    if (wheelmapFeature instanceof Promise) {
-      const rawCategoryLists = getCategoriesForFeature(categories, feature);
-      return {
-        wheelmapFeature: null,
-        wheelmapFeaturePromise: wheelmapFeature,
-        ...rawCategoryLists,
-      };
-    }
-
     const classicCategoryData = getCategoriesForFeature(categories, feature);
     return {
       wheelmapFeature: wheelmapFeature,
-      wheelmapFeaturePromise: null,
       ...classicCategoryData,
     };
   }
 
-  componentDidMount() {
-    const { wheelmapFeaturePromise } = this.state;
-
-    if (wheelmapFeaturePromise) {
-      wheelmapFeaturePromise.then(wheelmapFeature =>
-        this.handleWheelmapFeatureFetched(
-          wheelmapFeaturePromise,
-          wheelmapFeature,
-        ),
-      );
-    }
-  }
-
   componentDidUpdate(prevProps: Props, prevState: State) {
-    const { wheelmapFeaturePromise } = this.state;
+    const { wheelmapFeature } = this.state;
 
-    if (
-      wheelmapFeaturePromise &&
-      prevState.wheelmapFeaturePromise !== wheelmapFeaturePromise
-    ) {
-      wheelmapFeaturePromise.then(wheelmapFeature =>
-        this.handleWheelmapFeatureFetched(
-          wheelmapFeaturePromise,
-          wheelmapFeature,
-        ),
-      );
+    if (wheelmapFeature && prevState.wheelmapFeature !== wheelmapFeature) {
+      this.handleWheelmapFeatureFetched(wheelmapFeature, wheelmapFeature),
     }
   }
 
   handleWheelmapFeatureFetched = (
-    prevWheelmapFeaturePromise: Promise<WheelmapFeature | null>,
-    wheelmapFeature: WheelmapFeature | null,
+    prevWheelmapFeature: WheelmapFeature,
+    wheelmapFeature?: WheelmapFeature,
   ) => {
-    if (this.state.wheelmapFeaturePromise !== prevWheelmapFeaturePromise) {
+    if (this.state.wheelmapFeature !== prevWheelmapFeature) {
       return;
     }
 

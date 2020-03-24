@@ -1,8 +1,8 @@
 import HamsterCache from '@sozialhelden/hamster-cache';
+import uniq from 'lodash/uniq';
+import { NextPageContext } from 'next';
 import { getAvailableTranslationsByPreference, Translations } from '../i18n';
 import allTranslations from '../translations.json';
-import { NextPageContext } from 'next';
-import uniq from 'lodash/uniq';
 
 type PreferredLanguageTagsSeparatedByComma = string;
 type ResolvedExistingTranslations = Translations[];

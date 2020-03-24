@@ -1,23 +1,25 @@
-import { t } from 'ttag';
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { SearchResultCollection } from '../../lib/model/searchPlaces';
+import { t } from 'ttag';
 import colors from '../../lib/colors';
-import { SearchResultFeature } from '../../lib/model/searchPlaces';
-import { WheelmapFeature, getFeatureId } from '../../lib/types/Feature';
+import {
+  SearchResultCollection,
+  SearchResultFeature,
+} from '../../lib/model/searchPlaces';
+import { getFeatureId, WheelmapFeature } from '../../lib/types/Feature';
 import SearchResult from './SearchResult';
-import { CategoryLookupTables } from '../../lib/types/Categories';
 
 type Props = {
-  searchResults: SearchResultCollection,
-  categories: CategoryLookupTables,
-  className?: string,
-  hidden: boolean | null,
-  refFirst: (result: SearchResult | null) => void | null,
+  searchResults: SearchResultCollection;
+  className?: string;
+  hidden: boolean | null;
+  refFirst: (result: SearchResult | null) => void | null;
 };
 
-const onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+const onSearchResultClick = (
+  feature: SearchResultFeature,
+  wheelmapFeature: WheelmapFeature | null,
+) => {
   const params = this.getCurrentParams() as any;
   let routeName = 'map';
 
@@ -47,7 +49,8 @@ const onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: Whee
 };
 
 function SearchResults(props: Props) {
-  const id = (result: any) => result && result.properties && result.properties.osm_id;
+  const id = (result: any) =>
+    result && result.properties && result.properties.osm_id;
   const { wheelmapFeatures, features } = props.searchResults;
 
   const failedLoading = !!props.searchResults.error;
@@ -62,7 +65,10 @@ function SearchResults(props: Props) {
   const renderedFeatureIds = [];
 
   return (
-    <ul className={`search-results ${props.className || ''}`} aria-label={t`Search results`}>
+    <ul
+      className={`search-results ${props.className || ''}`}
+      aria-label={t`Search results`}
+    >
       {failedLoading && <li className="error-result">{searchErrorCaption}</li>}
       {hasNoResults && <li className="no-result">{noResultsFoundCaption}</li>}
       {features.map((feature, index) => {
@@ -81,7 +87,6 @@ function SearchResults(props: Props) {
             key={featureId}
             onClick={onSearchResultClick}
             hidden={!!props.hidden}
-            categories={props.categories}
             ref={ref => {
               if (props.refFirst && index === 0) props.refFirst(ref);
             }}
