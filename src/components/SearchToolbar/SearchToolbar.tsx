@@ -24,6 +24,7 @@ import { SearchResultFeature } from '../../lib/searchPlaces';
 import { CategoryLookupTables } from '../../lib/Categories';
 import ErrorBoundary from '../ErrorBoundary';
 import { UnstyledSearchResult } from './SearchResult';
+import { SearchOmnibar } from './SearchOmnibar';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
@@ -491,6 +492,10 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
         className={isExpanded ? 'isExpanded' : null}
       >
         <ErrorBoundary>
+          <SearchOmnibar 
+            query={this.props.searchQuery}
+            onChange={this.props.onChangeSearchQuery}
+          />
           <header>
             <form
               action="#"
