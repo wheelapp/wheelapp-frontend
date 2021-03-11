@@ -96,12 +96,38 @@ app.prepare().then(() => {
 
   // changeOrigin: overwrite host with target host (needed to proxy to cloudflare)
   server.use(
-    ['/api/*', '/nodes/*'],
+    ['/api/nodes/*', '/nodes/*'],
     createProxyMiddleware({
       target: process.env.REACT_APP_LEGACY_API_BASE_URL,
       changeOrigin: true,
     })
   );
+
+
+  server.use(
+    ['/api/search/*'],
+    createProxyMiddleware({
+      target: env.SEARCH_ELASTIC_BASEURL,
+      onProxyReq: (proxyReq, request, response) => {
+        console.log('Path', request.path);
+        if (request.path != '/accessibility-cloud.placeinfos/_search') {
+          response.status(401).send({ error: 'Wrong path, not allowed' });
+        }
+        proxyReq.method = 'GET';
+        proxyReq.setHeader(
+          'Authorization',
+          'Basic ' + Buffer.from(`${env.SEARCH_ELASTIC_USER}:${env.SEARCH_ELASTIC_PASSWORD}`).toString('base64')
+        );
+        proxyReq.setHeader('Accept', 'application/json');
+      },
+      pathRewrite: {
+        '^/api/search/': '/',
+      },
+      changeOrigin: true,
+      logLevel: 'debug',
+    })
+  );
+
 
   registerHealthChecks(server);
 
