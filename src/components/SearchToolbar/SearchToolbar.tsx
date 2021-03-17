@@ -495,6 +495,9 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
           <SearchOmnibar 
             query={this.props.searchQuery}
             onChange={this.props.onChangeSearchQuery}
+            onSearchResultClick={this.props.onSearchResultClick}
+            osmFeatures={searchResults?.features}
+            wheelmapFeatures={searchResults?.wheelmapFeatures}
           />
           <header>
             <form
