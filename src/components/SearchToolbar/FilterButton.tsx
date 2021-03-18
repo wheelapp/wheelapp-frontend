@@ -24,7 +24,7 @@ const Caption = styled.div.attrs({ className: 'caption' })`
   margin: 0 0.75rem 0 0;
 `;
 
-function SearchButton(props: Props) {
+function FilterButton(props: Props) {
   const classNames = ['btn-unstyled', 'search-button', props.className];
 
   const { toiletFilter, accessibilityFilter, category } = props;
@@ -58,7 +58,7 @@ function SearchButton(props: Props) {
   );
 }
 
-const StyledSearchButton = styled(SearchButton)`
+const StyledFilterButton = styled(FilterButton)`
   > div {
     display: flex;
     flex-direction: row;
@@ -91,4 +91,4 @@ const StyledSearchButton = styled(SearchButton)`
   }
 `;
 
-export default StyledSearchButton;
+export default StyledFilterButton;

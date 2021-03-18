@@ -224,7 +224,7 @@ const StyledToolbar = styled(Toolbar)`
   }
 `;
 
-export default class SearchToolbar extends React.PureComponent<Props, State> {
+export default class FilterPanel extends React.PureComponent<Props, State> {
   props: Props;
 
   state: State = {

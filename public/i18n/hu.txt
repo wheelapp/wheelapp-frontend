@@ -11,7 +11,7 @@ msgstr ""
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331
+#: src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331
 msgid "Search"
 msgstr "Keresés"
 
@@ -287,7 +287,7 @@ msgstr "Menj a(z) ${ appName } alkalmazásba"
 msgid "App Logo"
 msgstr "Alkalmazás logója"
 
-#: src/components/SearchToolbar/SearchButton.js:35
+#: src/components/SearchToolbar/FilterButton.js:35
 msgid "All places"
 msgstr "Minden hely"
 

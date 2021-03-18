@@ -13,7 +13,7 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331
+#: src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331
 msgid "Search"
 msgstr "Buscar"
 
@@ -289,7 +289,7 @@ msgstr "Ir a ${ appName }"
 msgid "App Logo"
 msgstr "Logotipo de la aplicación"
 
-#: src/components/SearchToolbar/SearchButton.js:35
+#: src/components/SearchToolbar/FilterButton.js:35
 msgid "All places"
 msgstr "Todos los lugares"
 

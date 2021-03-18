@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import FocusTrap from 'focus-trap-react';
 import MainMenu from './components/MainMenu/MainMenu';
 import NodeToolbarFeatureLoader from './components/NodeToolbar/NodeToolbarFeatureLoader';
-import SearchToolbar from './components/SearchToolbar/SearchToolbar';
+import FilterPanel from './components/SearchToolbar/FilterPanel';
 import { PlaceFilter } from './components/SearchToolbar/AccessibilityFilterModel';
 import ReportPhotoToolbar from './components/PhotoUpload/ReportPhotoToolbar';
 import PhotoUploadInstructionsToolbar from './components/PhotoUpload/PhotoUploadInstructionsToolbar';
@@ -21,7 +21,7 @@ import { EquipmentInfo } from './lib/EquipmentInfo';
 import { translatedStringFromObject } from './lib/i18n';
 import { Cluster } from './components/Map/Cluster';
 
-import SearchButton from './components/SearchToolbar/SearchButton';
+import FilterButton from './components/SearchToolbar/FilterButton';
 import Onboarding from './components/Onboarding/Onboarding';
 import FullscreenBackdrop from './components/FullscreenBackdrop';
 
@@ -79,9 +79,8 @@ type Props = {
   isMainMenuOpen: boolean,
   isNotFoundVisible: boolean,
   modalNodeState: ModalNodeState,
-  isSearchBarVisible: boolean,
-  isSearchToolbarExpanded: boolean,
-  isSearchButtonVisible: boolean,
+  isFilterPanelVisible: boolean,
+  isFilterButtonVisible: boolean,
   isNodeToolbarDisplayed: boolean,
   shouldLocateOnStart: boolean,
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
@@ -90,10 +89,10 @@ type Props = {
     feature: SearchResultFeature,
     wheelmapFeature: WheelmapFeature | null
   ) => void,
-  onSearchToolbarClick: () => void,
-  onSearchToolbarClose: () => void,
-  onSearchToolbarSubmit: (searchQuery: string) => void,
-  onClickSearchButton: () => void,
+  onFilterPanelClick: () => void,
+  onFilterPanelClose: () => void,
+  onFilterPanelSubmit: (searchQuery: string) => void,
+  onClickFilterButton: () => void,
   onToggleMainMenu: () => void,
   onMainMenuHomeClick: () => void,
   onClickFullscreenBackdrop: () => void,
@@ -195,7 +194,7 @@ class MainView extends React.Component<Props, State> {
 
   lastFocusedElement: HTMLElement | null;
   nodeToolbar: NodeToolbarFeatureLoader | null;
-  searchToolbar: SearchToolbar | null;
+  searchToolbar: FilterPanel | null;
   photoUploadInstructionsToolbar: PhotoUploadInstructionsToolbar | null;
 
   resizeListener = () => {
@@ -221,7 +220,7 @@ class MainView extends React.Component<Props, State> {
     this.setState({ isOnSmallViewport: isOnSmallViewport() });
   }
 
-  focusSearchToolbar() {
+  focusFilterPanel() {
     if (this.searchToolbar) {
       this.searchToolbar.focus();
     }
@@ -375,12 +374,12 @@ class MainView extends React.Component<Props, State> {
     );
   }
 
-  renderSearchToolbar(isInert: boolean) {
+  renderFilterPanel(isInert: boolean) {
     return (
-      <SearchToolbar
+      <FilterPanel
         ref={searchToolbar => (this.searchToolbar = searchToolbar)}
         categories={this.props.categories}
-        hidden={!this.props.isSearchBarVisible}
+        hidden={!this.props.isFilterPanelVisible}
         inert={isInert}
         category={this.props.category}
         showCategoryMenu={!this.props.disableWheelmapSource}
@@ -391,24 +390,24 @@ class MainView extends React.Component<Props, State> {
         onChangeSearchQuery={this.props.onSearchQueryChange}
         onAccessibilityFilterButtonClick={this.props.onAccessibilityFilterButtonClick}
         onSearchResultClick={this.props.onSearchResultClick}
-        onClick={this.props.onSearchToolbarClick}
-        onSubmit={this.props.onSearchToolbarSubmit}
-        onClose={this.props.onSearchToolbarClose}
-        isExpanded={this.props.isSearchToolbarExpanded}
+        onClick={this.props.onFilterPanelClick}
+        onSubmit={this.props.onFilterPanelSubmit}
+        onClose={this.props.onFilterPanelClose}
+        isExpanded={true}
         hasGoButton={this.state.isOnSmallViewport}
         minimalTopPosition={this.getMinimalToolbarTopPosition()}
       />
     );
   }
 
-  renderSearchButton() {
+  renderFilterButton() {
     return (
-      <SearchButton
+      <FilterButton
         onClick={event => {
           event.stopPropagation();
           // Using setTimeout to prevent touch-up events from hovering components
           // in the search toolbar
-          setTimeout(() => this.props.onClickSearchButton(), 10);
+          setTimeout(() => this.props.onClickFilterButton(), 10);
         }}
         category={this.props.category}
         toiletFilter={this.props.toiletFilter}
@@ -683,8 +682,8 @@ class MainView extends React.Component<Props, State> {
       isMappingEventWelcomeDialogVisible,
       isNotFoundVisible,
       isMainMenuOpen,
-      isSearchBarVisible,
-      isSearchButtonVisible,
+      isFilterPanelVisible,
+      isFilterButtonVisible,
       isNodeToolbarDisplayed: isNodeToolbarVisible,
       isMappingEventsToolbarVisible,
       isMappingEventToolbarVisible,
@@ -704,7 +703,6 @@ class MainView extends React.Component<Props, State> {
       className,
       isDialogVisible ? 'is-dialog-visible' : null,
       isMainMenuOpen ? 'is-main-menu-open' : null,
-      isSearchBarVisible ? 'is-search-bar-visible' : null,
       isNodeToolbarVisible ? 'is-node-toolbar-visible' : null,
       modalNodeState ? 'is-modal' : null,
       isReportMode ? 'is-report-mode' : null,
@@ -727,12 +725,12 @@ class MainView extends React.Component<Props, State> {
           <div className="behind-backdrop">
             {inEmbedMode && this.renderWheelmapHomeLink()}
             {!inEmbedMode && isMainMenuInBackground && this.renderMainMenu()}
-            {!inEmbedMode && this.renderSearchToolbar(searchToolbarIsInert)}
+            {!inEmbedMode && this.renderFilterPanel(searchToolbarIsInert)}
             {isNodeToolbarVisible && !modalNodeState && this.renderNodeToolbar(isNodeRoute)}
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
             {!isNodeToolbarVisible && this.renderClusterPanel()}
-            {!inEmbedMode && isSearchButtonVisible && this.renderSearchButton()}
+            {!inEmbedMode && isFilterButtonVisible && this.renderFilterButton()}
             {this.renderMap()}
           </div>
           {this.renderFullscreenBackdrop()}

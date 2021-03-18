@@ -13,7 +13,7 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331
+#: src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331
 msgid "Search"
 msgstr "Поиск"
 
@@ -288,7 +288,7 @@ msgstr "Перейдите в ${ appName }"
 msgid "App Logo"
 msgstr "Логотип приложения"
 
-#: src/components/SearchToolbar/SearchButton.js:35
+#: src/components/SearchToolbar/FilterButton.js:35
 msgid "All places"
 msgstr "Все места"
 

@@ -11,7 +11,7 @@ msgstr ""
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331
+#: src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331
 msgid "Search"
 msgstr "検索"
 
@@ -280,7 +280,7 @@ msgstr " ${ appName }に移動"
 msgid "App Logo"
 msgstr "アプリのロゴ"
 
-#: src/components/SearchToolbar/SearchButton.js:35
+#: src/components/SearchToolbar/FilterButton.js:35
 msgid "All places"
 msgstr "すべての場所"
 

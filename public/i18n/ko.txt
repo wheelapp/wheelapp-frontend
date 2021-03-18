@@ -11,7 +11,7 @@ msgstr ""
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331
+#: src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331
 msgid "Search"
 msgstr "검색 "
 
@@ -280,7 +280,7 @@ msgstr "${ appName }(으)로 가기 "
 msgid "App Logo"
 msgstr "앱 로고"
 
-#: src/components/SearchToolbar/SearchButton.js:35
+#: src/components/SearchToolbar/FilterButton.js:35
 msgid "All places"
 msgstr "모든 장소 "
 

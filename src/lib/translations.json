@@ -22,7 +22,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "بحث"
@@ -592,7 +592,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "كل الأماكن"
@@ -2229,7 +2229,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Търсене"
@@ -2799,7 +2799,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Всички места"
@@ -4412,7 +4412,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Cerca"
@@ -4982,7 +4982,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Tots els llocs"
@@ -6595,7 +6595,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Hledat"
@@ -7165,7 +7165,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Všechna místa "
@@ -8790,7 +8790,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Søg "
@@ -9360,7 +9360,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Alle steder "
@@ -10973,7 +10973,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Suchen"
@@ -11543,7 +11543,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Alle Orte"
@@ -13502,7 +13502,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Αναζήτηση"
@@ -14072,7 +14072,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Όλες οι τοποθεσίες"
@@ -15685,7 +15685,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Search"
@@ -16255,7 +16255,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "All places"
@@ -18214,7 +18214,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Buscar"
@@ -18784,7 +18784,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Todos los lugares"
@@ -20488,7 +20488,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Hae"
@@ -21058,7 +21058,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Kaikki paikat"
@@ -22671,7 +22671,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Rechercher"
@@ -23241,7 +23241,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Tous les lieux"
@@ -25033,7 +25033,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "חפש"
@@ -25603,7 +25603,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "כל המקומות"
@@ -27228,7 +27228,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "खोजें"
@@ -27798,7 +27798,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "सभी स्थान"
@@ -29411,7 +29411,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Keresés"
@@ -29981,7 +29981,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Minden hely"
@@ -31685,7 +31685,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Cerca"
@@ -32255,7 +32255,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Tutti i luoghi"
@@ -33868,7 +33868,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "検索"
@@ -34438,7 +34438,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "すべての場所"
@@ -36045,7 +36045,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "검색 "
@@ -36615,7 +36615,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "모든 장소 "
@@ -39659,7 +39659,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Zoeken"
@@ -40229,7 +40229,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Alle locaties"
@@ -41930,7 +41930,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Søk"
@@ -42500,7 +42500,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Alle steder"
@@ -44135,7 +44135,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Szukaj"
@@ -44705,7 +44705,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Wszystkie miejsca"
@@ -46330,7 +46330,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Procurar"
@@ -46900,7 +46900,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Todos os locais"
@@ -48513,7 +48513,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Pesquisar"
@@ -49083,7 +49083,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Todos os lugares"
@@ -50787,7 +50787,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Caută"
@@ -51357,7 +51357,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Toate locurile"
@@ -53073,7 +53073,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Поиск"
@@ -53643,7 +53643,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Все места"
@@ -55268,7 +55268,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Hľadať"
@@ -55838,7 +55838,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Všetky miesta"
@@ -57554,7 +57554,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Sök"
@@ -58124,7 +58124,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Alla platser"
@@ -59828,7 +59828,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Ara"
@@ -60398,7 +60398,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Bütün mekanlar"
@@ -62011,7 +62011,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Шукати"
@@ -62581,7 +62581,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Всі місця"
@@ -64206,7 +64206,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "Tìm kiếm"
@@ -64776,7 +64776,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "Mọi địa điểm"
@@ -66405,7 +66405,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "搜索"
@@ -66975,7 +66975,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "所有地点"
@@ -68582,7 +68582,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "搜尋"
@@ -69152,7 +69152,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "所有地點"
@@ -70781,7 +70781,7 @@
         "Search": {
           "msgid": "Search",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:40 src/pages/_app.js:331"
+            "reference": "src/components/SearchToolbar/FilterButton.js:40 src/pages/_app.js:331"
           },
           "msgstr": [
             "尋找"
@@ -71351,7 +71351,7 @@
         "All places": {
           "msgid": "All places",
           "comments": {
-            "reference": "src/components/SearchToolbar/SearchButton.js:35"
+            "reference": "src/components/SearchToolbar/FilterButton.js:35"
           },
           "msgstr": [
             "所有地方"

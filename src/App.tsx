@@ -106,9 +106,9 @@ interface State {
   isMainMenuOpen: boolean,
   modalNodeState: ModalNodeState,
   accessibilityPresetStatus?: YesNoLimitedUnknown | null,
-  isSearchBarVisible: boolean,
+  isFilterPanelVisible: boolean,
   isOnSmallViewport: boolean,
-  isSearchToolbarExpanded: boolean,
+
   isMappingEventsToolbarVisible: boolean,
   isMappingEventToolbarVisible: boolean,
 
@@ -130,9 +130,6 @@ interface State {
   extent?: [number, number, number, number] | null,
 }
 
-// function isStickySearchBarSupported() {
-//   return hasBigViewport() && !isTouchDevice();
-// }
 
 // filters mapping events for the active app & shown mapping event
 function filterMappingEvents(
@@ -448,7 +445,7 @@ class App extends React.Component<Props, State> {
     isSpecificLatLonProvided: false,
     zoom: null,
     mappingEvents: [],
-    isSearchBarVisible: true, //isStickySearchBarSupported(),
+    isFilterPanelVisible: false,
     isOnboardingVisible: false,
     joinedMappingEventId: null,
     joinedMappingEvent: null,
@@ -457,7 +454,6 @@ class App extends React.Component<Props, State> {
     modalNodeState: null,
     accessibilityPresetStatus: null,
     isOnSmallViewport: false,
-    isSearchToolbarExpanded: false,
     isMappingEventsToolbarVisible: false,
     isMappingEventToolbarVisible: false,
 
@@ -474,14 +470,13 @@ class App extends React.Component<Props, State> {
 
   static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
     const newState: Partial<State> = {
-      isSearchToolbarExpanded: false,
-      isSearchBarVisible: true, //isStickySearchBarSupported(),
+      
+      isFilterPanelVisible: false,
     };
 
     // open search results on search route
     if (props.routeName === 'search') {
-      newState.isSearchToolbarExpanded = true;
-      newState.isSearchBarVisible = true;
+      newState.isFilterPanelVisible = true;
       newState.activeCluster = null;
     }
 
@@ -503,14 +498,14 @@ class App extends React.Component<Props, State> {
 
     if (props.routeName === 'mappingEvents') {
       newState.isMappingEventsToolbarVisible = true;
-      newState.isSearchBarVisible = false;
+      newState.isFilterPanelVisible = false;
     } else {
       newState.isMappingEventsToolbarVisible = false;
     }
 
     if (props.routeName === 'mappingEventDetail' || props.routeName === 'mappingEventJoin') {
       newState.isMappingEventToolbarVisible = true;
-      newState.isSearchBarVisible = false;
+      newState.isFilterPanelVisible = false;
     } else {
       newState.isMappingEventToolbarVisible = false;
     }
@@ -519,11 +514,10 @@ class App extends React.Component<Props, State> {
     if (placeDetailsRoute) {
       const { accessibilityFilter, toiletFilter, category } = props;
 
-      newState.isSearchBarVisible =
-        // isStickySearchBarSupported() &&
-        !isAccessibilityFiltered(accessibilityFilter) &&
-        !isToiletFiltered(toiletFilter) &&
-        !category;
+      newState.isFilterPanelVisible =
+        !(isAccessibilityFiltered(accessibilityFilter) ||
+        isToiletFiltered(toiletFilter) ||
+        category);
     }
 
     const parsedZoom = typeof props.zoom === 'string' ? parseInt(props.zoom, 10) : null;
@@ -545,13 +539,9 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     const { routeName, inEmbedMode } = this.props;
 
-    const shouldStartInSearch = routeName === 'map' && !inEmbedMode;
-
     if (isFirstStart()) {
       this.setState({ isOnboardingVisible: true });
-    } else if (shouldStartInSearch) {
-      this.openSearch(true);
-    }
+    } 
 
     this.setupMappingEvents();
 
@@ -682,20 +672,21 @@ class App extends React.Component<Props, State> {
       this.props.routerHistory.push('search', params);
     }
 
-    if (this.mainView) this.mainView.focusSearchToolbar();
+    if (this.mainView) this.mainView.focusFilterPanel();
   }
 
   closeSearch() {
+    this.setState({ isFilterPanelVisible: false })
     if (this.props.routeName !== 'search') {
       return;
     }
-
     const params = this.getCurrentParams();
-
+    
     this.props.routerHistory.push('map', params);
+    
   }
 
-  onClickSearchButton = () => this.openSearch();
+  onClickFilterButton = () => this.openSearch();
 
   onToggleMainMenu = (isMainMenuOpen: boolean) => {
     this.setState({ isMainMenuOpen });
@@ -731,8 +722,9 @@ class App extends React.Component<Props, State> {
   };
 
   onMapClick = () => {
-    if (this.state.isSearchToolbarExpanded) {
+    if (this.state.isFilterPanelVisible) {
       this.closeSearch();
+      
       this.mainView && this.mainView.focusMap();
     }
   };
@@ -860,7 +852,7 @@ class App extends React.Component<Props, State> {
 
   onStartPhotoUploadFlow = () => {
     this.setState({
-      isSearchBarVisible: false,
+      isFilterPanelVisible: false,
       waitingForPhotoUpload: false,
       isPhotoUploadInstructionsToolbarVisible: true,
       photosMarkedForUpload: null,
@@ -871,7 +863,7 @@ class App extends React.Component<Props, State> {
   onExitPhotoUploadFlow = (notification: string = null, photoFlowErrorMessage: string | null = null) => {
     this.setState({
       photoFlowErrorMessage,
-      isSearchBarVisible: true , //!isOnSmallViewport(),
+      isFilterPanelVisible: true , //!isOnSmallViewport(),
       waitingForPhotoUpload: false,
       isPhotoUploadInstructionsToolbarVisible: false,
       photosMarkedForUpload: null,
@@ -913,7 +905,7 @@ class App extends React.Component<Props, State> {
   };
 
   onStartReportPhotoFlow = (photo: PhotoModel) => {
-    this.setState({ isSearchBarVisible: false, photoMarkedForReport: photo });
+    this.setState({ isFilterPanelVisible: false, photoMarkedForReport: photo });
   };
 
   onFinishReportPhotoFlow = (photo: PhotoModel, reason: string) => {
@@ -929,7 +921,7 @@ class App extends React.Component<Props, State> {
 
   onExitReportPhotoFlow = (notification?: string) => {
     this.setState({
-      isSearchBarVisible: true, // !isOnSmallViewport(),
+      isFilterPanelVisible: true, // !isOnSmallViewport(),
       photoMarkedForReport: null,
       photoFlowNotification: notification,
     });
@@ -1042,20 +1034,20 @@ class App extends React.Component<Props, State> {
   onCloseOnboarding = () => {
     saveState({ onboardingCompleted: 'true' });
     this.setState({ isOnboardingVisible: false });
-    if (this.mainView) this.mainView.focusSearchToolbar();
+    if (this.mainView) this.mainView.focusFilterPanel();
   };
 
-  onSearchToolbarClick = () => {
+  onFilterPanelClick = () => {
     this.openSearch();
   };
 
-  onSearchToolbarClose = () => {
+  onFilterPanelClose = () => {
     this.closeSearch();
 
     if (this.mainView) this.mainView.focusMap();
   };
 
-  onSearchToolbarSubmit = (searchQuery: string) => {
+  onSearchSubmit = (searchQuery: string) => {
     // Enter a command like `locale:de_DE` to set a new locale.
     const setLocaleCommandMatch = searchQuery.match(/^locale:(\w\w(?:_\w\w))/);
 
@@ -1143,7 +1135,7 @@ class App extends React.Component<Props, State> {
     return (
       props.feature &&
       !props.mappingEvent &&
-      !state.isSearchToolbarExpanded &&
+      !state.isFilterPanelVisible &&
       !state.isPhotoUploadInstructionsToolbarVisible &&
       !state.photoMarkedForReport
     );
@@ -1163,11 +1155,11 @@ class App extends React.Component<Props, State> {
 
     const shouldLocateOnStart = !isSpecificLatLonProvided && !isNodeRoute && !wasMapMovedRecently;
 
-    const isSearchBarVisible = this.state.isSearchBarVisible;
+    const isFilterPanelVisible = this.state.isFilterPanelVisible;
     const isMappingEventsToolbarVisible = this.state.isMappingEventsToolbarVisible;
     const isMappingEventToolbarVisible = this.state.isMappingEventToolbarVisible;
-    const isSearchButtonVisible =
-      !isSearchBarVisible && !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
+    const isFilterButtonVisible =
+       (!isFilterPanelVisible && !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible);
 
     const extraProps = {
       isNodeRoute,
@@ -1176,8 +1168,8 @@ class App extends React.Component<Props, State> {
       isMappingEventsToolbarVisible,
       isMappingEventToolbarVisible,
       shouldLocateOnStart,
-      isSearchButtonVisible,
-      isSearchBarVisible,
+      isFilterButtonVisible,
+      isFilterPanelVisible: isFilterPanelVisible,
 
       featureId: this.props.featureId,
       feature: this.props.feature,
@@ -1201,7 +1193,6 @@ class App extends React.Component<Props, State> {
       isMappingEventWelcomeDialogVisible: this.state.isMappingEventWelcomeDialogVisible,
       isMainMenuOpen: this.state.isMainMenuOpen,
       isOnSmallViewport: this.state.isOnSmallViewport,
-      isSearchToolbarExpanded: this.state.isSearchToolbarExpanded,
       searchResults: this.props.searchResults,
       inEmbedMode: this.props.inEmbedMode,
       mappingEvents: this.state.mappingEvents,
@@ -1244,7 +1235,7 @@ class App extends React.Component<Props, State> {
           ref={mainView => {
             this.mainView = mainView;
           }}
-          onClickSearchButton={this.onClickSearchButton}
+          onClickFilterButton={this.onClickFilterButton}
           onToggleMainMenu={this.onToggleMainMenu}
           onMoveEnd={this.onMoveEnd}
           onMapClick={this.onMapClick}
@@ -1257,9 +1248,9 @@ class App extends React.Component<Props, State> {
           onOpenReportMode={this.onOpenReportMode}
           onCloseNodeToolbar={this.onCloseNodeToolbar}
           onCloseOnboarding={this.onCloseOnboarding}
-          onSearchToolbarClick={this.onSearchToolbarClick}
-          onSearchToolbarClose={this.onSearchToolbarClose}
-          onSearchToolbarSubmit={this.onSearchToolbarSubmit}
+          onFilterPanelClick={this.onFilterPanelClick}
+          onFilterPanelClose={this.onFilterPanelClose}
+          onFilterPanelSubmit={this.onSearchSubmit}
           onCloseModalDialog={this.onCloseModalDialog}
           onOpenWheelchairAccessibility={this.onOpenWheelchairAccessibility}
           onOpenToiletAccessibility={this.onOpenToiletAccessibility}
