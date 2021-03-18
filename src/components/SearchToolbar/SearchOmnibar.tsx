@@ -21,27 +21,35 @@ import {
 import Address from '../NodeToolbar/Address';
 import ErrorBoundary from '../ErrorBoundary';
 import { getBrowserLocaleStrings } from '../../lib/i18n';
-import { SearchResultCollection, SearchResultFeature } from '../../lib/searchPlaces';
+import { SearchResultFeature } from '../../lib/searchPlaces';
+import usePlaceSearch from '../CreatePlaceFlow/components/usePlaceSearch';
 
 type Props = {
   query: string,
   onChange: (query: string) => void,
   onSearchResultClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature) => void,
   osmFeatures: SearchResultFeature[],
-  wheelmapFeatures: WheelmapFeature[] | Promise<WheelmapFeature>[],
+  categories: CategoryLookupTables,
+  wheelmapFeatures: WheelmapFeature[] | Promise<WheelmapFeature>[], // no need ?
+  onClose: () => void,
 };
 
-export type ElasticFeature = {
-  _index?: string,
-  _type?: string,
-  _id?: string,
-  _score?: number,
-  _source?: {
-    geometry?: Point | null,
-    properties?: any, // AccessibilityCloudProperties fails here ?
-    tileCoordinates?: any | null,
-  },
-};
+export type ElasticOrPhotonFeature =
+  // | { _index?: 'accessibility-cloud.placeinfos' }
+  // |
+  {
+    _index?: string,
+    _type?: string, // "_doc"
+    _id?: string, // AC-Id
+    _score?: number,
+    _source?:
+      | AccessibilityCloudFeature
+      | {
+          geometry?: Point | null,
+          properties?: any, // AccessibilityCloudProperties fails here ?
+          tileCoordinates?: any | null,
+        },
+  };
 
 const ResultsOmnibar = Omnibar.ofType<any>();
 
@@ -103,21 +111,24 @@ export const SearchOmnibar = (props: Props) => {
     setIsOpen(!isOpen);
   }, []);
 
-  const handleClick = React.useCallback((_event: React.MouseEvent<HTMLElement>) => {
-    setIsOpen(true);
-  }, []);
-
   const handleClose = React.useCallback(() => {
     setIsOpen(false);
+    props.onClose();
   }, []);
 
-  const handleItemSelect = React.useCallback((item: any) => {
+  const handleItemSelect = React.useCallback((item: ElasticOrPhotonFeature) => {
     setIsOpen(false);
+
+    // if (item._index === 'fromPhotonAPI') {
+    //   props.onSearchResultClick(
+    //     props.osmFeatures.find(f => String(f.properties.osm_id) === item._id)
+    //   );
+    // }
     alert(JSON.stringify(item));
   }, []);
 
-  const resultItemRenderer: ItemRenderer<ElasticFeature> = (
-    item: ElasticFeature,
+  const resultItemRenderer: ItemRenderer<ElasticOrPhotonFeature> = (
+    item: ElasticOrPhotonFeature,
     { handleClick, modifiers, query }
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -128,27 +139,29 @@ export const SearchOmnibar = (props: Props) => {
     const accessibility = isWheelchairAccessible(feature.properties);
     const address = getAddressStringFromFeature(feature.properties.address);
 
-    const label = String(feature?.properties?.category);
+    const label = String(feature?.properties?.sourceName || 'OpenStreetMap');
 
     return (
       <MenuItem
         active={modifiers.active}
         disabled={modifiers.disabled}
         // label={(label === undefined) ? ' ' : label}
-        label={''}
+        label={label === undefined ? ' ' : label}
+        // label={''}
         key={item._id}
         onClick={handleClick}
-        // onClick={props.onSearchResultClick}
         text={
           <React.Fragment>
             <PlaceNameHeader>
-              <Icon
-                accessibility={accessibility || null}
-                category={item._source.properties.category}
-                size="medium"
-                centered
-                ariaHidden={true}
-              />
+              {item._source.properties.category ? (
+                <Icon
+                  accessibility={accessibility || null}
+                  category={item._source.properties.category}
+                  size="medium"
+                  centered
+                  ariaHidden={true}
+                />
+              ) : null}
               {placeName}
             </PlaceNameHeader>
             {address ? <Address role="none">{address}</Address> : null}
@@ -182,9 +195,10 @@ export const SearchOmnibar = (props: Props) => {
           // items={mockItems || []}
           // items={data?.hits?.hits || []}
           items={
-            mergeElasticSearchresultsWithWheelmapClassicSearchresults(
+            mergeElasticSearchresultsWithPhotonAPISearchresults(
               data?.hits?.hits,
-              props.osmFeatures
+              props.osmFeatures,
+              props.categories
             ) || []
           }
           itemRenderer={resultItemRenderer}
@@ -197,13 +211,18 @@ export const SearchOmnibar = (props: Props) => {
   );
 };
 
-/**
+/**********************************************************************************************************************
+ *
  * Helpers
  *
  */
 
-const getNameFromFeature = (elasticFeature: ElasticFeature): string => {
-  // discern between name strings and name objects
+/**
+ *  @todo rewrite once removal of database union types (name and address) is completed
+ *  Until then discern between name strings and name objects
+ *  address is not indexed atm
+ */
+const getNameFromFeature = (elasticFeature: ElasticOrPhotonFeature): string => {
   const featureName = elasticFeature._source.properties.name;
   let names: object = typeof featureName === 'object' ? featureName : {};
   let name: string = typeof featureName === 'string' ? featureName : '';
@@ -212,7 +231,7 @@ const getNameFromFeature = (elasticFeature: ElasticFeature): string => {
   if (name) {
     name = featureName;
   } else if (!(names && Object.keys(names).length === 0 && names.constructor == Object)) {
-    // not an empty object
+    // definitely make sure it is an object and is not empty
     lang.forEach(featureNameLanguage => {
       if (names.hasOwnProperty(featureNameLanguage)) {
         name = name === '' ? featureName[featureNameLanguage] : name; // assign the first hit to match with the first set browser locale
@@ -221,8 +240,8 @@ const getNameFromFeature = (elasticFeature: ElasticFeature): string => {
   }
 
   if (!name) {
-    // no lang tag matches with present browser locale ?
-    name = featureName && featureName[Object.keys(featureName)[0]]; // nothing found? assign the first hit from the obj
+    // no lang tag matches with present browser locale ? assign the first hit from the obj
+    name = featureName && featureName[Object.keys(featureName)[0]];
   }
 
   if (typeof name === 'undefined') {
@@ -233,13 +252,22 @@ const getNameFromFeature = (elasticFeature: ElasticFeature): string => {
   return name;
 };
 
-const mapToA11ycloudFeature = (elasticFeature: ElasticFeature): AccessibilityCloudFeature => {
+const mapToA11ycloudFeature = (
+  elasticFeature: ElasticOrPhotonFeature
+): AccessibilityCloudFeature => {
   return {
     type: 'Feature',
     name: getNameFromFeature(elasticFeature),
     geometry: elasticFeature._source.geometry || null,
     properties: elasticFeature._source.properties,
   };
+};
+
+const getCategory = (categories: CategoryLookupTables, feature: SearchResultFeature) => {
+  const { category, parentCategory } = Categories.getCategoriesForFeature(categories, feature);
+  const shownCategory = category || parentCategory;
+  const shownCategoryId = shownCategory && getCategoryId(shownCategory);
+  return shownCategoryId;
 };
 
 const getAddressStringFromFeature = (featureAddress: string | object): string => {
@@ -293,22 +321,23 @@ type addressPart = {
   zipcode?: string | undefined,
 };
 
-const mergeElasticSearchresultsWithWheelmapClassicSearchresults = (
-  elasticData: ElasticFeature[],
-  osmData: SearchResultFeature[]
+const mergeElasticSearchresultsWithPhotonAPISearchresults = (
+  elasticData: ElasticOrPhotonFeature[],
+  osmData: SearchResultFeature[],
+  categories: CategoryLookupTables
   // wheelmapData: WheelmapFeature[] | Promise<WheelmapFeature>[]
 ) => {
-  const elastic: Array<ElasticFeature> = elasticData?.map(elastic => ({
-    _index: 'AC',
-    _type: 'elastic',
+  const elastic: Array<ElasticOrPhotonFeature> = elasticData?.map(elastic => ({
+    _index: 'accessibility-cloud.placeinfos',
+
     _id: elastic._id,
     _score: elastic._score,
     _source: elastic._source,
   }));
 
-  const osm: ElasticFeature[] = osmData?.map(osm => ({
-    _index: 'OSM',
-    _type: 'openstreetmap',
+  const osm: ElasticOrPhotonFeature[] = osmData?.map(osm => ({
+    _index: 'fromPhotonAPI',
+
     _id: String(osm.properties.osm_id),
     _score: 0.1,
     _source: {
@@ -317,8 +346,9 @@ const mergeElasticSearchresultsWithWheelmapClassicSearchresults = (
         name: osm.properties.name,
         osm_id: osm.properties.osm_id,
         osm_key: osm.properties.osm_key,
-        osm_type: osm.properties.type,
-        category: osm.properties.osm_value,
+        osm_type: osm.properties.osm_type,
+        category: getCategory(categories, osm), // osm.properties.osm_key, // osm_value,
+        // category: osm.properties.osm_value, // osm_key,
         extent: osm.properties.extent,
         type: osm.properties.type,
         address: {
@@ -367,37 +397,19 @@ const mergeElasticSearchresultsWithWheelmapClassicSearchresults = (
   //   },
   // }));
 
-  /** merge 2 arrays of different length one by one and append remainder
+  /**
+   *
+   * merge 2 arrays of different length one by one and append remainder
    * a = ['a', 'b', 'c', 'd']
    * b = [1, 2, 3, 4, 5, 6, 7, 8, 9]
    * merge(a,b) = [ 'a', 1, 'b', 2, 'c', 3, 'd', 4, 5, 6, 7, 8, 9 ]
    */
-
-  // imperative way
-  // const len: number = Math.max(elastic.length, wheelmap.length);
-  // const result: ElasticFeature[] = [];
-  // for (let i = 0; i < len; i++) {
-  //   if (elastic[i] !== undefined) {
-  //     result.push(elastic[i]);
-  //   }
-  //   if (wheelmap[i] !== undefined) {
-  //     result.push(wheelmap[i]);
-  //   }
-  // }
-
-  // functional way : function type synthax is a pain in typescript, types are only somehwat derived
-  const merge: (xs: ElasticFeature[], ys: ElasticFeature[]) => ElasticFeature[] = (
-    [x, ...xs],
-    ys
-  ) => (x ? [x, ...merge(ys, xs)] : ys);
-
-  // merge wheelmapfeatures with osm features and kick out duplicate ids
-  // take all ids from wheelmap
-
-  // let wheelmapkeys = wheelmap.map(ele => ele._id)
+  const merge: (
+    xs: ElasticOrPhotonFeature[],
+    ys: ElasticOrPhotonFeature[]
+  ) => ElasticOrPhotonFeature[] = ([x, ...xs], ys) => (x ? [x, ...merge(ys, xs)] : ys);
 
   const out = elastic && osm && merge(elastic, osm);
-  // const all = merge(out, osm)
 
   return out;
 

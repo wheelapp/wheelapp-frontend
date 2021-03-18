@@ -57,6 +57,7 @@ import 'focus-visible';
 import { trackModalView, trackEvent } from './lib/Analytics';
 import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
+import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
 
 export type LinkData = {
   label: LocalizedString,
@@ -129,9 +130,9 @@ interface State {
   extent?: [number, number, number, number] | null,
 }
 
-function isStickySearchBarSupported() {
-  return hasBigViewport() && !isTouchDevice();
-}
+// function isStickySearchBarSupported() {
+//   return hasBigViewport() && !isTouchDevice();
+// }
 
 // filters mapping events for the active app & shown mapping event
 function filterMappingEvents(
@@ -447,7 +448,7 @@ class App extends React.Component<Props, State> {
     isSpecificLatLonProvided: false,
     zoom: null,
     mappingEvents: [],
-    isSearchBarVisible: isStickySearchBarSupported(),
+    isSearchBarVisible: true, //isStickySearchBarSupported(),
     isOnboardingVisible: false,
     joinedMappingEventId: null,
     joinedMappingEvent: null,
@@ -474,7 +475,7 @@ class App extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
     const newState: Partial<State> = {
       isSearchToolbarExpanded: false,
-      isSearchBarVisible: isStickySearchBarSupported(),
+      isSearchBarVisible: true, //isStickySearchBarSupported(),
     };
 
     // open search results on search route
@@ -519,7 +520,7 @@ class App extends React.Component<Props, State> {
       const { accessibilityFilter, toiletFilter, category } = props;
 
       newState.isSearchBarVisible =
-        isStickySearchBarSupported() &&
+        // isStickySearchBarSupported() &&
         !isAccessibilityFiltered(accessibilityFilter) &&
         !isToiletFiltered(toiletFilter) &&
         !category;
@@ -820,9 +821,12 @@ class App extends React.Component<Props, State> {
   };
 
   onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+  // onSearchResultClick = (feature: ElasticOrPhotonFeature) => {
+
     const params = this.getCurrentParams() as any;
     let routeName = 'map';
 
+    // click on POI
     if (wheelmapFeature) {
       let id = getFeatureId(wheelmapFeature);
       if (id) {
@@ -867,7 +871,7 @@ class App extends React.Component<Props, State> {
   onExitPhotoUploadFlow = (notification: string = null, photoFlowErrorMessage: string | null = null) => {
     this.setState({
       photoFlowErrorMessage,
-      isSearchBarVisible: !isOnSmallViewport(),
+      isSearchBarVisible: true , //!isOnSmallViewport(),
       waitingForPhotoUpload: false,
       isPhotoUploadInstructionsToolbarVisible: false,
       photosMarkedForUpload: null,
@@ -925,7 +929,7 @@ class App extends React.Component<Props, State> {
 
   onExitReportPhotoFlow = (notification?: string) => {
     this.setState({
-      isSearchBarVisible: !isOnSmallViewport(),
+      isSearchBarVisible: true, // !isOnSmallViewport(),
       photoMarkedForReport: null,
       photoFlowNotification: notification,
     });

@@ -470,16 +470,6 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
     const { isLoading, searchResults } = this.state;
     const { searchQuery, hidden, inert, isExpanded } = this.props;
 
-    let contentBelowSearchField = null;
-
-    if (!searchResults && isLoading) {
-      contentBelowSearchField = this.renderLoadingIndicator();
-    } else if (searchResults && searchQuery) {
-      contentBelowSearchField = this.renderSearchResults(searchResults);
-    } else {
-      contentBelowSearchField = this.renderFilters();
-    }
-
     return (
       <StyledToolbar
         hidden={hidden}
@@ -498,8 +488,10 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
             onSearchResultClick={this.props.onSearchResultClick}
             osmFeatures={searchResults?.features}
             wheelmapFeatures={searchResults?.wheelmapFeatures}
+            categories={this.props.categories}
+            onClose={this.props.onClose}
           />
-          <header>
+          {/* <header>
             <form
               action="#"
               method="post"
@@ -512,8 +504,8 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {this.props.searchQuery && this.renderCloseLink()}
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
-          </header>
-          <section onTouchStart={() => this.blur()}>{contentBelowSearchField}</section>
+          </header> */}
+          <section onTouchStart={() => this.blur()}>{!searchQuery && this.renderFilters()}</section>
         </ErrorBoundary>
       </StyledToolbar>
     );
