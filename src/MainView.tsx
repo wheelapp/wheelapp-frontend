@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import FocusTrap from 'focus-trap-react';
 import MainMenu from './components/MainMenu/MainMenu';
 import NodeToolbarFeatureLoader from './components/NodeToolbar/NodeToolbarFeatureLoader';
-import FilterPanel from './components/SearchToolbar/FilterPanel';
-import { PlaceFilter } from './components/SearchToolbar/AccessibilityFilterModel';
+import FilterPanel from './components/FilterPanel/FilterPanel';
+import { PlaceFilter } from './components/FilterPanel/AccessibilityFilterModel';
 import ReportPhotoToolbar from './components/PhotoUpload/ReportPhotoToolbar';
 import PhotoUploadInstructionsToolbar from './components/PhotoUpload/PhotoUploadInstructionsToolbar';
 import MapLoading from './components/Map/MapLoading';
@@ -21,7 +21,7 @@ import { EquipmentInfo } from './lib/EquipmentInfo';
 import { translatedStringFromObject } from './lib/i18n';
 import { Cluster } from './components/Map/Cluster';
 
-import FilterButton from './components/SearchToolbar/FilterButton';
+import FilterButton from './components/FilterPanel/FilterButton';
 import Onboarding from './components/Onboarding/Onboarding';
 import FullscreenBackdrop from './components/FullscreenBackdrop';
 
@@ -51,6 +51,7 @@ import MappingEventToolbar from './components/MappingEvents/MappingEventToolbar'
 import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWelcomeDialog';
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
+import { ElasticOrPhotonFeature } from './components/FilterPanel/SearchOmnibar';
 
 type Props = {
   className?: string,
@@ -86,7 +87,8 @@ type Props = {
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
 
   onSearchResultClick: (
-    feature: SearchResultFeature,
+    elasticFeature: ElasticOrPhotonFeature | null, 
+    feature: SearchResultFeature | null, 
     wheelmapFeature: WheelmapFeature | null
   ) => void,
   onFilterPanelClick: () => void,
@@ -221,9 +223,9 @@ class MainView extends React.Component<Props, State> {
   }
 
   focusFilterPanel() {
-    if (this.searchToolbar) {
-      this.searchToolbar.focus();
-    }
+    // if (this.searchToolbar) {
+    //   this.searchToolbar.focus();
+    // }
   }
 
   focusMap() {
@@ -394,7 +396,7 @@ class MainView extends React.Component<Props, State> {
         onSubmit={this.props.onFilterPanelSubmit}
         onClose={this.props.onFilterPanelClose}
         isExpanded={true}
-        hasGoButton={this.state.isOnSmallViewport}
+        // hasGoButton={this.state.isOnSmallViewport}
         minimalTopPosition={this.getMinimalToolbarTopPosition()}
       />
     );
@@ -485,17 +487,8 @@ class MainView extends React.Component<Props, State> {
   }
 
   renderFullscreenBackdrop() {
-    const isActive =
-      this.props.isMainMenuOpen ||
-      this.props.isOnboardingVisible ||
-      this.props.isMappingEventWelcomeDialogVisible ||
-      this.props.isNotFoundVisible ||
-      this.props.modalNodeState !== null ||
-      this.props.isPhotoUploadInstructionsToolbarVisible ||
-      Boolean(this.props.photoMarkedForReport);
-
     return (
-      <FullscreenBackdrop onClick={this.props.onClickFullscreenBackdrop} isActive={isActive} />
+      <FullscreenBackdrop onClick={this.props.onClickFullscreenBackdrop} />
     );
   }
 
@@ -540,7 +533,7 @@ class MainView extends React.Component<Props, State> {
         onCancel={place => {
           this.props.onCloseModalDialog();
           if (place) {
-            this.props.onSearchResultClick(place.searchResult, place.wheelmapFeature);
+            this.props.onSearchResultClick(null, place.searchResult, place.wheelmapFeature); // add new 1st param for elasticFeature onClick
           }
         }}
       />

@@ -223,6 +223,7 @@ export type NodeProperties = AccessibilityCloudProperties | WheelmapProperties;
 // todo: case analysis for id extraction
 export function getFeatureId(feature: Feature | EquipmentInfo | any): string | null {
   if (!feature) return null;
+  if (feature._id) return feature._id; // type ElasticOrPhotonFeature has top level _id property
   const idProperties = [
     typeof feature.id === 'number' && feature.id,
     typeof feature._id === 'string' && feature._id,

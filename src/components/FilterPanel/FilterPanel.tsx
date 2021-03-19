@@ -7,14 +7,9 @@ import styled, { css } from 'styled-components';
 import Toolbar from '../Toolbar';
 import Button from '../Button';
 import CloseLink from '../CloseLink';
-import SearchIcon from './SearchIcon';
 import ChevronRight from '../ChevronRight';
 import CategoryMenu from './CategoryMenu';
-import SearchResults from './SearchResults';
-import SearchResult from './SearchResults';
-import SearchInputField from './SearchInputField';
 import AccessibilityFilterMenu from './AccessibilityFilterMenu';
-
 import colors from '../../lib/colors';
 import { isAccessibilityFiltered, WheelmapFeature } from '../../lib/Feature';
 import { SearchResultCollection } from '../../lib/searchPlaces';
@@ -23,8 +18,7 @@ import { isOnSmallViewport } from '../../lib/ViewportSize';
 import { SearchResultFeature } from '../../lib/searchPlaces';
 import { CategoryLookupTables } from '../../lib/Categories';
 import ErrorBoundary from '../ErrorBoundary';
-import { UnstyledSearchResult } from './SearchResult';
-import { SearchOmnibar } from './SearchOmnibar';
+import { ElasticOrPhotonFeature, SearchOmnibar } from './SearchOmnibar';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
@@ -34,8 +28,9 @@ export type Props = PlaceFilter & {
   showCategoryMenu?: boolean,
   searchQuery?: null | string,
   onSearchResultClick: (
-    feature: SearchResultFeature,
-    wheelmapFeature: null | WheelmapFeature
+    elasticFeature: ElasticOrPhotonFeature | null,
+    feature: SearchResultFeature | null,
+    wheelmapFeature: WheelmapFeature | null
   ) => void,
   onChangeSearchQuery: (newSearchQuery: string) => void,
   onSubmit: (searchQuery: string) => void,
@@ -43,13 +38,11 @@ export type Props = PlaceFilter & {
   onClose: () => void | null,
   onClick: () => void,
   isExpanded: boolean,
-  hasGoButton: boolean,
   searchResults: null | SearchResultCollection | Promise<SearchResultCollection>,
   minimalTopPosition: number,
 };
 
 type State = {
-  searchFieldIsFocused: boolean,
   isCategoryFocused: boolean,
   isLoading: boolean,
   searchResults: null | SearchResultCollection,
@@ -98,7 +91,8 @@ const GoButton = styled(Button)`
 `;
 
 const StyledToolbar = styled(Toolbar)`
-  transition: opacity 0.3s ease-out, transform 0.15s ease-out, width 0.15s ease-out, height 0.15s ease-out;
+  transition: opacity 0.3s ease-out, transform 0.15s ease-out, width 0.15s ease-out,
+    height 0.15s ease-out;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -123,7 +117,7 @@ const StyledToolbar = styled(Toolbar)`
       z-index: 1;
       border-bottom: 1px ${colors.borderColor} solid;
       background: white;
-  
+
       > form {
         display: flex;
         flex-direction: row;
@@ -131,7 +125,7 @@ const StyledToolbar = styled(Toolbar)`
         height: 100%;
       }
     }
-  
+
     > section {
       overflow: auto;
     }
@@ -164,7 +158,8 @@ const StyledToolbar = styled(Toolbar)`
 
   @media (max-width: 512px), (max-height: 512px) {
     &.toolbar-iphone-x {
-      input, input:focus {
+      input,
+      input:focus {
         background-color: white;
       }
     }
@@ -194,10 +189,12 @@ const StyledToolbar = styled(Toolbar)`
       max-height: 100%;
       max-width: 320px;
       margin: 0;
-   }
+    }
 
-    > div > header, .search-results, ${CategoryMenu} {
-      padding: 0
+    > div > header,
+    .search-results,
+    ${CategoryMenu} {
+      padding: 0;
     }
 
     .search-results .link-button {
@@ -228,16 +225,11 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
   props: Props;
 
   state: State = {
-    searchFieldIsFocused: false,
     isCategoryFocused: false,
     isLoading: false,
     searchResults: null,
     searchResultsPromise: null,
   };
-
-  searchInputField = React.createRef<SearchInputField>();
-  goButton = React.createRef<HTMLButtonElement>();
-  firstResult: UnstyledSearchResult | null = null;
 
   static getDerivedStateFromProps(props: Props, state: State) {
     const { searchResults } = props;
@@ -258,10 +250,6 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
     const { hidden } = this.props;
     const { searchResultsPromise } = this.state;
 
-    if (!hidden) {
-      this.focus();
-    }
-
     if (searchResultsPromise) {
       searchResultsPromise.then(this.handleSearchResultsFetched.bind(this, searchResultsPromise));
     }
@@ -269,12 +257,6 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     const { searchResultsPromise } = this.state;
-
-    const searchFieldShouldBecomeFocused =
-      !prevState.searchFieldIsFocused && this.state.searchFieldIsFocused;
-    if (searchFieldShouldBecomeFocused) {
-      this.focus();
-    }
 
     if (searchResultsPromise && prevState.searchResultsPromise !== searchResultsPromise) {
       searchResultsPromise.then(this.handleSearchResultsFetched.bind(this, searchResultsPromise));
@@ -294,95 +276,6 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
       searchResults,
     });
   };
-
-  clearSearch() {
-    if (this.searchInputField.current) {
-      this.searchInputField.current.clear();
-    }
-  }
-
-  focus() {
-    if (
-      window.document.activeElement === ReactDOM.findDOMNode(this.goButton.current) ||
-      window.document.activeElement === ReactDOM.findDOMNode(this.searchInputField.current)
-    ) {
-      return;
-    }
-    if (isOnSmallViewport()) {
-      if (!this.goButton.current) return;
-      this.goButton.current.focus();
-    } else {
-      if (!this.searchInputField.current) return;
-      this.searchInputField.current.focus();
-    }
-  }
-
-  blur() {
-    if (!this.searchInputField.current) return;
-    this.searchInputField.current.blur();
-  }
-
-  resetSearch() {
-    this.setState({ searchFieldIsFocused: true, isCategoryFocused: false }, () => {
-      if (this.searchInputField instanceof HTMLInputElement) {
-        this.searchInputField.value = '';
-      }
-    });
-  }
-
-  renderSearchInputField() {
-    return (
-      <SearchInputField
-        // @ts-ignore
-        ref={this.searchInputField}
-        searchQuery={this.props.searchQuery}
-        hidden={this.props.hidden}
-        onClick={() => {
-          if (this.props.category) {
-            this.resetSearch();
-          }
-          this.setState({ searchFieldIsFocused: true });
-          window.scrollTo(0, 0);
-          this.props.onClick();
-        }}
-        onFocus={event => {
-          this.setState({ searchFieldIsFocused: true });
-          window.scrollTo(0, 0);
-        }}
-        onBlur={() => {
-          this.setState({ searchFieldIsFocused: false });
-        }}
-        onChange={this.props.onChangeSearchQuery}
-        onSubmit={(event: React.SyntheticEvent<HTMLInputElement>) => {
-          this.setState({ searchFieldIsFocused: false }, () => {
-            this.blur();
-            if (this.firstResult) {
-              this.firstResult.focus();
-            }
-          });
-
-          this.props.onSubmit(event.currentTarget.value);
-        }}
-        ariaRole="searchbox"
-      />
-    );
-  }
-
-  renderSearchResults(searchResults: SearchResultCollection) {
-    return (
-      <div aria-live="assertive">
-        <SearchResults
-          searchResults={searchResults}
-          onSearchResultClick={this.props.onSearchResultClick}
-          hidden={this.props.hidden}
-          categories={this.props.categories}
-          refFirst={ref => {
-            this.firstResult = ref as UnstyledSearchResult;
-          }}
-        />
-      </div>
-    );
-  }
 
   renderLoadingIndicator() {
     return (
@@ -444,28 +337,6 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
     );
   }
 
-  renderCloseLink() {
-    return (
-      <CloseLink
-        ariaLabel={t`Clear search`}
-        onClick={() => {
-          this.resetSearch();
-          if (this.props.onClose) this.props.onClose();
-        }}
-      />
-    );
-  }
-
-  renderGoButton() {
-    // translator: button shown next to the search bar
-    const caption = t`Go`;
-    return (
-      <GoButton ref={this.goButton} onClick={this.props.onClose}>
-        {caption} <StyledChevronRight />
-      </GoButton>
-    );
-  }
-
   render() {
     const { isLoading, searchResults } = this.state;
     const { searchQuery, hidden, inert, isExpanded } = this.props;
@@ -482,7 +353,7 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
         className={isExpanded ? 'isExpanded' : null}
       >
         <ErrorBoundary>
-          <SearchOmnibar 
+          <SearchOmnibar
             query={this.props.searchQuery}
             onChange={this.props.onChangeSearchQuery}
             onSearchResultClick={this.props.onSearchResultClick}
@@ -491,21 +362,7 @@ export default class FilterPanel extends React.PureComponent<Props, State> {
             categories={this.props.categories}
             onClose={this.props.onClose}
           />
-          {/* <header>
-            <form
-              action="#"
-              method="post"
-              onSubmit={ev => {
-                ev.preventDefault();
-              }}
-            >
-              <SearchIcon />
-              {this.renderSearchInputField()}
-              {this.props.searchQuery && this.renderCloseLink()}
-              {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
-            </form>
-          </header> */}
-          <section onTouchStart={() => this.blur()}>{!searchQuery && this.renderFilters()}</section>
+          <section>{!searchQuery && this.renderFilters()}</section>
         </ErrorBoundary>
       </StyledToolbar>
     );

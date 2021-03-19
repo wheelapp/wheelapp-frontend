@@ -48,7 +48,7 @@ import { ModalNodeState } from './lib/ModalNodeState';
 import { CategoryLookupTables } from './lib/Categories';
 import { PhotoModel } from './lib/PhotoModel';
 import { PlaceDetailsProps, PotentialPromise } from './app/PlaceDetailsProps';
-import { PlaceFilter } from './components/SearchToolbar/AccessibilityFilterModel';
+import { PlaceFilter } from './components/FilterPanel/AccessibilityFilterModel';
 import { LocalizedString } from './lib/i18n';
 import { RouteProvider } from './components/Link/RouteContext';
 
@@ -57,7 +57,7 @@ import 'focus-visible';
 import { trackModalView, trackEvent } from './lib/Analytics';
 import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
-import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
+import { ElasticOrPhotonFeature } from './components/FilterPanel/SearchOmnibar';
 
 export type LinkData = {
   label: LocalizedString,
@@ -812,15 +812,24 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.push(routeName, params);
   };
 
-  onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
-  // onSearchResultClick = (feature: ElasticOrPhotonFeature) => {
+  // onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+  onSearchResultClick = (elasticFeature: ElasticOrPhotonFeature | null, feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null) => {
 
     const params = this.getCurrentParams() as any;
     let routeName = 'map';
 
     // click on POI
-    if (wheelmapFeature) {
-      let id = getFeatureId(wheelmapFeature);
+    // if (wheelmapFeature) {
+    //   let id = getFeatureId(wheelmapFeature);
+    //   if (id) {
+    //     params.id = id;
+    //     delete params.eid;
+    //     routeName = 'placeDetail';
+    //   }
+    // }
+
+    if (elasticFeature._index === 'accessibility-cloud.placeinfos') {
+      let id = getFeatureId(elasticFeature);
       if (id) {
         params.id = id;
         delete params.eid;
@@ -833,11 +842,21 @@ class App extends React.Component<Props, State> {
       delete params.eid;
     }
 
-    if (feature.properties.extent) {
-      const extent = feature.properties.extent;
+
+    // if (feature.properties.extent) {
+    //   const extent = feature.properties.extent;
+    //   this.setState({ lat: null, lon: null, extent });
+    // } else {
+    //   const [lon, lat] = feature.geometry.coordinates;
+    //   this.setState({ lat, lon, extent: null });
+    // }
+
+    // osm of osm_type: 'place'
+    if (elasticFeature._source.properties.extent) {
+      const extent = elasticFeature._source.properties.extent;
       this.setState({ lat: null, lon: null, extent });
     } else {
-      const [lon, lat] = feature.geometry.coordinates;
+      const [lon, lat] = elasticFeature._source.geometry.coordinates;
       this.setState({ lat, lon, extent: null });
     }
 

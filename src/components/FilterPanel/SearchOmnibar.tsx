@@ -6,10 +6,9 @@ import '@blueprintjs/core/lib/css/blueprint.css';
 import { ItemRenderer, Omnibar } from '@blueprintjs/select';
 import { MenuItem, Button, HotkeysTarget2, KeyCombo } from '@blueprintjs/core';
 import { createGlobalStyle } from 'styled-components';
-import { IPlace, mockItems } from './MockItems';
-import Categories, { getCategoryId, Category, CategoryLookupTables } from '../../lib/Categories';
+import Categories, { getCategoryId, CategoryLookupTables } from '../../lib/Categories';
 import Icon from '../Icon';
-import SearchResult from './SearchResult';
+
 import { PlaceNameHeader } from '../PlaceName';
 import { Point } from 'geojson';
 import {
@@ -21,13 +20,17 @@ import {
 import Address from '../NodeToolbar/Address';
 import ErrorBoundary from '../ErrorBoundary';
 import { getBrowserLocaleStrings } from '../../lib/i18n';
-import { SearchResultFeature } from '../../lib/searchPlaces';
-import usePlaceSearch from '../CreatePlaceFlow/components/usePlaceSearch';
+import { SearchResultFeature, SearchResultProperties } from '../../lib/searchPlaces';
+import _ from 'lodash';
 
 type Props = {
   query: string,
   onChange: (query: string) => void,
-  onSearchResultClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature) => void,
+  onSearchResultClick: (
+    elasticFeature: ElasticOrPhotonFeature,
+    feature: SearchResultFeature | null,
+    wheelmapFeature: WheelmapFeature | null
+  ) => void,
   osmFeatures: SearchResultFeature[],
   categories: CategoryLookupTables,
   wheelmapFeatures: WheelmapFeature[] | Promise<WheelmapFeature>[], // no need ?
@@ -35,21 +38,46 @@ type Props = {
 };
 
 export type ElasticOrPhotonFeature =
-  // | { _index?: 'accessibility-cloud.placeinfos' }
-  // |
-  {
-    _index?: string,
-    _type?: string, // "_doc"
-    _id?: string, // AC-Id
-    _score?: number,
-    _source?:
-      | AccessibilityCloudFeature
-      | {
-          geometry?: Point | null,
-          properties?: any, // AccessibilityCloudProperties fails here ?
-          tileCoordinates?: any | null,
-        },
-  };
+  | {
+      _index: 'fromPhotonAPI',
+      _id: string,
+      _score?: 0.1,
+      _source?: {
+        geometry?: Point | null,
+        properties:
+          | SearchResultProperties
+          | {
+              name?: any,
+              osm_id?: any,
+              osm_key?: any,
+              osm_type?: any,
+              category?: any,
+              // category?: any, // osm_key,
+              extent?: [number, number, number, number] | undefined,
+              type?: string,
+              address?: {
+                street?: any,
+                housenumber?: any,
+                postcode?: any,
+                city?: any,
+                country?: any,
+                state?: any,
+              },
+            },
+      },
+    }
+  | {
+      _index: 'accessibility-cloud.placeinfos',
+      _id: string, // AC-Id
+      _score?: number,
+      _source?:
+        | AccessibilityCloudFeature
+        | {
+            geometry?: Point | null,
+            properties?: AccessibilityCloudProperties | any, // AccessibilityCloudProperties seems to fail here as elastic properties are much more detailed
+            tileCoordinates?: any | null,
+          },
+    };
 
 const ResultsOmnibar = Omnibar.ofType<any>();
 
@@ -57,14 +85,27 @@ const PushBlueprintjsPortalToTop = createGlobalStyle`
   .bp3-portal {
     z-index: 10000
   }
+    
+  @media (max-width: 512px), (max-height: 512px) {
+    .bp3-omnibar {
+      left: 0 !important; 
+      top: 0 !important;
+      width: 100vw !important;
+      max-height: 100vh;
+    }
+  }
 `;
 
 const bodyAtQueryTime = (actualQuery: string) => {
-  return {
+  return JSON.stringify({
     size: 500,
+    _source: {
+      includes: ['*'],
+      excludes: ['tileCoordinates', 'properties.originalData'],
+    },
     query: {
       function_score: {
-        query: { query_string: { query: actualQuery } },
+        query: { query_string: { query: '' } },
         boost: 1,
         boost_mode: 'multiply',
         functions: [
@@ -75,7 +116,7 @@ const bodyAtQueryTime = (actualQuery: string) => {
         ],
       },
     },
-  };
+  });
 };
 
 const fetcher = (url: string) =>
@@ -118,13 +159,14 @@ export const SearchOmnibar = (props: Props) => {
 
   const handleItemSelect = React.useCallback((item: ElasticOrPhotonFeature) => {
     setIsOpen(false);
+    props.onSearchResultClick(item, null, null);
 
     // if (item._index === 'fromPhotonAPI') {
     //   props.onSearchResultClick(
     //     props.osmFeatures.find(f => String(f.properties.osm_id) === item._id)
     //   );
     // }
-    alert(JSON.stringify(item));
+    // alert(JSON.stringify(item));
   }, []);
 
   const resultItemRenderer: ItemRenderer<ElasticOrPhotonFeature> = (
@@ -337,7 +379,6 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
 
   const osm: ElasticOrPhotonFeature[] = osmData?.map(osm => ({
     _index: 'fromPhotonAPI',
-
     _id: String(osm.properties.osm_id),
     _score: 0.1,
     _source: {
@@ -347,7 +388,7 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
         osm_id: osm.properties.osm_id,
         osm_key: osm.properties.osm_key,
         osm_type: osm.properties.osm_type,
-        category: getCategory(categories, osm), // osm.properties.osm_key, // osm_value,
+        category: getCategory(categories, osm),
         // category: osm.properties.osm_value, // osm_key,
         extent: osm.properties.extent,
         type: osm.properties.type,
@@ -363,40 +404,6 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
     },
   }));
 
-  // const wheelmap: ElasticFeature[] = wheelmapData.map(wheelmap => ({
-  //   _index: 'WHEELMAP',
-  //   _type: 'classicwheelmap',
-  //   _id: String(wheelmap.properties.id),
-  //   _score: 0.1,
-  //   _source: {
-  //     geometry: wheelmap.geometry,
-  //     properties: {
-  //       id:  wheelmap.properties.id,
-  //       category: wheelmap.properties.category,
-  //       node_type: wheelmap.properties.node_type,
-  //       lat: wheelmap.properties.lat,
-  //       lon: wheelmap.properties.lon,
-  //       name: wheelmap.properties.name,
-  //       phone: wheelmap.properties.phone,
-  //       photo_ids: wheelmap.properties.photo_ids,
-  //       postcode: wheelmap.properties.postcode,
-  //       sponsor: wheelmap.properties.sponsor,
-  //       icon: wheelmap.properties.icon,
-  //       website: wheelmap.properties.website,
-  //       wheelchair: wheelmap.properties.wheelchair,
-  //       wheelchair_description: wheelmap.properties.wheelchair_description,
-  //       wheelchair_toilet: wheelmap.properties.wheelchair_toilet,
-  //       address: {
-  //         street: wheelmap.properties.street,
-  //         housenumber: wheelmap.properties.housenumber,
-  //         city: wheelmap.properties.city,
-  //         region: wheelmap.properties.region,
-  //       }
-  //     }
-
-  //   },
-  // }));
-
   /**
    *
    * merge 2 arrays of different length one by one and append remainder
@@ -409,74 +416,12 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
     ys: ElasticOrPhotonFeature[]
   ) => ElasticOrPhotonFeature[] = ([x, ...xs], ys) => (x ? [x, ...merge(ys, xs)] : ys);
 
-  const out = elastic && osm && merge(elastic, osm);
+  const osmOut = elastic && osm && osm.filter(osms => osms._source.properties.osm_type === 'place');
+
+  const out = elastic && osmOut && merge(elastic, osmOut);
+
+  // zip does not work here as it returns empty objects?
+  const o = elastic && osmOut && _.zip(elastic, osmOut);
 
   return out;
-
-  /** TYPES
-   
-  SearchResultFeature = {
-    type: 'Feature',
-    geometry: Point,
-    properties: SearchResultProperties,
-  }
-
-  SearchResultProperties = {
-    city?: any,
-    country?: any,
-    name?: any,
-    osm_id?: any,
-    osm_key?: any,
-    osm_type?: any,
-    osm_value?: any,
-    postcode?: any,
-    state?: any,
-    housenumber?: any,
-    street?: any,
-    extent: [number, number, number, number] | undefined,
-    type: string,
-  }
-
-  WheelmapFeature = {
-    type: 'Feature',
-    geometry: Point | null,
-    properties: WheelmapProperties | null,
-    id: number,
-  }
-
-  WheelmapProperties = {
-   id: number,
-   category: WheelmapCategoryOrNodeType | null,
-   node_type: WheelmapCategoryOrNodeType | null,
-   city: string | null,
-   housenumber: string | null,
-   lat: number,
-   lon: number,
-   name?: LocalizedString | null,
-   phone: string | null,
-   photo_ids: number | string[] | null,
-   postcode: string | null,
-   sponsor: string | null,
-   icon: string | null,
-   region: string | null,
-   street: string | null,
-   website: string | null,
-   wheelchair: YesNoLimitedUnknown | null,
-   wheelchair_description: string | null,
-   wheelchair_toilet: YesNoUnknown | null,
-  }
-
-  ElasticFeature = {
-    _index: string,
-    _type: string,
-    _id: string,
-    _score: number,
-    _source: {
-      geometry: Point | null,
-      properties: any,
-      tileCoordinates: any | null,
-    },
-  }  
-
-*/
 };

@@ -2,8 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { t } from 'ttag';
 import { Dots } from 'react-activity';
-
-import SearchResult from '../../SearchToolbar/SearchResult';
 import VerticalPage from '../components/VerticalPage';
 import usePlaceSearchWithWheelmapResolution, {
   WheelmapResolvedSearchResultFeature,
@@ -87,7 +85,7 @@ const ExistingPlacePicker = (props: Props) => {
             {t`Searching...`}
           </div>
         )}
-        {searchResults && (
+        {/* {searchResults && (
           <ul>
             {searchResults.map((result, index) => {
               return (
@@ -102,7 +100,7 @@ const ExistingPlacePicker = (props: Props) => {
               );
             })}
           </ul>
-        )}
+        )} */}
       </div>
     </VerticalPage>
   );
