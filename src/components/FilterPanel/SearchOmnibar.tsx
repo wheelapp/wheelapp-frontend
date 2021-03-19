@@ -41,6 +41,7 @@ export type ElasticOrPhotonFeature =
   | {
       _index: 'fromPhotonAPI',
       _id: string,
+      _type?: string,
       _score?: 0.1,
       _source?: {
         geometry?: Point | null,
@@ -69,6 +70,7 @@ export type ElasticOrPhotonFeature =
   | {
       _index: 'accessibility-cloud.placeinfos',
       _id: string, // AC-Id
+      _type?: string,
       _score?: number,
       _source?:
         | AccessibilityCloudFeature
@@ -105,7 +107,7 @@ const bodyAtQueryTime = (actualQuery: string) => {
     },
     query: {
       function_score: {
-        query: { query_string: { query: '' } },
+        query: { query_string: { query: actualQuery } },
         boost: 1,
         boost_mode: 'multiply',
         functions: [

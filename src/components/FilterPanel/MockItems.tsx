@@ -1,12 +1,5 @@
 import { ElasticOrPhotonFeature } from './SearchOmnibar';
 
-export type IPlace = {
-  _id: string,
-  _name: string,
-  _cat: string,
-  _score: number,
-};
-
 export const mockItems: ElasticOrPhotonFeature[] = [
   {
     _index: 'accessibility-cloud.placeinfos',
