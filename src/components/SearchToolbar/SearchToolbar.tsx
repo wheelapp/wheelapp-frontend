@@ -491,7 +491,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
         className={isExpanded ? 'isExpanded' : null}
       >
         <ErrorBoundary>
-          <header>
+          {/* <header>
             <form
               action="#"
               method="post"
@@ -504,7 +504,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {this.props.searchQuery && this.renderCloseLink()}
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
-          </header>
+          </header> */}
           <section onTouchStart={() => this.blur()}>{contentBelowSearchField}</section>
         </ErrorBoundary>
       </StyledToolbar>
