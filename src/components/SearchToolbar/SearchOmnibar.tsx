@@ -21,10 +21,10 @@ import Address from '../NodeToolbar/Address';
 import ErrorBoundary from '../ErrorBoundary';
 import { getBrowserLocaleStrings } from '../../lib/i18n';
 import { SearchResultCollection, SearchResultFeature, SearchResultProperties } from '../../lib/searchPlaces';
-import StyledSearchButton from './SearchButton';
+import StyledSearchButton from './OpenOmniBarButton';
 import CloseLink from '../CloseLink';
 import { t } from 'ttag';
-import SearchResults from './SearchResults';
+
 
 type Props = {
   query: string,
@@ -287,7 +287,10 @@ const fetcher = (url: string) =>
         ]}
       >
         <div>
-        {/* <span><StyledSearchButton onClick={handleClick} />{renderNearByOption()}</span> */}
+          <span>
+            <StyledSearchButton onClick={handleClick} />
+            {/* {renderNearByOption()} */}
+          </span>
           <PushBlueprintjsPortalToTop />
           <ErrorBoundary>
           <ResultsOmnibar

@@ -485,9 +485,9 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
     let contentBelowSearchField = null;
 
     if (!searchResults && isLoading) {
-      contentBelowSearchField = this.renderLoadingIndicator();
+      // contentBelowSearchField = this.renderLoadingIndicator();
     } else if (searchResults && searchQuery) {
-      contentBelowSearchField = this.renderSearchResults(searchResults);
+    //   contentBelowSearchField = this.renderSearchResults(searchResults);
     } else {
       contentBelowSearchField = this.renderFilters();
     }
@@ -504,7 +504,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
         className={isExpanded ? 'isExpanded' : null}
       >
         <ErrorBoundary>
-          <header>
+          {/* <header>
             <form
               action="#"
               method="post"
@@ -517,7 +517,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {this.props.searchQuery && this.renderCloseLink()}
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
-          </header>
+          </header> */}
           {this.renderSearchOmnibar()}
           <section onTouchStart={() => this.blur()}>
             {contentBelowSearchField}

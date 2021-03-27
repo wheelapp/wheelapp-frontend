@@ -1191,7 +1191,8 @@ class App extends React.Component<Props, State> {
     const isMappingEventsToolbarVisible = this.state.isMappingEventsToolbarVisible;
     const isMappingEventToolbarVisible = this.state.isMappingEventToolbarVisible;
     const isSearchButtonVisible =
-      !isSearchBarVisible && !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
+      !isSearchBarVisible && 
+      !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
 
     const extraProps = {
       isNodeRoute,

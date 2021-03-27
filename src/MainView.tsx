@@ -21,7 +21,7 @@ import { EquipmentInfo } from './lib/EquipmentInfo';
 import { translatedStringFromObject } from './lib/i18n';
 import { Cluster } from './components/Map/Cluster';
 
-import SearchButton from './components/SearchToolbar/SearchButton';
+import FilterButton from './components/SearchToolbar/SearchButton';
 import Onboarding from './components/Onboarding/Onboarding';
 import FullscreenBackdrop from './components/FullscreenBackdrop';
 
@@ -52,6 +52,7 @@ import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWe
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
 import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
+import StyledSearchButton from './components/SearchToolbar/OpenOmniBarButton';
 
 type Props = {
   className?: string,
@@ -399,19 +400,21 @@ class MainView extends React.Component<Props, State> {
     );
   }
 
-  renderSearchButton() {
+  renderFilterButton() {
     return (
-      <SearchButton
-        onClick={event => {
-          event.stopPropagation();
-          // Using setTimeout to prevent touch-up events from hovering components
-          // in the search toolbar
-          setTimeout(() => this.props.onClickSearchButton(), 10);
-        }}
-        category={this.props.category}
-        toiletFilter={this.props.toiletFilter}
-        accessibilityFilter={this.props.accessibilityFilter}
-      />
+      <>
+        <FilterButton
+          onClick={event => {
+            event.stopPropagation();
+            // Using setTimeout to prevent touch-up events from hovering components
+            // in the search toolbar
+            setTimeout(() => this.props.onClickSearchButton(), 10);
+          }}
+          category={this.props.category}
+          toiletFilter={this.props.toiletFilter}
+          accessibilityFilter={this.props.accessibilityFilter}
+        />
+      </>
     );
   }
 
@@ -731,7 +734,7 @@ class MainView extends React.Component<Props, State> {
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
             {!isNodeToolbarVisible && this.renderClusterPanel()}
-            {!inEmbedMode && isSearchButtonVisible && this.renderSearchButton()}
+            {!inEmbedMode && isSearchButtonVisible && this.renderFilterButton()}
             {this.renderMap()}
           </div>
           {this.renderFullscreenBackdrop()}
@@ -742,6 +745,7 @@ class MainView extends React.Component<Props, State> {
           {this.renderContributionThanksDialog()}
           {this.renderOnboarding()}
           {isMappingEventWelcomeDialogVisible && this.renderMappingEventWelcomeDialog()}
+          {!isSearchButtonVisible && this.renderFilterButton()} 
         </ErrorBoundary>
       </div>
     );

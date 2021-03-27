@@ -3,18 +3,12 @@ import SearchIcon from './SearchIcon';
 import MapButton from '../MapButton';
 import { t } from 'ttag';
 import styled from 'styled-components';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
-import { isAccessibilityFiltered } from '../../lib/Feature';
-import Categories from '../../lib/Categories';
-import CombinedIcon from './CombinedIcon';
+
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
 
 type Props = {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
   className?: string,
-  category: string | null,
-  accessibilityFilter: YesNoLimitedUnknown[],
-  toiletFilter: YesNoUnknown[],
 };
 
 const Caption = styled.div.attrs({ className: 'caption' })`
@@ -24,18 +18,16 @@ const Caption = styled.div.attrs({ className: 'caption' })`
   margin: 0 0.75rem 0 0;
 `;
 
-function FilterButton(props: Props) {
-  const classNames = ['btn-unstyled', 'filter-button', props.className];
+function SearchButton(props: Props) {
+  const classNames = ['btn-unstyled', 'omnisearchbar-button', props.className];
 
-  const { toiletFilter, accessibilityFilter, category } = props;
-  const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
   // translator: Shown in collapsed search/filter combi button when there is no category filter set
-  const allPlacesCaption = t`Filter`;
+  const searchPlacesCaption = t`Search`;
 
   return (
     <MapButton
       {...props}
-      aria-label={t`Search`}
+      aria-label={t`search`}
       aria-controls="search"
       className={classNames.join(' ')}
     >
@@ -44,21 +36,13 @@ function FilterButton(props: Props) {
 
         <BreadcrumbChevron />
 
-        {isAnyFilterSet && (
-          <CombinedIcon
-            {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
-          />
-        )}
-
-        <Caption>
-          {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
-        </Caption>
+        <Caption>{searchPlacesCaption}</Caption>
       </div>
     </MapButton>
   );
 }
 
-const StyledFilterButton = styled(FilterButton)`
+const StyledSearchButton = styled(SearchButton)`
   > div {
     display: flex;
     flex-direction: row;
@@ -91,4 +75,4 @@ const StyledFilterButton = styled(FilterButton)`
   }
 `;
 
-export default StyledFilterButton;
+export default StyledSearchButton;
