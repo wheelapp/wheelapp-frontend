@@ -51,6 +51,7 @@ import MappingEventToolbar from './components/MappingEvents/MappingEventToolbar'
 import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWelcomeDialog';
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
+import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
 
 type Props = {
   className?: string,
@@ -86,10 +87,7 @@ type Props = {
   shouldLocateOnStart: boolean,
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
 
-  onSearchResultClick: (
-    feature: SearchResultFeature,
-    wheelmapFeature: WheelmapFeature | null
-  ) => void,
+  onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
   onSearchToolbarClick: () => void,
   onSearchToolbarClose: () => void,
   onSearchToolbarSubmit: (searchQuery: string) => void,
@@ -496,6 +494,7 @@ class MainView extends React.Component<Props, State> {
       Boolean(this.props.photoMarkedForReport);
 
     return (
+      // @ts-ignore
       <FullscreenBackdrop onClick={this.props.onClickFullscreenBackdrop} isActive={isActive} />
     );
   }
@@ -541,7 +540,7 @@ class MainView extends React.Component<Props, State> {
         onCancel={place => {
           this.props.onCloseModalDialog();
           if (place) {
-            this.props.onSearchResultClick(place.searchResult, place.wheelmapFeature);
+            this.props.onSearchResultClick(place.searchResult, place.wheelmapFeature, null);
           }
         }}
       />

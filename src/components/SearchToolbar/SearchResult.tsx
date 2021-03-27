@@ -13,12 +13,17 @@ import { PlaceNameHeader } from '../PlaceName';
 import { PotentialPromise } from '../../app/PlaceDetailsProps';
 import styled from 'styled-components';
 import colors from '../../lib/colors';
+import { ElasticOrPhotonFeature } from './SearchOmnibar';
 
 type Props = {
   className?: string,
   feature: SearchResultFeature,
   categories: CategoryLookupTables,
-  onClick: (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => void,
+  onClick: (
+    feature: SearchResultFeature | null,
+    wheelmapFeature: WheelmapFeature | null,
+    elasticFeature: ElasticOrPhotonFeature | null
+  ) => void,
   hidden: boolean,
   wheelmapFeature: PotentialPromise<WheelmapFeature | null>,
 };
@@ -148,7 +153,7 @@ export class UnstyledSearchResult extends React.Component<Props, State> {
       <li ref={this.root} className={className}>
         <button
           onClick={() => {
-            this.props.onClick(feature, wheelmapFeature);
+            this.props.onClick(feature, wheelmapFeature, null);
           }}
           tabIndex={this.props.hidden ? -1 : 0}
         >

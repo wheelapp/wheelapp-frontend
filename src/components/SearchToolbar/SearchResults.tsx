@@ -7,6 +7,7 @@ import { SearchResultFeature } from '../../lib/searchPlaces';
 import { WheelmapFeature } from '../../lib/Feature';
 import SearchResult, { UnstyledSearchResult } from './SearchResult';
 import { CategoryLookupTables } from '../../lib/Categories';
+import { ElasticOrPhotonFeature } from './SearchOmnibar';
 
 type Props = {
   searchResults: SearchResultCollection,
@@ -14,8 +15,9 @@ type Props = {
   className?: string,
   hidden: boolean | null,
   onSearchResultClick: (
-    feature: SearchResultFeature,
-    wheelmapFeature: WheelmapFeature | null
+    feature: SearchResultFeature | null,
+    wheelmapFeature: WheelmapFeature | null,
+    elasticFeature: ElasticOrPhotonFeature | null
   ) => void,
   refFirst: (result: UnstyledSearchResult | null) => void | null,
 };

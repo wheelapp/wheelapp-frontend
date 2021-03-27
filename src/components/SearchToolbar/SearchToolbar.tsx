@@ -24,6 +24,7 @@ import { SearchResultFeature } from '../../lib/searchPlaces';
 import { CategoryLookupTables } from '../../lib/Categories';
 import ErrorBoundary from '../ErrorBoundary';
 import { UnstyledSearchResult } from './SearchResult';
+import SearchOmnibar, { ElasticOrPhotonFeature } from './SearchOmnibar';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
@@ -32,10 +33,7 @@ export type Props = PlaceFilter & {
   category: null | string,
   showCategoryMenu?: boolean,
   searchQuery: null | string,
-  onSearchResultClick: (
-    feature: SearchResultFeature,
-    wheelmapFeature: null | WheelmapFeature
-  ) => void,
+  onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
   onChangeSearchQuery: (newSearchQuery: string) => void,
   onSubmit: (searchQuery: string) => void,
   onAccessibilityFilterButtonClick: (filter: PlaceFilter) => void,
@@ -367,6 +365,21 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
     );
   }
 
+  renderSearchOmnibar() {
+    return(
+      <SearchOmnibar
+        query={this.props.searchQuery}
+        onChange={this.props.onChangeSearchQuery}
+        onSearchResultClick={this.props.onSearchResultClick}
+        searchResults={this.props.searchResults}
+        categories={this.props.categories}
+        onClose={this.props.onClose}
+        hidden={this.props.hidden}
+        // ariaRole="searchbox"
+      ></SearchOmnibar>
+    );
+  }
+
   renderSearchResults(searchResults: SearchResultCollection) {
     return (
       <div aria-live="assertive">
@@ -491,7 +504,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
         className={isExpanded ? 'isExpanded' : null}
       >
         <ErrorBoundary>
-          {/* <header>
+          <header>
             <form
               action="#"
               method="post"
@@ -504,8 +517,11 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {this.props.searchQuery && this.renderCloseLink()}
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
-          </header> */}
-          <section onTouchStart={() => this.blur()}>{contentBelowSearchField}</section>
+          </header>
+          {this.renderSearchOmnibar()}
+          <section onTouchStart={() => this.blur()}>
+            {contentBelowSearchField}
+            </section>
         </ErrorBoundary>
       </StyledToolbar>
     );

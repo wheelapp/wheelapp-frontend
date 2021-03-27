@@ -57,6 +57,7 @@ import 'focus-visible';
 import { trackModalView, trackEvent } from './lib/Analytics';
 import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
+import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
 
 export type LinkData = {
   label: LocalizedString,
@@ -819,30 +820,57 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.push(routeName, params);
   };
 
-  onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+  // onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
+  //   const params = this.getCurrentParams() as any;
+  //   let routeName = 'map';
+
+  //   if (wheelmapFeature) {
+  //     let id = getFeatureId(wheelmapFeature);
+  //     if (id) {
+  //       params.id = id;
+  //       delete params.eid;
+  //       routeName = 'placeDetail';
+  //     }
+  //   }
+
+  //   if (routeName === 'map') {
+  //     delete params.id;
+  //     delete params.eid;
+  //   }
+
+  //   if (feature.properties.extent) {
+  //     const extent = feature.properties.extent;
+  //     this.setState({ lat: null, lon: null, extent });
+  //   } else {
+  //     const [lon, lat] = feature.geometry.coordinates;
+  //     this.setState({ lat, lon, extent: null });
+  //   }
+
+  //   this.props.routerHistory.push(routeName, params);
+  // };
+
+  onSearchResultClick = (feature: SearchResultFeature| null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => {
+
     const params = this.getCurrentParams() as any;
     let routeName = 'map';
 
-    if (wheelmapFeature) {
-      let id = getFeatureId(wheelmapFeature);
+    if (elasticFeature._index == 'fromPhotonAPI' && elasticFeature?._source?.properties?.extent) { // there are places without extent
+      const extent = elasticFeature._source.properties.extent;
+      this.setState({ lat: null, lon: null, extent });
+    } else {
+      let id = getFeatureId(elasticFeature);
       if (id) {
         params.id = id;
         delete params.eid;
         routeName = 'placeDetail';
       }
+      const [lon, lat] = elasticFeature._source.geometry.coordinates;
+      this.setState({ lat, lon, extent: null });
     }
 
-    if (routeName === 'map') {
+    if(routeName == 'map'){
       delete params.id;
       delete params.eid;
-    }
-
-    if (feature.properties.extent) {
-      const extent = feature.properties.extent;
-      this.setState({ lat: null, lon: null, extent });
-    } else {
-      const [lon, lat] = feature.geometry.coordinates;
-      this.setState({ lat, lon, extent: null });
     }
 
     this.props.routerHistory.push(routeName, params);
