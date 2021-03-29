@@ -3,18 +3,13 @@ import SearchIcon from './SearchIcon';
 import MapButton from '../MapButton';
 import { t } from 'ttag';
 import styled from 'styled-components';
-import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
-import { isAccessibilityFiltered } from '../../lib/Feature';
-import Categories from '../../lib/Categories';
-import CombinedIcon from './CombinedIcon';
+
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+import { Switch } from '@blueprintjs/core';
 
 type Props = {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
   className?: string,
-  category: string | null,
-  accessibilityFilter: YesNoLimitedUnknown[],
-  toiletFilter: YesNoUnknown[],
 };
 
 const Caption = styled.div.attrs({ className: 'caption' })`
@@ -24,43 +19,31 @@ const Caption = styled.div.attrs({ className: 'caption' })`
   margin: 0 0.75rem 0 0;
 `;
 
-function FilterButton(props: Props) {
-  const classNames = ['btn-unstyled', 'filter-button', props.className];
+function SearchNearbyButton(props: Props) {
+  const classNames = ['btn-unstyled', 'search-nearby-button', props.className];
 
-  const { toiletFilter, accessibilityFilter, category } = props;
-  const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
   // translator: Shown in collapsed search/filter combi button when there is no category filter set
-  const allPlacesCaption = t`Filter`;
+  const searchPlacesnearbyCaption = t`Nearby?`;
 
   return (
     <MapButton
       {...props}
-      aria-label={t`Search`}
+      aria-label={t`search`}
       aria-controls="search"
       className={classNames.join(' ')}
     >
       <div>
-        <SearchIcon />
+        {/* <SearchIcon /> */}
+        <Switch checked={false} onChange={null} className="nearby-switch" label="Nearby"></Switch>
+        {/* <BreadcrumbChevron /> */}
 
-        <BreadcrumbChevron />
-
-        {isAnyFilterSet && (
-          <CombinedIcon
-            {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
-          />
-        )}
-
-        <Caption>
-          {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
-        </Caption>
+        {/* <Caption>{searchPlacesnearbyCaption}</Caption> */}
       </div>
     </MapButton>
   );
 }
 
-// max-width: calc(100vw - 80px);
-
-const StyledFilterButton = styled(FilterButton)`
+const StyledSearchNearbyButton = styled(SearchNearbyButton)`
   > div {
     display: flex;
     flex-direction: row;
@@ -70,12 +53,18 @@ const StyledFilterButton = styled(FilterButton)`
 
   top: 120px;
   width: auto;
-  max-width: -webkit-min-content;
+  max-width: calc(100vw - 80px);
   min-height: 50px;
   margin-top: constant(safe-area-inset-top);
   margin-top: env(safe-area-inset-top);
   margin-left: constant(safe-area-inset-left);
   margin-left: env(safe-area-inset-left);
+
+  .nearby-switch {
+    height: 20px;
+    margin-left: 0.75rem;
+    margin-right: 10px;
+  }
 
   .breadcrumb-chevron {
     width: 24px;
@@ -94,4 +83,4 @@ const StyledFilterButton = styled(FilterButton)`
   }
 `;
 
-export default StyledFilterButton;
+export default StyledSearchNearbyButton;

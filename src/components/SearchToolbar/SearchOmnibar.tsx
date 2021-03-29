@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import { ItemRenderer, Omnibar } from '@blueprintjs/select';
-import { MenuItem, HotkeysTarget2,Switch } from '@blueprintjs/core';
+import { MenuItem, HotkeysTarget2,Switch, ControlGroup } from '@blueprintjs/core';
 import { createGlobalStyle } from 'styled-components';
 import Categories, { getCategoryId, CategoryLookupTables } from '../../lib/Categories';
 import Icon from '../Icon';
@@ -21,9 +21,10 @@ import Address from '../NodeToolbar/Address';
 import ErrorBoundary from '../ErrorBoundary';
 import { getBrowserLocaleStrings } from '../../lib/i18n';
 import { SearchResultCollection, SearchResultFeature, SearchResultProperties } from '../../lib/searchPlaces';
-import StyledSearchButton from './OpenOmniBarButton';
+import StyledSearchButton from './OpenOmnibarButton';
 import CloseLink from '../CloseLink';
 import { t } from 'ttag';
+import StyledSearchNearbyButton from './SearchNearbyButton';
 
 
 type Props = {
@@ -172,8 +173,6 @@ const fetcher = (url: string) =>
               setIsLoading(false);
             })
           }
-          
-
         } );
       } 
     }, [props.searchResults]);
@@ -203,7 +202,7 @@ const fetcher = (url: string) =>
         photonSearchResults ? photonSearchResults?.features?.find(o => String(o.properties.osm_id) === item._id) : null, 
         wheelmapFeature ? wheelmapFeature?.find(o => String(o.id) === item._id) : null, 
         item);
-      setQueryDebounced("");
+      // setQueryDebounced("");
       
       
     }, []);
@@ -289,11 +288,30 @@ const fetcher = (url: string) =>
         <div>
           <span>
             <StyledSearchButton onClick={handleClick} />
+            {/* <StyledSearchNearbyButton 
+              onClick={null} /> */}
             {/* {renderNearByOption()} */}
           </span>
           <PushBlueprintjsPortalToTop />
           <ErrorBoundary>
           <ResultsOmnibar
+            inputProps={ {
+              rightElement : 
+              <ControlGroup
+                style={
+                  {
+                    padding: "8px 8px 0 8px",
+                    alignItems: "center",
+                    height: "40px"
+                  }
+                }
+              >
+
+                <Switch label="Near current position" checked={false} onChange={null} />
+              </ControlGroup>
+            }
+              
+            }
             query={queryDebounced}
             isOpen={isOpen}
             noResults={<MenuItem disabled={true} text="No results." />}

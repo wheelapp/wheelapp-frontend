@@ -42,6 +42,8 @@ function SearchButton(props: Props) {
   );
 }
 
+// max-width: calc(100vw - 80px);
+
 const StyledSearchButton = styled(SearchButton)`
   > div {
     display: flex;
@@ -51,7 +53,8 @@ const StyledSearchButton = styled(SearchButton)`
   font-size: 1.2rem;
 
   width: auto;
-  max-width: calc(100vw - 80px);
+
+  max-width: -webkit-min-content;
   min-height: 50px;
   margin-top: constant(safe-area-inset-top);
   margin-top: env(safe-area-inset-top);

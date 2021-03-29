@@ -518,7 +518,7 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
           </header> */}
-          {this.renderSearchOmnibar()}
+          {/* {this.renderSearchOmnibar()} */}
           <section onTouchStart={() => this.blur()}>
             {contentBelowSearchField}
             </section>

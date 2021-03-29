@@ -14,6 +14,7 @@ class NextRouterHistory extends AbstractRouterHistory {
 
   change(method: RouterHistoryMethod, name: string, params: RouteParams = {}) {
     const route = this.getRoute(name);
+    // debugger;
     const path = this.generatePath(name, params);
 
     const query = { routeName: route.name, ...params };

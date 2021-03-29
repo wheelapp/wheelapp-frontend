@@ -51,8 +51,8 @@ import MappingEventToolbar from './components/MappingEvents/MappingEventToolbar'
 import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWelcomeDialog';
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
-import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
-import StyledSearchButton from './components/SearchToolbar/OpenOmniBarButton';
+import SearchOmnibar, { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
+
 
 type Props = {
   className?: string,
@@ -257,7 +257,8 @@ class MainView extends React.Component<Props, State> {
         : 0
       : this.state.isOnSmallViewport
       ? 50
-      : 60;
+      : 120; // move FilterPanel under SearchButton
+      // : 60;
   }
 
   renderNodeToolbar(isNodeRoute: boolean) {
@@ -415,6 +416,21 @@ class MainView extends React.Component<Props, State> {
           accessibilityFilter={this.props.accessibilityFilter}
         />
       </>
+    );
+  }
+
+  renderSearchOmnibar() {
+    return(
+      <SearchOmnibar
+        query={this.props.searchQuery}
+        onChange={this.props.onSearchQueryChange}
+        onSearchResultClick={this.props.onSearchResultClick}
+        searchResults={this.props.searchResults}
+        categories={this.props.categories}
+        onClose={this.props.onSearchToolbarClose}
+        hidden={this.props.isSearchBarVisible}
+        // ariaRole="searchbox"
+      ></SearchOmnibar>
     );
   }
 
@@ -734,7 +750,10 @@ class MainView extends React.Component<Props, State> {
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
             {!isNodeToolbarVisible && this.renderClusterPanel()}
-            {!inEmbedMode && isSearchButtonVisible && this.renderFilterButton()}
+            {!inEmbedMode && 
+            // isSearchButtonVisible && 
+            this.renderFilterButton()}
+            {this.renderSearchOmnibar()}
             {this.renderMap()}
           </div>
           {this.renderFullscreenBackdrop()}
@@ -745,7 +764,6 @@ class MainView extends React.Component<Props, State> {
           {this.renderContributionThanksDialog()}
           {this.renderOnboarding()}
           {isMappingEventWelcomeDialogVisible && this.renderMappingEventWelcomeDialog()}
-          {!isSearchButtonVisible && this.renderFilterButton()} 
         </ErrorBoundary>
       </div>
     );
