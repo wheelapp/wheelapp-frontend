@@ -20,7 +20,7 @@ exports.config = {
 
   updateJob: false,
   // specs: ['./tests/specs/**/*.js'],
-  specs: [ './tests/specs/basics.js'],
+  specs: [ './tests/specs/**/basics.js'],
   exclude: [],
   maxInstances: 2,
 
