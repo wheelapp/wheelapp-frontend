@@ -21,6 +21,7 @@ type Environment = {
   REACT_APP_LEGACY_API_BASE_URL: string,
   REACT_APP_WHEELMAP_API_KEY: string,
   REACT_APP_ALLOW_ADDITIONAL_IMAGE_URLS: string,
+  NODE_EXTRA_CA_CERTS: string,
 };
 
 const env: Environment = loadGlobalEnvironment();
