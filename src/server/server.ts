@@ -107,7 +107,7 @@ app.prepare().then(() => {
     ['/api/search/*'],
     createProxyMiddleware({
       // target: env.SEARCH_ELASTIC_BASEURL, // "https://search-es-http.a11ycloud.es.local:9200/" or :  "https://search-es-http:9200/"
-      target: 'https://search-es-http:9200/', // env.SEARCH_ELASTIC_BASEURL,  'https://search-es-http.a11ycloud.es.local:9200/'
+      target: env.SEARCH_ELASTIC_BASEURL, // 'https://search-es-http:9200/',  'https://search-es-http.a11ycloud.es.local:9200/'
       onProxyReq: (proxyReq, request, response) => {
         console.log('>>> Elastic Path', request.path);
         if (request.path != '/accessibility-cloud.placeinfos/_search') {
