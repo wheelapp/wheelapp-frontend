@@ -10,6 +10,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/runtime-corejs3": "^7.12.1",
     "@blueprintjs/core": "^3.42.0",
+    "@blueprintjs/docs-theme": "^3.9.9",
     "@blueprintjs/select": "^3.15.9",
     "@elastic/apm-rum": "^4.9.1",
     "@hypo808/elastic-apm-sourcemap-webpack-plugin": "^1.5.2",

@@ -423,6 +423,10 @@ class MainView extends React.Component<Props, State> {
     return(
       <SearchOmnibar
         query={this.props.searchQuery}
+        lat={this.props.lat}
+        lon={this.props.lon}
+        zoom={this.props.zoom}
+        extent={this.props.extent}
         onChange={this.props.onSearchQueryChange}
         onSearchResultClick={this.props.onSearchResultClick}
         searchResults={this.props.searchResults}

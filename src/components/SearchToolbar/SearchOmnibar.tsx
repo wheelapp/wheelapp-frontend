@@ -15,6 +15,8 @@ import {
   AccessibilityCloudFeature,
   AccessibilityCloudProperties,
   isWheelchairAccessible,
+  normalizedCoordinatesForElasticOrPhotonFeature,
+  normalizedCoordinatesForFeature,
   WheelmapFeature,
 } from '../../lib/Feature';
 import Address from '../NodeToolbar/Address';
@@ -24,20 +26,21 @@ import { SearchResultCollection, SearchResultFeature, SearchResultProperties } f
 import StyledSearchButton from './OpenOmnibarButton';
 import CloseLink from '../CloseLink';
 import { t } from 'ttag';
-import StyledSearchNearbyButton from './SearchNearbyButton';
-
+import { handleBooleanChange } from "@blueprintjs/docs-theme";
+import { geoDistance } from '../../lib/geoDistance';
 
 type Props = {
   query: string,
   onChange: (query: string) => void,
   onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
   searchResults: SearchResultCollection | Promise<SearchResultCollection>
-  // osmFeatures: SearchResultFeature[],
   categories: CategoryLookupTables,
-  // wheelmapFeatures: WheelmapFeature[] | Promise<WheelmapFeature>[], // no need ?
   onClose: () => void,
   hidden: boolean,
-  // closeFilterPanel: () => void,
+  lat: number | null,
+  lon: number | null,
+  zoom: number | null,
+  extent: [number, number, number, number] | null,
 };
 
 export type ElasticOrPhotonFeature =
@@ -102,9 +105,45 @@ const PushBlueprintjsPortalToTop = createGlobalStyle`
 
 `;
 
-const bodyAtQueryTime = (actualQuery: string) => {
+const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lon: number) => {
+  if (isNearby){
+    
+    return lat && lon && JSON.stringify({
+      size: 500,
+      _source: {
+        includes: ["*"],
+        excludes: ["tileCoordinates", "properties.originalData"]
+      },
+      query: {
+        bool: {
+          must: {
+            function_score: {
+              query: {
+                query_string: { query: actualQuery } },
+              boost: 1,
+              boost_mode: "multiply",
+              functions: [
+                {
+                  filter: {
+                    match: { "properties.accessibility.accessibleWith.wheelchair": true } },
+                  weight: 1.0
+                }
+              ]
+            }
+          },
+          filter: {
+            geo_distance: {
+              distance: "1000m",
+              'geometry.coordinates': [String(lat), String(lon)].join(', ')
+            }
+          }
+        }
+      }
+    });
+  }
+  
   return JSON.stringify({
-    size: 500,
+    size: 30,
     _source: {
       includes: ['*'],
       excludes: ['tileCoordinates', 'properties.originalData'],
@@ -116,7 +155,8 @@ const bodyAtQueryTime = (actualQuery: string) => {
         boost_mode: 'multiply',
         functions: [
           {
-            filter: { match: { 'properties.accessibility.accessibleWith.wheelchair': true } },
+            filter: { 
+              match: { 'properties.accessibility.accessibleWith.wheelchair': true } },
             weight: 1.1,
           },
         ],
@@ -124,6 +164,8 @@ const bodyAtQueryTime = (actualQuery: string) => {
     },
   });
 };
+
+
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -140,16 +182,16 @@ const fetcher = (url: string) =>
     const [photonSearchResults, setPhotonSearchResults] = React.useState<SearchResultCollection>(null);
     const [wheelmapFeature, setWheelmapFeature] = React.useState<WheelmapFeature[]>(null);
     const [photonSearchResultsPromise, setPhotonSearchResultsPromise] = React.useState<Promise<SearchResultCollection>>(null);
-  
-    const [isFilerPanelHidden, setIsFilterPanelHidden] = React.useState<boolean>(props.hidden);
+    const [isNearbySearch, setIsNearbySearch] = React.useState<boolean>(false);
+    
     // sending 'GET' request with body in browsers can lead to undefined behavior. elastic supports parsing the body into the 'source=' query parameter instead of the 'q=' query parameter
+    // const { data, error } = useSWR('/api/search/accessibility-cloud.placeinfos/_search?q=' + props.query, fetcher );
     const { data, error } = useSWR(
       '/api/search/accessibility-cloud.placeinfos/_search?source_content_type=application/json&source=' 
-      + bodyAtQueryTime(props.query), 
+      + bodyAtQueryTime(props.query, isNearbySearch, props.lat, props.lon), 
       fetcher 
       );
   
-    // const { data, error } = useSWR('/api/search/accessibility-cloud.placeinfos/_search?q=' + props.query, fetcher );
   
     React.useEffect(() => {
       const timeOutId = setTimeout(() => 
@@ -164,7 +206,6 @@ const fetcher = (url: string) =>
         setIsLoading(true);
         result.then( result => {
           setPhotonSearchResults(result);
-
           const wheelmapFeature = photonSearchResults?.wheelmapFeatures
           if(wheelmapFeature instanceof Promise){
             setIsLoading(true);
@@ -202,23 +243,10 @@ const fetcher = (url: string) =>
         photonSearchResults ? photonSearchResults?.features?.find(o => String(o.properties.osm_id) === item._id) : null, 
         wheelmapFeature ? wheelmapFeature?.find(o => String(o.id) === item._id) : null, 
         item);
-      // setQueryDebounced("");
-      
-      
+      // setQueryDebounced("");    
     }, []);
-  
-    const renderCloseLink = () => {
-      return (
-        <CloseLink
-          ariaLabel={t`Clear search`}
-          onClick={() => {
-            setQueryDebounced(undefined);
-            setIsOpen(false);
-            if (props.onClose) props.onClose();
-          }}
-        />
-      );
-    }
+
+    const handleNearbySearchChange = handleBooleanChange(isNearbySearch => setIsNearbySearch( isNearbySearch ));
   
     const resultItemRenderer: ItemRenderer<ElasticOrPhotonFeature> = (
       item: ElasticOrPhotonFeature,
@@ -239,7 +267,6 @@ const fetcher = (url: string) =>
           active={modifiers.active}
           disabled={modifiers.disabled}
           label={label === undefined ? ' ' : label}
-          // label={''}
           key={item._id}
           onClick={handleClick}
           text={
@@ -257,19 +284,9 @@ const fetcher = (url: string) =>
                 {placeName}
               </PlaceNameHeader>
               {address ? <Address role="none">{address}</Address> : null}
-              
             </React.Fragment>
           }
         ></MenuItem>
-      );
-    };
-  
-  
-    const renderNearByOption = () => {
-      return (
-        <>
-          <Switch label="Near by" checked={false} onChange={null} />
-        </>
       );
     };
   
@@ -288,9 +305,6 @@ const fetcher = (url: string) =>
         <div>
           <span>
             <StyledSearchButton onClick={handleClick} />
-            {/* <StyledSearchNearbyButton 
-              onClick={null} /> */}
-            {/* {renderNearByOption()} */}
           </span>
           <PushBlueprintjsPortalToTop />
           <ErrorBoundary>
@@ -306,8 +320,7 @@ const fetcher = (url: string) =>
                   }
                 }
               >
-
-                <Switch label="Near current position" checked={false} onChange={null} />
+                <Switch label="Near current position" checked={isNearbySearch} onChange={handleNearbySearchChange} />
               </ControlGroup>
             }
               
@@ -494,5 +507,14 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
 
 const merge: (xs: ElasticOrPhotonFeature[], ys: ElasticOrPhotonFeature[]) => ElasticOrPhotonFeature[] = ([x, ...xs], ys) => (x ? [x, ...merge(ys, xs)] : ys);
 
+function getDistanceTo(coords: [number, number], elasticFeature: ElasticOrPhotonFeature) {
+  const featureCoords = normalizedCoordinatesForElasticOrPhotonFeature(elasticFeature);
+  if (!featureCoords) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  return geoDistance(coords, featureCoords);
+}
 
 export default SearchOmnibar;
+

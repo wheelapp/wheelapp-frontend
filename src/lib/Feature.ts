@@ -18,6 +18,7 @@ import { categoryNameFor, getCategoryIdFromProperties } from './Categories';
 import { LocalizedString } from './i18n';
 import { normalizeCoordinates } from './normalizeCoordinates';
 import { SearchResultFeature } from './searchPlaces';
+import { ElasticOrPhotonFeature } from '../components/SearchToolbar/SearchOmnibar';
 
 export type YesNoLimitedUnknown = 'yes' | 'no' | 'limited' | 'unknown';
 export type YesNoUnknown = 'yes' | 'no' | 'unknown';
@@ -594,6 +595,15 @@ export function removeNullAndUndefinedFields(something: any): any {
 // returns coordinates in [lon, lat] array
 export function normalizedCoordinatesForFeature(feature: Feature): [number, number] | null {
   const geometry = feature ? feature.geometry : null;
+  if (!(geometry instanceof Object)) return null;
+  const coordinates = geometry ? geometry.coordinates : null;
+  if (!(coordinates instanceof Array) || coordinates.length !== 2) return null;
+  // @ts-ignore
+  return normalizeCoordinates(coordinates);
+}
+
+export function normalizedCoordinatesForElasticOrPhotonFeature(feature: ElasticOrPhotonFeature): [number, number] | null {
+  const geometry = feature ? feature._source.geometry : null;
   if (!(geometry instanceof Object)) return null;
   const coordinates = geometry ? geometry.coordinates : null;
   if (!(coordinates instanceof Array) || coordinates.length !== 2) return null;
