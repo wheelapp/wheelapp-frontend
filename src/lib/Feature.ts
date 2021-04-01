@@ -602,8 +602,8 @@ export function normalizedCoordinatesForFeature(feature: Feature): [number, numb
   return normalizeCoordinates(coordinates);
 }
 
-export function normalizedCoordinatesForElasticOrPhotonFeature(feature: ElasticOrPhotonFeature): [number, number] | null {
-  const geometry = feature ? feature._source.geometry : null;
+export function normalizedCoordinatesForElasticOrPhotonFeature(elasticFeature: ElasticOrPhotonFeature): [number, number] | null {
+  const geometry = elasticFeature ? elasticFeature._source.geometry : null;
   if (!(geometry instanceof Object)) return null;
   const coordinates = geometry ? geometry.coordinates : null;
   if (!(coordinates instanceof Array) || coordinates.length !== 2) return null;

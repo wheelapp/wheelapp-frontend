@@ -126,7 +126,7 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
                 {
                   filter: {
                     match: { "properties.accessibility.accessibleWith.wheelchair": true } },
-                  weight: 1.0
+                  weight: 1.1
                 }
               ]
             }
@@ -158,10 +158,10 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
             filter: { 
               match: { 'properties.accessibility.accessibleWith.wheelchair': true } },
             weight: 1.1,
-          },
-        ],
-      },
-    },
+          }
+        ]
+      }
+    }
   });
 };
 
@@ -323,7 +323,6 @@ const fetcher = (url: string) =>
                 <Switch label="Near current position" checked={isNearbySearch} onChange={handleNearbySearchChange} />
               </ControlGroup>
             }
-              
             }
             query={queryDebounced}
             isOpen={isOpen}
@@ -339,11 +338,7 @@ const fetcher = (url: string) =>
             itemRenderer={resultItemRenderer}
             onItemSelect={handleItemSelect}
             onQueryChange={setQueryDebounced} 
-          >
-            <Switch label="Near by" checked={false} onChange={null} />
-  
-          </ResultsOmnibar>
-          
+          ></ResultsOmnibar>
           </ErrorBoundary>
         </div>
       </HotkeysTarget2>

@@ -24,7 +24,7 @@ import { SearchResultFeature } from '../../lib/searchPlaces';
 import { CategoryLookupTables } from '../../lib/Categories';
 import ErrorBoundary from '../ErrorBoundary';
 import { UnstyledSearchResult } from './SearchResult';
-import SearchOmnibar, { ElasticOrPhotonFeature } from './SearchOmnibar';
+import { ElasticOrPhotonFeature } from './SearchOmnibar';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
@@ -365,21 +365,6 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
     );
   }
 
-  renderSearchOmnibar() {
-    return(
-      <SearchOmnibar
-        query={this.props.searchQuery}
-        onChange={this.props.onChangeSearchQuery}
-        onSearchResultClick={this.props.onSearchResultClick}
-        searchResults={this.props.searchResults}
-        categories={this.props.categories}
-        onClose={this.props.onClose}
-        hidden={this.props.hidden}
-        // ariaRole="searchbox"
-      ></SearchOmnibar>
-    );
-  }
-
   renderSearchResults(searchResults: SearchResultCollection) {
     return (
       <div aria-live="assertive">
@@ -518,7 +503,6 @@ export default class SearchToolbar extends React.PureComponent<Props, State> {
               {!this.props.searchQuery && this.props.hasGoButton && this.renderGoButton()}
             </form>
           </header> */}
-          {/* {this.renderSearchOmnibar()} */}
           <section onTouchStart={() => this.blur()}>
             {contentBelowSearchField}
             </section>
