@@ -858,7 +858,12 @@ class App extends React.Component<Props, State> {
       const extent = elasticFeature._source.properties.extent;
       this.setState({ lat: null, lon: null, extent });
     } else {
-      let id = getFeatureId(elasticFeature);
+
+      let acId = getFeatureId(elasticFeature);
+      let origId = elasticFeature._source.properties.originalId && elasticFeature._source.properties.originalId;
+
+      let id = origId && origId || acId;
+    
       if (id) {
         params.id = id;
         delete params.eid;

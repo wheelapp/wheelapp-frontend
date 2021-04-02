@@ -109,7 +109,7 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
   if (isNearby){
     
     return lat && lon && JSON.stringify({
-      size: 500,
+      size: 40,
       _source: {
         includes: ["*"],
         excludes: ["tileCoordinates", "properties.originalData"]
@@ -143,7 +143,7 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
   }
   
   return JSON.stringify({
-    size: 30,
+    size: 40,
     _source: {
       includes: ['*'],
       excludes: ['tileCoordinates', 'properties.originalData'],
@@ -158,6 +158,11 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
             filter: { 
               match: { 'properties.accessibility.accessibleWith.wheelchair': true } },
             weight: 1.1,
+          },
+          {
+            filter: { 
+              match: { 'properties.accessibility.partiallyAccessibleWith.wheelchair': true } },
+            weight: 1.05,
           }
         ]
       }
