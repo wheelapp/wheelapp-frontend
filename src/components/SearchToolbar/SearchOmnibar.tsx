@@ -276,7 +276,9 @@ const fetcher = (url: string) =>
           onClick={handleClick}
           text={
             <React.Fragment>
-              <PlaceNameHeader>
+              <PlaceNameHeader
+                className={item._id}
+              >
                 {item._source.properties.category ? (
                   <Icon
                     accessibility={accessibility || null}
