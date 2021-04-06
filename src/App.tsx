@@ -859,10 +859,12 @@ class App extends React.Component<Props, State> {
       this.setState({ lat: null, lon: null, extent });
     } else {
 
-      let acId = getFeatureId(elasticFeature);
-      let origId = elasticFeature._source.properties.originalId && elasticFeature._source.properties.originalId;
+      const acId = getFeatureId(elasticFeature);
 
-      let id = origId && origId || acId;
+      // Todo: fix osm sync and delete this list
+      const isOSMPlace = ["LiBTS67TjmBcXdEmX","uxBG2vp4hN4akkk5v","bELWgM9KtnGWh4gRv","ngFECXr28QQAMmHuF"].includes( elasticFeature._source.properties.sourceId );
+
+      const id = isOSMPlace && elasticFeature._source.properties.originalId || acId;
     
       if (id) {
         params.id = id;

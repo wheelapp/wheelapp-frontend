@@ -25,7 +25,7 @@ describe('Searching a place by name', function() {
     await $searchButton.click();
 
     // const $search = await $('.bp3-input'); // may not work in chrome ?? 
-    const $search = await (await (await $('.bp3-omnibar')).shadow$('.bp3-input-group')).shadow$('.bp3-input')
+    const $search = await (await (await $('.bp3-omnibar')).shadow$('.bp3-input-group')).shadow$('.bp3-input');
     await $search.addValue('bilderbuch');
     const $results = await $('.bp3-menu');
     expect($results).toBeVisible();

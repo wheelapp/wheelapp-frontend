@@ -170,18 +170,14 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
   });
 };
 
-
-
 const fetcher = (url: string) =>
   fetch(url, {
     method: 'GET',
   }).then(r => r.json());
 
   const SearchOmnibar = (props: Props) => {
-    /**
-     * States
-     */
-    const [queryDebounced, setQueryDebounced] = React.useState<string>("");
+
+    const [query, setQuery] = React.useState<string>("");
     const [isOpen, setIsOpen] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [photonSearchResults, setPhotonSearchResults] = React.useState<SearchResultCollection>(null);
@@ -190,19 +186,16 @@ const fetcher = (url: string) =>
     const [isNearbySearch, setIsNearbySearch] = React.useState<boolean>(false);
     
     // sending 'GET' request with body in browsers can lead to undefined behavior. elastic supports parsing the body into the 'source=' query parameter instead of the 'q=' query parameter
-    // const { data, error } = useSWR('/api/search/accessibility-cloud.placeinfos/_search?q=' + props.query, fetcher );
     const { data, error } = useSWR(
       '/api/search/accessibility-cloud.placeinfos/_search?source_content_type=application/json&source=' 
       + bodyAtQueryTime(props.query, isNearbySearch, props.lat, props.lon), 
       fetcher 
       );
   
-  
-    React.useEffect(() => {
-      const timeOutId = setTimeout(() => 
-      props.onChange(queryDebounced), 1000);
-      return () => clearTimeout(timeOutId);
-    }, [queryDebounced]);
+    const handleChange = React.useCallback((newValue: string) => {
+      props.onChange(newValue);
+      setQuery(newValue);
+    }, [props.onChange]);
   
     React.useEffect(() => {
       const result = props.searchResults;
@@ -224,10 +217,10 @@ const fetcher = (url: string) =>
     }, [props.searchResults]);
   
     React.useEffect(() => {
-      if (queryDebounced?.length > 0) {
+      if (query?.length > 0) {
         setIsOpen(true);
       }
-    }, [queryDebounced]);
+    }, [query]);
   
     const handleToggle = React.useCallback(() => {
       setIsOpen(!isOpen);
@@ -248,7 +241,7 @@ const fetcher = (url: string) =>
         photonSearchResults ? photonSearchResults?.features?.find(o => String(o.properties.osm_id) === item._id) : null, 
         wheelmapFeature ? wheelmapFeature?.find(o => String(o.id) === item._id) : null, 
         item);
-      // setQueryDebounced("");    
+      setQuery("");    
     }, []);
 
     const handleNearbySearchChange = handleBooleanChange(isNearbySearch => setIsNearbySearch( isNearbySearch ));
@@ -331,7 +324,7 @@ const fetcher = (url: string) =>
               </ControlGroup>
             }
             }
-            query={queryDebounced}
+            query={query}
             isOpen={isOpen}
             noResults={<MenuItem disabled={true} text="No results." />}
             onClose={handleClose}
@@ -344,7 +337,7 @@ const fetcher = (url: string) =>
             }
             itemRenderer={resultItemRenderer}
             onItemSelect={handleItemSelect}
-            onQueryChange={setQueryDebounced} 
+            onQueryChange={handleChange} 
           ></ResultsOmnibar>
           </ErrorBoundary>
         </div>
@@ -501,8 +494,12 @@ const mergeElasticSearchresultsWithPhotonAPISearchresults = (
     },
   }));
 
-  const osmPlaces = osm && osm.filter(osms => osms._source.properties.osm_key === 'place');
-  const out = elastic && osmPlaces && merge(elastic, osmPlaces);
+  const osmPlaces = osm && osm.filter(osms => osms._source.properties.osm_key === 'place').slice(0,5);
+
+
+
+
+  const out = elastic && osmPlaces &&  osmPlaces.concat(elastic);  // merge(elastic, osmPlaces);
 
   return out;
 };
