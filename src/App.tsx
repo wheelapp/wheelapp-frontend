@@ -671,16 +671,17 @@ class App extends React.Component<Props, State> {
       return;
     }
 
-    const params = this.getCurrentParams() as any;
+    // Manage 'search' router func
+    // const params = this.getCurrentParams() as any;
 
-    delete params.id;
-    delete params.eid;
+    // delete params.id;
+    // delete params.eid;
 
-    if (replace) {
-      this.props.routerHistory.replace('search', params);
-    } else {
-      this.props.routerHistory.push('search', params);
-    }
+    // if (replace) {
+    //   this.props.routerHistory.replace('search', params);
+    // } else {
+    //   this.props.routerHistory.push('search', params);
+    // }
 
   }
 
