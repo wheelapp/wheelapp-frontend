@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { t } from 'ttag';
 import { Dots } from 'react-activity';
 
-import SearchResult from '../../SearchToolbar/SearchResult';
+import SearchResult from '../../SearchFilter/SearchResult';
 import VerticalPage from '../components/VerticalPage';
 import usePlaceSearchWithWheelmapResolution, {
   WheelmapResolvedSearchResultFeature,

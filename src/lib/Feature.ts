@@ -18,7 +18,7 @@ import { categoryNameFor, getCategoryIdFromProperties } from './Categories';
 import { LocalizedString } from './i18n';
 import { normalizeCoordinates } from './normalizeCoordinates';
 import { SearchResultFeature } from './searchPlaces';
-import { ElasticOrPhotonFeature } from '../components/SearchToolbar/SearchOmnibar';
+import { ElasticOrPhotonFeature } from '../components/SearchFilter/SearchOmnibar';
 
 export type YesNoLimitedUnknown = 'yes' | 'no' | 'limited' | 'unknown';
 export type YesNoUnknown = 'yes' | 'no' | 'unknown';

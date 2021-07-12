@@ -48,7 +48,7 @@ import { ModalNodeState } from './lib/ModalNodeState';
 import { CategoryLookupTables } from './lib/Categories';
 import { PhotoModel } from './lib/PhotoModel';
 import { PlaceDetailsProps, PotentialPromise } from './app/PlaceDetailsProps';
-import { PlaceFilter } from './components/SearchToolbar/AccessibilityFilterModel';
+import { PlaceFilter } from './components/SearchFilter/AccessibilityFilterModel';
 import { LocalizedString } from './lib/i18n';
 import { RouteProvider } from './components/Link/RouteContext';
 
@@ -57,7 +57,7 @@ import 'focus-visible';
 import { trackModalView, trackEvent } from './lib/Analytics';
 import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
-import { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
+import { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
 
 export type LinkData = {
   label: LocalizedString,
@@ -108,7 +108,7 @@ interface State {
   accessibilityPresetStatus?: YesNoLimitedUnknown | null,
   isSearchBarVisible: boolean,
   isOnSmallViewport: boolean,
-  isSearchToolbarExpanded: boolean,
+  isFilterToolbarExpanded: boolean,
   isMappingEventsToolbarVisible: boolean,
   isMappingEventToolbarVisible: boolean,
 
@@ -457,7 +457,7 @@ class App extends React.Component<Props, State> {
     modalNodeState: null,
     accessibilityPresetStatus: null,
     isOnSmallViewport: false,
-    isSearchToolbarExpanded: false,
+    isFilterToolbarExpanded: false,
     isMappingEventsToolbarVisible: false,
     isMappingEventToolbarVisible: false,
 
@@ -474,13 +474,13 @@ class App extends React.Component<Props, State> {
 
   static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
     const newState: Partial<State> = {
-      isSearchToolbarExpanded: false,
+      isFilterToolbarExpanded: false,
       isSearchBarVisible: isStickySearchBarSupported(),
     };
 
     // open search results on search route
     if (props.routeName === 'search') {
-      newState.isSearchToolbarExpanded = true;
+      newState.isFilterToolbarExpanded = true;
       newState.isSearchBarVisible = true;
       newState.activeCluster = null;
     }
@@ -682,7 +682,6 @@ class App extends React.Component<Props, State> {
       this.props.routerHistory.push('search', params);
     }
 
-    if (this.mainView) this.mainView.focusSearchToolbar();
   }
 
   closeSearch() {
@@ -731,7 +730,7 @@ class App extends React.Component<Props, State> {
   };
 
   onMapClick = () => {
-    if (this.state.isSearchToolbarExpanded) {
+    if (this.state.isFilterToolbarExpanded) {
       this.closeSearch();
       this.mainView && this.mainView.focusMap();
     }
@@ -1073,20 +1072,20 @@ class App extends React.Component<Props, State> {
   onCloseOnboarding = () => {
     saveState({ onboardingCompleted: 'true' });
     this.setState({ isOnboardingVisible: false });
-    if (this.mainView) this.mainView.focusSearchToolbar();
+
   };
 
-  onSearchToolbarClick = () => {
+  onFilterToolbarClick = () => {
     this.openSearch();
   };
 
-  onSearchToolbarClose = () => {
+  onFilterToolbarClose = () => {
     this.closeSearch();
 
     if (this.mainView) this.mainView.focusMap();
   };
 
-  onSearchToolbarSubmit = (searchQuery: string) => {
+  onFilterToolbarSubmit = (searchQuery: string) => {
     // Enter a command like `locale:de_DE` to set a new locale.
     const setLocaleCommandMatch = searchQuery.match(/^locale:(\w\w(?:_\w\w))/);
 
@@ -1174,7 +1173,7 @@ class App extends React.Component<Props, State> {
     return (
       props.feature &&
       !props.mappingEvent &&
-      !state.isSearchToolbarExpanded &&
+      !state.isFilterToolbarExpanded &&
       !state.isPhotoUploadInstructionsToolbarVisible &&
       !state.photoMarkedForReport
     );
@@ -1233,7 +1232,7 @@ class App extends React.Component<Props, State> {
       isMappingEventWelcomeDialogVisible: this.state.isMappingEventWelcomeDialogVisible,
       isMainMenuOpen: this.state.isMainMenuOpen,
       isOnSmallViewport: this.state.isOnSmallViewport,
-      isSearchToolbarExpanded: this.state.isSearchToolbarExpanded,
+      isFilterToolbarExpanded: this.state.isFilterToolbarExpanded,
       searchResults: this.props.searchResults,
       inEmbedMode: this.props.inEmbedMode,
       mappingEvents: this.state.mappingEvents,
@@ -1289,9 +1288,9 @@ class App extends React.Component<Props, State> {
           onOpenReportMode={this.onOpenReportMode}
           onCloseNodeToolbar={this.onCloseNodeToolbar}
           onCloseOnboarding={this.onCloseOnboarding}
-          onSearchToolbarClick={this.onSearchToolbarClick}
-          onSearchToolbarClose={this.onSearchToolbarClose}
-          onSearchToolbarSubmit={this.onSearchToolbarSubmit}
+          onFilterToolbarClick={this.onFilterToolbarClick}
+          onFilterToolbarClose={this.onFilterToolbarClose}
+          onFilterToolbarSubmit={this.onFilterToolbarSubmit}
           onCloseModalDialog={this.onCloseModalDialog}
           onOpenWheelchairAccessibility={this.onOpenWheelchairAccessibility}
           onOpenToiletAccessibility={this.onOpenToiletAccessibility}

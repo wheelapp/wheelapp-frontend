@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import FocusTrap from 'focus-trap-react';
 import MainMenu from './components/MainMenu/MainMenu';
 import NodeToolbarFeatureLoader from './components/NodeToolbar/NodeToolbarFeatureLoader';
-import SearchToolbar from './components/SearchToolbar/SearchToolbar';
-import { PlaceFilter } from './components/SearchToolbar/AccessibilityFilterModel';
+import FilterToolbar from './components/SearchFilter/FilterToolbar';
+import { PlaceFilter } from './components/SearchFilter/AccessibilityFilterModel';
 import ReportPhotoToolbar from './components/PhotoUpload/ReportPhotoToolbar';
 import PhotoUploadInstructionsToolbar from './components/PhotoUpload/PhotoUploadInstructionsToolbar';
 import MapLoading from './components/Map/MapLoading';
@@ -21,7 +21,7 @@ import { EquipmentInfo } from './lib/EquipmentInfo';
 import { translatedStringFromObject } from './lib/i18n';
 import { Cluster } from './components/Map/Cluster';
 
-import FilterButton from './components/SearchToolbar/SearchButton';
+import FilterButton from './components/SearchFilter/SearchButton';
 import Onboarding from './components/Onboarding/Onboarding';
 import FullscreenBackdrop from './components/FullscreenBackdrop';
 
@@ -51,7 +51,7 @@ import MappingEventToolbar from './components/MappingEvents/MappingEventToolbar'
 import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWelcomeDialog';
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
-import SearchOmnibar, { ElasticOrPhotonFeature } from './components/SearchToolbar/SearchOmnibar';
+import SearchOmnibar, { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
 
 
 type Props = {
@@ -82,16 +82,16 @@ type Props = {
   isNotFoundVisible: boolean,
   modalNodeState: ModalNodeState,
   isSearchBarVisible: boolean,
-  isSearchToolbarExpanded: boolean,
+  isFilterToolbarExpanded: boolean,
   isSearchButtonVisible: boolean,
   isNodeToolbarDisplayed: boolean,
   shouldLocateOnStart: boolean,
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
 
   onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
-  onSearchToolbarClick: () => void,
-  onSearchToolbarClose: () => void,
-  onSearchToolbarSubmit: (searchQuery: string) => void,
+  onFilterToolbarClick: () => void,
+  onFilterToolbarClose: () => void,
+  onFilterToolbarSubmit: (searchQuery: string) => void,
   onClickSearchButton: () => void,
   onToggleMainMenu: () => void,
   onMainMenuHomeClick: () => void,
@@ -194,7 +194,7 @@ class MainView extends React.Component<Props, State> {
 
   lastFocusedElement: HTMLElement | null;
   nodeToolbar: NodeToolbarFeatureLoader | null;
-  searchToolbar: SearchToolbar | null;
+  filterToolbar: FilterToolbar | null;
   photoUploadInstructionsToolbar: PhotoUploadInstructionsToolbar | null;
 
   resizeListener = () => {
@@ -218,12 +218,6 @@ class MainView extends React.Component<Props, State> {
 
   updateViewportSizeState() {
     this.setState({ isOnSmallViewport: isOnSmallViewport() });
-  }
-
-  focusSearchToolbar() {
-    if (this.searchToolbar) {
-      this.searchToolbar.focus();
-    }
   }
 
   focusMap() {
@@ -375,27 +369,20 @@ class MainView extends React.Component<Props, State> {
     );
   }
 
-  renderSearchToolbar(isInert: boolean) {
+  renderFilterToolbar(isInert: boolean) {
     return (
-      <SearchToolbar
-        ref={searchToolbar => (this.searchToolbar = searchToolbar)}
+      <FilterToolbar
+        ref={filterToolbar => (this.filterToolbar = filterToolbar)}
         categories={this.props.categories}
         hidden={!this.props.isSearchBarVisible}
         inert={isInert}
         category={this.props.category}
         showCategoryMenu={!this.props.disableWheelmapSource}
         searchQuery={this.props.searchQuery}
-        searchResults={this.props.searchResults}
         accessibilityFilter={this.props.accessibilityFilter}
         toiletFilter={this.props.toiletFilter}
-        onChangeSearchQuery={this.props.onSearchQueryChange}
         onAccessibilityFilterButtonClick={this.props.onAccessibilityFilterButtonClick}
-        onSearchResultClick={this.props.onSearchResultClick}
-        onClick={this.props.onSearchToolbarClick}
-        onSubmit={this.props.onSearchToolbarSubmit}
-        onClose={this.props.onSearchToolbarClose}
-        isExpanded={this.props.isSearchToolbarExpanded}
-        hasGoButton={this.state.isOnSmallViewport}
+        isExpanded={this.props.isFilterToolbarExpanded}
         minimalTopPosition={this.getMinimalToolbarTopPosition()}
       />
     );
@@ -431,7 +418,7 @@ class MainView extends React.Component<Props, State> {
         onSearchResultClick={this.props.onSearchResultClick}
         searchResults={this.props.searchResults}
         categories={this.props.categories}
-        onClose={this.props.onSearchToolbarClose}
+        onClose={this.props.onFilterToolbarClose}
         hidden={this.props.isSearchBarVisible}
         // ariaRole="searchbox"
       ></SearchOmnibar>
@@ -733,14 +720,14 @@ class MainView extends React.Component<Props, State> {
       inEmbedMode ? 'in-embed-mode' : null,
     ]).filter(Boolean);
 
-    const searchToolbarIsHidden =
+    const filterToolbarIsHidden =
       (isNodeRoute && this.state.isOnSmallViewport) ||
       isPhotoUploadInstructionsToolbarVisible ||
       isOnboardingVisible ||
       isNotFoundVisible ||
       !!photoMarkedForReport;
 
-    const searchToolbarIsInert: boolean = searchToolbarIsHidden || isMainMenuOpen;
+    const filterToolbarIsInert: boolean = filterToolbarIsHidden || isMainMenuOpen;
 
     return (
       <div className={classList.join(' ')}>
@@ -749,7 +736,7 @@ class MainView extends React.Component<Props, State> {
           <div className="behind-backdrop">
             {inEmbedMode && this.renderWheelmapHomeLink()}
             {!inEmbedMode && isMainMenuInBackground && this.renderMainMenu()}
-            {!inEmbedMode && this.renderSearchToolbar(searchToolbarIsInert)}
+            {!inEmbedMode && this.renderFilterToolbar(filterToolbarIsInert)}
             {isNodeToolbarVisible && !modalNodeState && this.renderNodeToolbar(isNodeRoute)}
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
