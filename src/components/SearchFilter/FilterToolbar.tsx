@@ -241,7 +241,7 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
       >
         <ErrorBoundary>
           <section
-          // onTouchStart={() => this.blur()}
+          // onTouchStart={() =>  this.blur()}
           >
             {contentBelowSearchField}
           </section>
