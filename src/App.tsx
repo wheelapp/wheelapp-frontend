@@ -59,6 +59,8 @@ import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
 import { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
 
+import { OmnibarIsOpenContextProvider } from './components/Contexts/OmnibarContext';
+
 export type LinkData = {
   label: LocalizedString,
   badgeLabel?: LocalizedString,
@@ -1271,6 +1273,7 @@ class App extends React.Component<Props, State> {
         }}
       >
         <GlobalStyle />
+        <OmnibarIsOpenContextProvider> {/* context for the isOpen flag of the Omnibar */}
         <MainView
           {...extraProps}
           ref={mainView => {
@@ -1323,6 +1326,7 @@ class App extends React.Component<Props, State> {
           onMappingEventWelcomeDialogOpen={this.onMappingEventWelcomeDialogOpen}
           onMappingEventWelcomeDialogClose={this.onMappingEventWelcomeDialogClose}
         />
+        </OmnibarIsOpenContextProvider>
       </RouteProvider>
     );
   }

@@ -17,6 +17,10 @@ import { AppContextConsumer } from '../../AppContext';
 
 import CloseIcon from '../icons/actions/Close';
 
+import { useUpdateOmnibarIsOpenContext } from '../Contexts/OmnibarContext';
+import SearchIcon from '../SearchFilter/SearchIcon';
+import { isOnSmallViewport } from '../../lib/ViewportSize';
+
 type State = {
   isMenuButtonVisible: boolean,
 };
@@ -71,70 +75,71 @@ const Badge = styled.span`
 
 const MENU_BUTTON_VISIBILITY_BREAKPOINT = 1024;
 
-class MainMenu extends React.Component<Props, State> {
-  props: Props;
-  state: State = {
-    isMenuButtonVisible: false,
-  };
+const MainMenu = (props: Props) => {
+  const [isMenuButtonVisible, setIsMenuButtonVisible] = React.useState<boolean>(false);
 
-  boundOnResize: () => void;
+  // boundOnResize: () => void;
 
-  onResize = () => {
+  const onResize = () => {
     if (window.innerWidth > MENU_BUTTON_VISIBILITY_BREAKPOINT) {
-      this.setState({ isMenuButtonVisible: false });
+      setIsMenuButtonVisible(false);
     } else {
-      this.setState({ isMenuButtonVisible: true });
-      this.props.onToggle(false);
+      setIsMenuButtonVisible(true);
+      props.onToggle(false);
     }
   };
 
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize);
-    this.onResize();
-  }
+  // is called initially
+  /**
+   * TODO check if eventlistener is removed properly and doesnt eat memory
+   */
+  React.useEffect(() => {
+    window.addEventListener('resize', onResize);
+    onResize();
+  }, [isMenuButtonVisible, setIsMenuButtonVisible]);
 
-  componentWillUnmount() {
+  React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', this.onResize);
+      window.removeEventListener('resize', onResize);
     }
-  }
+  }, [isMenuButtonVisible, setIsMenuButtonVisible]);
 
-  toggleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    this.props.onToggle(!this.props.isOpen);
+  const toggleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    props.onToggle(!props.isOpen);
     event.preventDefault();
   };
 
-  handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') {
-      this.props.onToggle(false);
+      props.onToggle(false);
     }
   };
 
-  renderHomeLink(extraProps = {}) {
+  const renderHomeLink = (extraProps = {}) => {
     return (
       <div className="home-link">
         <button
           className="btn-unstyled home-button"
-          onClick={this.props.onHomeClick}
+          onClick={props.onHomeClick}
           aria-label={t`Home`}
-          onKeyDown={this.handleKeyDown}
+          onKeyDown={handleKeyDown}
           {...extraProps}
         >
           {/* translator: The alternative desription of the app logo for screenreaders */}
           <img
             className="logo"
-            src={this.props.logoURL}
+            src={props.logoURL}
             width={156}
             height={30}
-            alt={this.props.productName}
+            alt={props.productName}
           />
         </button>
       </div>
     );
-  }
+  };
 
-  renderAppLinks(baseUrl: string) {
-    return this.props.links
+  const renderAppLinks = (baseUrl: string) => {
+    return props.links
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .map(link => {
         const url =
@@ -142,7 +147,7 @@ class MainMenu extends React.Component<Props, State> {
           insertPlaceholdersToAddPlaceUrl(
             baseUrl,
             translatedStringFromObject(link.url),
-            this.props.uniqueSurveyId
+            props.uniqueSurveyId
           );
         const label = translatedStringFromObject(link.label);
         const badgeLabel = translatedStringFromObject(link.badgeLabel);
@@ -163,12 +168,12 @@ class MainMenu extends React.Component<Props, State> {
         }
 
         if (isAddPlaceLink && !isAddPlaceLinkWithoutCustomUrl) {
-          customClickHandler = this.props.onAddPlaceViaCustomLinkClick;
+          customClickHandler = props.onAddPlaceViaCustomLinkClick;
         }
 
         const isEventsLink = link.tags && link.tags.indexOf('events') !== -1;
         if (isEventsLink) {
-          return this.renderEventsOrJoinedEventLink(label, url, className);
+          return renderEventsOrJoinedEventLink(label, url, className);
         }
 
         if (typeof url === 'string') {
@@ -188,10 +193,14 @@ class MainMenu extends React.Component<Props, State> {
 
         return null;
       });
-  }
+  };
 
-  renderEventsOrJoinedEventLink(label: string | null, url: string | null, className: string) {
-    const joinedMappingEvent = this.props.joinedMappingEvent;
+  const renderEventsOrJoinedEventLink = (
+    label: string | null,
+    url: string | null,
+    className: string
+  ) => {
+    const joinedMappingEvent = props.joinedMappingEvent;
     if (joinedMappingEvent) {
       return (
         <Link
@@ -200,7 +209,7 @@ class MainMenu extends React.Component<Props, State> {
           to="mappingEventDetail"
           params={{ id: joinedMappingEvent._id }}
           role="menuitem"
-          onClick={this.props.onMappingEventsLinkClick}
+          onClick={props.onMappingEventsLinkClick}
         >
           {joinedMappingEvent.name}
         </Link>
@@ -219,7 +228,7 @@ class MainMenu extends React.Component<Props, State> {
                 to="mappingEvents"
                 params={params}
                 role="menuitem"
-                onClick={this.props.onMappingEventsLinkClick}
+                onClick={props.onMappingEventsLinkClick}
               >
                 {label}
               </Link>
@@ -228,61 +237,76 @@ class MainMenu extends React.Component<Props, State> {
         </RouteConsumer>
       );
     }
-  }
+  };
 
-  renderCloseButton() {
-    const { isOpen } = this.props;
-    const { isMenuButtonVisible } = this.state;
+  const renderCloseButton = () => {
     return (
       <button
         className="btn-unstyled menu"
-        onClick={this.toggleMenu}
+        onClick={toggleMenu}
         aria-hidden={!isMenuButtonVisible}
         tabIndex={isMenuButtonVisible ? 0 : -1}
         aria-label={t`Menu`}
         aria-haspopup="true"
-        aria-expanded={isOpen}
+        aria-expanded={props.isOpen}
         aria-controls="main-menu"
-        onKeyDown={this.handleKeyDown}
+        onKeyDown={handleKeyDown}
       >
-        {isOpen ? <CloseIcon /> : <MenuIcon />}
+        {props.isOpen ? <CloseIcon /> : <MenuIcon />}
       </button>
     );
-  }
+  };
 
-  render() {
-    const { isOpen, className, claim } = this.props;
-    const { isMenuButtonVisible } = this.state;
+  const setIsOpen = useUpdateOmnibarIsOpenContext();
 
-    const classList = [
-      className,
-      isOpen || !isMenuButtonVisible ? 'is-open' : null,
-      'main-menu',
-    ].filter(Boolean);
+  const handleClick = React.useCallback((_event: React.MouseEvent<HTMLElement>) => {
+    setIsOpen(true);
+  }, []);
 
-    const focusTrapIsActive = isMenuButtonVisible && isOpen;
-
+  const renderOmnibarSearchButtonOnSmallViewport = () => {
     return (
-      <FocusTrap active={focusTrapIsActive}>
-        <nav className={classList.join(' ')}>
-          {this.renderHomeLink()}
-
-          <div className="claim">{translatedStringFromObject(claim)}</div>
-
-          <GlobalActivityIndicator className="activity-indicator" />
-
-          <div id="main-menu" role="menu">
-            <AppContextConsumer>
-              {appContext => this.renderAppLinks(appContext.baseUrl)}
-            </AppContextConsumer>
-          </div>
-
-          {this.renderCloseButton()}
-        </nav>
-      </FocusTrap>
+      <>
+        <div className="search-on-small-vp">
+          <button
+            className="btn-search btn-unstyled" // TODO use btn-unstyled later once it fits
+            onClick={handleClick}
+            aria-label={t`search`}
+            aria-controls="search"
+          >
+            <SearchIcon />
+          </button>
+        </div>
+      </>
     );
-  }
-}
+    // we may need an context hook here?
+  };
+
+  const classList = [
+    props.className,
+    props.isOpen || !isMenuButtonVisible ? 'is-open' : null,
+    'main-menu',
+  ].filter(Boolean);
+
+  const focusTrapIsActive = isMenuButtonVisible && props.isOpen;
+
+  return (
+    <FocusTrap active={focusTrapIsActive}>
+      <nav className={classList.join(' ')}>
+        {renderHomeLink()}
+        <div className="claim">{translatedStringFromObject(props.claim)}</div>
+        <GlobalActivityIndicator className="activity-indicator" />
+        <div id="main-menu" role="menu">
+          <AppContextConsumer>
+            {appContext => renderAppLinks(appContext.baseUrl)}
+          </AppContextConsumer>
+        </div>
+
+        {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null}
+        {renderCloseButton()}
+      </nav>
+    </FocusTrap>
+  );
+};
 
 const openMenuHoverColor = hsl(colors.primaryColor).brighter(1.4);
 openMenuHoverColor.opacity = 0.5;
@@ -325,13 +349,13 @@ const StyledMainMenu = styled(MainMenu)`
 
   #main-menu {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: row;
     justify-content: flex-end;
     align-items: stretch;
     height: 100%;
     overflow: hidden;
-    flex: 3;
+    flex: 5;
     min-height: 50px;
   }
 
@@ -388,6 +412,14 @@ const StyledMainMenu = styled(MainMenu)`
     padding: 0;
     min-width: 50px;
     min-height: 50px;
+  }
+
+  button.btn-search {
+    // padding-right: 80px;
+    // position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   button.menu {

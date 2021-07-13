@@ -5,6 +5,7 @@ import { t } from 'ttag';
 import styled from 'styled-components';
 
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+import { hasBigViewport, isOnSmallViewport } from '../../lib/ViewportSize';
 
 type Props = {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
@@ -25,20 +26,22 @@ function SearchButton(props: Props) {
   const searchPlacesCaption = t`Search`;
 
   return (
-    <MapButton
-      {...props}
-      aria-label={t`search`}
-      aria-controls="search"
-      className={classNames.join(' ')}
-    >
-      <div>
-        <SearchIcon />
-
-        <BreadcrumbChevron />
-
-        <Caption>{searchPlacesCaption}</Caption>
-      </div>
-    </MapButton>
+    <>
+      {!isOnSmallViewport() ? (
+        <MapButton
+          {...props}
+          aria-label={t`search`}
+          aria-controls="search"
+          className={classNames.join(' ')}
+        >
+          <div>
+            <SearchIcon />
+            <BreadcrumbChevron />
+            <Caption>{searchPlacesCaption}</Caption>
+          </div>
+        </MapButton>
+      ) : null}
+    </>
   );
 }
 

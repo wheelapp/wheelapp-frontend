@@ -28,6 +28,7 @@ import CloseLink from '../CloseLink';
 import { t } from 'ttag';
 import { handleBooleanChange } from "@blueprintjs/docs-theme";
 import { geoDistance } from '../../lib/geoDistance';
+import { useOmnibarIsOpenContext, useUpdateOmnibarIsOpenContext } from '../Contexts/OmnibarContext';
 
 type Props = {
   query: string,
@@ -177,8 +178,9 @@ const fetcher = (url: string) =>
 
   const SearchOmnibar = (props: Props) => {
 
+    const isOpen = useOmnibarIsOpenContext();
+    const setIsOpen = useUpdateOmnibarIsOpenContext();
     const [query, setQuery] = React.useState<string>("");
-    const [isOpen, setIsOpen] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [photonSearchResults, setPhotonSearchResults] = React.useState<SearchResultCollection>(null);
     const [wheelmapFeature, setWheelmapFeature] = React.useState<WheelmapFeature[]>(null);
