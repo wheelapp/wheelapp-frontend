@@ -134,7 +134,7 @@ const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lo
           },
           filter: {
             geo_distance: {
-              distance: "1000m",
+              distance: "10000m",
               'geometry.coordinates': [String(lat), String(lon)].join(', ')
             }
           }
