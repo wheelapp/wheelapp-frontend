@@ -301,7 +301,7 @@ const MainMenu = (props: Props) => {
           </AppContextConsumer>
         </div>
 
-        {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null}
+        {/* {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null} */}
         {renderCloseButton()}
       </nav>
     </FocusTrap>
@@ -349,13 +349,13 @@ const StyledMainMenu = styled(MainMenu)`
 
   #main-menu {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: flex-end;
     align-items: stretch;
     height: 100%;
     overflow: hidden;
-    flex: 5;
+    flex: 3;
     min-height: 50px;
   }
 
@@ -412,14 +412,6 @@ const StyledMainMenu = styled(MainMenu)`
     padding: 0;
     min-width: 50px;
     min-height: 50px;
-  }
-
-  button.btn-search {
-    // padding-right: 80px;
-    // position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   button.menu {

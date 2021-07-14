@@ -8,6 +8,7 @@ import { isAccessibilityFiltered } from '../../lib/Feature';
 import Categories from '../../lib/Categories';
 import CombinedIcon from './CombinedIcon';
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+import FilterIcon from './FilterIcon';
 
 type Props = {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
@@ -40,7 +41,7 @@ function FilterButton(props: Props) {
       className={classNames.join(' ')}
     >
       <div>
-        <SearchIcon />
+        <FilterIcon />
 
         <BreadcrumbChevron />
 
@@ -84,7 +85,7 @@ const StyledFilterButton = styled(FilterButton)`
     opacity: 0.5;
   }
 
-  svg.search-icon {
+  svg.filter-icon {
     width: 20px;
     height: 20px;
     margin-left: 0.75rem;
