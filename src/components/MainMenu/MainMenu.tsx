@@ -268,7 +268,7 @@ const MainMenu = (props: Props) => {
       <>
         <div className="search-on-small-vp">
           <button
-            className="btn-search btn-unstyled" // TODO use btn-unstyled later once it fits
+            className="search btn-unstyled" // TODO use btn-unstyled later once it fits
             onClick={handleClick}
             aria-label={t`search`}
             aria-controls="search"
@@ -295,13 +295,14 @@ const MainMenu = (props: Props) => {
         {renderHomeLink()}
         <div className="claim">{translatedStringFromObject(props.claim)}</div>
         <GlobalActivityIndicator className="activity-indicator" />
+
+        {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null}
         <div id="main-menu" role="menu">
           <AppContextConsumer>
             {appContext => renderAppLinks(appContext.baseUrl)}
           </AppContextConsumer>
         </div>
 
-        {/* {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null} */}
         {renderCloseButton()}
       </nav>
     </FocusTrap>
@@ -348,6 +349,18 @@ const StyledMainMenu = styled(MainMenu)`
   }
 
   #main-menu {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: stretch;
+    height: 100%;
+    overflow: hidden;
+    flex: 3;
+    min-height: 50px;
+  }
+
+  #search-icon-small-vp {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -412,6 +425,25 @@ const StyledMainMenu = styled(MainMenu)`
     padding: 0;
     min-width: 50px;
     min-height: 50px;
+  }
+
+  button.search {
+    position: fixed;
+    top: 0;
+    top: constant(safe-area-inset-top);
+    top: env(safe-area-inset-top);
+    right: 0;
+    right: constant(safe-area-inset-right);
+    right: env(safe-area-inset-right);
+    width: 70px;
+    height: 50px;
+    margin-right: 74px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // opacity: 0;
+    // pointer-events: none;
+    // transition: opacity 0.3s ease-out;
   }
 
   button.menu {

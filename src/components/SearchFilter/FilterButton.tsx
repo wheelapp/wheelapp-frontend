@@ -36,8 +36,8 @@ function FilterButton(props: Props) {
   return (
     <MapButton
       {...props}
-      aria-label={t`Search`}
-      aria-controls="search"
+      aria-label={t`Filter`}
+      aria-controls="filter"
       className={classNames.join(' ')}
     >
       <div>

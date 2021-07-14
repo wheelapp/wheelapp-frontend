@@ -21,7 +21,7 @@ import { EquipmentInfo } from './lib/EquipmentInfo';
 import { translatedStringFromObject } from './lib/i18n';
 import { Cluster } from './components/Map/Cluster';
 
-import FilterButton from './components/SearchFilter/SearchButton';
+import FilterButton from './components/SearchFilter/FilterButton';
 import Onboarding from './components/Onboarding/Onboarding';
 import FullscreenBackdrop from './components/FullscreenBackdrop';
 
