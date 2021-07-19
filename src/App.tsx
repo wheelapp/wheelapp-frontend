@@ -60,6 +60,7 @@ import { createGlobalStyle } from 'styled-components';
 import { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
 
 import { OmnibarIsOpenContextProvider } from './components/Contexts/OmnibarContext';
+import { FilterToolbarIsOpenContextProvider, useFilterToolbarIsOpenContext, useUpdateFilterToolbarIsOpenContext } from './components/Contexts/FilterToolbarContext';
 
 export type LinkData = {
   label: LocalizedString,
@@ -697,7 +698,23 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.push('map', params);
   }
 
-  onClickSearchButton = () => this.openSearch();
+  // onClickFilterButton = () => this.openSearch();
+
+  isFilterToolbarOpenTest = useFilterToolbarIsOpenContext();
+  setIsFilterToolbarOpenTest = useUpdateFilterToolbarIsOpenContext();
+  onClickFilterButton = () => this.onToggleFilterButton(this.isFilterToolbarOpenTest);
+
+
+
+  onToggleFilterButton = (filter: boolean) => {
+    if(!filter){
+      this.setIsFilterToolbarOpenTest(!filter);
+      this.openSearch();
+    }else{
+      this.setIsFilterToolbarOpenTest(!filter);
+      this.closeSearch();
+    }
+  };
 
   onToggleMainMenu = (isMainMenuOpen: boolean) => {
     this.setState({ isMainMenuOpen });
@@ -1274,12 +1291,15 @@ class App extends React.Component<Props, State> {
       >
         <GlobalStyle />
         <OmnibarIsOpenContextProvider> {/* context for the isOpen flag of the Omnibar */}
+        <FilterToolbarIsOpenContextProvider>
+
+
         <MainView
           {...extraProps}
           ref={mainView => {
             this.mainView = mainView;
           }}
-          onClickSearchButton={this.onClickSearchButton}
+          onClickFilterButton={this.onClickFilterButton}
           onToggleMainMenu={this.onToggleMainMenu}
           onMoveEnd={this.onMoveEnd}
           onMapClick={this.onMapClick}
@@ -1326,6 +1346,7 @@ class App extends React.Component<Props, State> {
           onMappingEventWelcomeDialogOpen={this.onMappingEventWelcomeDialogOpen}
           onMappingEventWelcomeDialogClose={this.onMappingEventWelcomeDialogClose}
         />
+         </FilterToolbarIsOpenContextProvider>
         </OmnibarIsOpenContextProvider>
       </RouteProvider>
     );

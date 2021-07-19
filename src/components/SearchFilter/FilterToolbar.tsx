@@ -221,12 +221,12 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
     // const { isLoading, searchResults } = this.state;
     const { searchQuery, hidden, inert, isExpanded } = this.props;
 
-    let contentBelowSearchField = null;
+    let filterMenu = null;
 
     // create FilterPanel Logic and Filter Button buttonpressed indicator and remove the below if clause logic
     if (searchQuery) {
     } else {
-      contentBelowSearchField = this.renderFilters();
+      filterMenu = this.renderFilters();
     }
 
     return (
@@ -244,7 +244,7 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
           <section
           // onTouchStart={() =>  this.blur()}
           >
-            {contentBelowSearchField}
+            {filterMenu}
           </section>
 
           {/* Touch event handler: remove? replace? */}

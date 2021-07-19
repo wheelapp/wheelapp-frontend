@@ -92,7 +92,7 @@ type Props = {
   onFilterToolbarClick: () => void,
   onFilterToolbarClose: () => void,
   onFilterToolbarSubmit: (searchQuery: string) => void,
-  onClickSearchButton: () => void,
+  onClickFilterButton: () => void,
   onToggleMainMenu: () => void,
   onMainMenuHomeClick: () => void,
   onClickFullscreenBackdrop: () => void,
@@ -396,7 +396,7 @@ class MainView extends React.Component<Props, State> {
             event.stopPropagation();
             // Using setTimeout to prevent touch-up events from hovering components
             // in the search toolbar
-            setTimeout(() => this.props.onClickSearchButton(), 10);
+            setTimeout(() => this.props.onClickFilterButton(), 10);
           }}
           category={this.props.category}
           toiletFilter={this.props.toiletFilter}
@@ -729,6 +729,8 @@ class MainView extends React.Component<Props, State> {
 
     const filterToolbarIsInert: boolean = filterToolbarIsHidden || isMainMenuOpen;
 
+
+
     return (
       <div className={classList.join(' ')}>
         {!inEmbedMode && !isMainMenuInBackground && this.renderMainMenu()}
@@ -736,7 +738,7 @@ class MainView extends React.Component<Props, State> {
           <div className="behind-backdrop">
             {inEmbedMode && this.renderWheelmapHomeLink()}
             {!inEmbedMode && isMainMenuInBackground && this.renderMainMenu()}
-            {!inEmbedMode && this.renderFilterToolbar(filterToolbarIsInert)}
+            {/* {!inEmbedMode && this.renderFilterToolbar(filterToolbarIsInert)} */}
             {isNodeToolbarVisible && !modalNodeState && this.renderNodeToolbar(isNodeRoute)}
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
@@ -744,6 +746,7 @@ class MainView extends React.Component<Props, State> {
             {!inEmbedMode && 
             // isSearchButtonVisible && 
             this.renderFilterButton()}
+            {this.renderFilterToolbar(filterToolbarIsInert)}
             {this.renderSearchOmnibar()}
             {this.renderMap()}
           </div>
