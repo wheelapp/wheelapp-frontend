@@ -57,7 +57,7 @@ import 'focus-visible';
 import { trackModalView, trackEvent } from './lib/Analytics';
 import { trackingEventBackend } from './lib/TrackingEventBackend';
 import { createGlobalStyle } from 'styled-components';
-import { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
+import { ElasticOrPhotonFeature } from './components/SearchFilter/Searchbar';
 
 import { OmnibarIsOpenContextProvider } from './components/Contexts/OmnibarContext';
 
@@ -692,7 +692,22 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.push('map', params);
   }
 
-  onClickFilterButton = () => this.openFilterToolbar();
+  toogleFilterToolbar = () => {
+    this.setState(state => ({
+      isFilterToolbarExpanded: !state.isFilterToolbarExpanded
+    }))
+  };
+
+  onClickFilterButton = () => {
+    if(this.state.isFilterToolbarExpanded){
+      this.toogleFilterToolbar();
+      this.closeFilterToolbar();
+      if (this.mainView) this.mainView.focusMap();
+    } else {
+      this.toogleFilterToolbar();
+      this.openFilterToolbar();
+    }
+  };
   
   onSearchOmnibarClose = () => {
     this.closeFilterToolbar();
@@ -822,35 +837,6 @@ class App extends React.Component<Props, State> {
 
     this.props.routerHistory.push(routeName, params);
   };
-
-  // onSearchResultClick = (feature: SearchResultFeature, wheelmapFeature: WheelmapFeature | null) => {
-  //   const params = this.getCurrentParams() as any;
-  //   let routeName = 'map';
-
-  //   if (wheelmapFeature) {
-  //     let id = getFeatureId(wheelmapFeature);
-  //     if (id) {
-  //       params.id = id;
-  //       delete params.eid;
-  //       routeName = 'placeDetail';
-  //     }
-  //   }
-
-  //   if (routeName === 'map') {
-  //     delete params.id;
-  //     delete params.eid;
-  //   }
-
-  //   if (feature.properties.extent) {
-  //     const extent = feature.properties.extent;
-  //     this.setState({ lat: null, lon: null, extent });
-  //   } else {
-  //     const [lon, lat] = feature.geometry.coordinates;
-  //     this.setState({ lat, lon, extent: null });
-  //   }
-
-  //   this.props.routerHistory.push(routeName, params);
-  // };
 
   onSearchResultClick = (feature: SearchResultFeature| null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => {
 

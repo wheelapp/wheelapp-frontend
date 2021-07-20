@@ -13,7 +13,7 @@ import { PlaceNameHeader } from '../PlaceName';
 import { PotentialPromise } from '../../app/PlaceDetailsProps';
 import styled from 'styled-components';
 import colors from '../../lib/colors';
-import { ElasticOrPhotonFeature } from './SearchOmnibar';
+import { ElasticOrPhotonFeature } from './Searchbar';
 
 type Props = {
   className?: string,

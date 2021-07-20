@@ -51,7 +51,7 @@ import MappingEventToolbar from './components/MappingEvents/MappingEventToolbar'
 import MappingEventWelcomeDialog from './components/MappingEvents/MappingEventWelcomeDialog';
 import { AppContextConsumer } from './AppContext';
 import CreatePlaceFlow from './components/CreatePlaceFlow/CreatePlaceFlow';
-import SearchOmnibar, { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
+import SearchOmnibar, { ElasticOrPhotonFeature } from './components/SearchFilter/Searchbar';
 
 
 type Props = {
@@ -467,6 +467,7 @@ class MainView extends React.Component<Props, State> {
         lat={this.props.lat}
         lon={this.props.lon}
         zoom={this.props.zoom}
+        onClickFilterButton={this.props.onClickFilterButton}
       />
     );
   }

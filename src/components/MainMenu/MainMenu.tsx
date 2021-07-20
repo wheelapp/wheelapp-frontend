@@ -20,6 +20,8 @@ import CloseIcon from '../icons/actions/Close';
 import { useUpdateOmnibarIsOpenContext } from '../Contexts/OmnibarContext';
 import SearchIcon from '../SearchFilter/SearchIcon';
 import { isOnSmallViewport } from '../../lib/ViewportSize';
+import FilterIcon from '../SearchFilter/FilterIcon';
+import CombinedIcon from '../SearchFilter/CombinedIcon';
 
 type State = {
   isMenuButtonVisible: boolean,
@@ -41,6 +43,7 @@ type Props = {
   logoURL: string,
   claim: LocalizedString,
   links: Array<LinkData>,
+  onClickFilterButton: () => void,
 };
 
 function MenuIcon(props) {
@@ -263,7 +266,7 @@ const MainMenu = (props: Props) => {
     setIsOpen(true);
   }, []);
 
-  const renderOmnibarSearchButtonOnSmallViewport = () => {
+  const renderSearchButtonOnSmallViewport = () => {
     return (
       <>
         <div className="search-on-small-vp">
@@ -281,6 +284,35 @@ const MainMenu = (props: Props) => {
     // we may need an context hook here?
   };
 
+  const renderFilterButtonOnSmallViewport = () => {
+    return (
+      <>
+        <div className="filter-on-small-vp">
+          <button
+            onClick={props.onClickFilterButton}
+            aria-label={t`Filter`}
+            aria-controls="filter"
+            className="filter btn-unstyled"
+          >
+            <div>
+              <FilterIcon />
+
+              {/* {isAnyFilterSet && (
+                <CombinedIcon
+                  {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
+                />
+              )} */}
+              {/* 
+              <Caption>
+                {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
+              </Caption> */}
+            </div>
+          </button>
+        </div>
+      </>
+    );
+  };
+
   const classList = [
     props.className,
     props.isOpen || !isMenuButtonVisible ? 'is-open' : null,
@@ -296,7 +328,8 @@ const MainMenu = (props: Props) => {
         <div className="claim">{translatedStringFromObject(props.claim)}</div>
         <GlobalActivityIndicator className="activity-indicator" />
 
-        {isOnSmallViewport() ? renderOmnibarSearchButtonOnSmallViewport() : null}
+        {isOnSmallViewport() ? renderSearchButtonOnSmallViewport() : null}
+        {isOnSmallViewport() ? renderFilterButtonOnSmallViewport() : null}
         <div id="main-menu" role="menu">
           <AppContextConsumer>
             {appContext => renderAppLinks(appContext.baseUrl)}
@@ -429,21 +462,29 @@ const StyledMainMenu = styled(MainMenu)`
 
   button.search {
     position: fixed;
+    margin-right: 100px;
     top: 0;
     top: constant(safe-area-inset-top);
     top: env(safe-area-inset-top);
     right: 0;
     right: constant(safe-area-inset-right);
     right: env(safe-area-inset-right);
-    width: 70px;
+    width: 50px;
     height: 50px;
-    margin-right: 74px;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // opacity: 0;
-    // pointer-events: none;
-    // transition: opacity 0.3s ease-out;
+  }
+
+  button.filter {
+    position: fixed;
+    margin-right: 94px;
+    top: 0;
+    top: constant(safe-area-inset-top);
+    top: env(safe-area-inset-top);
+    right: 0;
+    right: constant(safe-area-inset-right);
+    right: env(safe-area-inset-right);
+    width: 50px;
+    height: 50px;
+    margin-right: 50px;
   }
 
   button.menu {
@@ -454,7 +495,7 @@ const StyledMainMenu = styled(MainMenu)`
     right: 0;
     right: constant(safe-area-inset-right);
     right: env(safe-area-inset-right);
-    width: 70px;
+    width: 50px;
     height: 50px;
     display: flex;
     align-items: center;

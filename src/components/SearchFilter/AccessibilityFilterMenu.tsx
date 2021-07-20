@@ -126,6 +126,7 @@ const StyledAccessibilityFilterMenu = styled(AccessibilityFilterMenu)`
   }
 
   section {
+    border-radius: 8px;
     opacity: 1;
     overflow: hidden;
     transition: opacity 0.1s ease-out, max-height 0.1s ease-out;

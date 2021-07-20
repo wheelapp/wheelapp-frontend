@@ -36,10 +36,10 @@ const StyledToolbar = styled(Toolbar)`
   flex-direction: column;
   padding: 0;
   border-top: none;
-  border-radius: 3px;
+  border-radius: 8px;
   bottom: auto !important;
   //top: 50px;
-  top: 180px !important;
+  top: 120px !important;
 
   .search-results {
     padding: 0 10px 5px 10px;

@@ -9,6 +9,7 @@ import Categories from '../../lib/Categories';
 import CombinedIcon from './CombinedIcon';
 import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
 import FilterIcon from './FilterIcon';
+import { isOnSmallViewport } from '../../lib/ViewportSize';
 
 type Props = {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
@@ -34,28 +35,32 @@ function FilterButton(props: Props) {
   const allPlacesCaption = t`Filter`;
 
   return (
-    <MapButton
-      {...props}
-      aria-label={t`Filter`}
-      aria-controls="filter"
-      className={classNames.join(' ')}
-    >
-      <div>
-        <FilterIcon />
+    <>
+      {!isOnSmallViewport() ? (
+        <MapButton
+          {...props}
+          aria-label={t`Filter`}
+          aria-controls="filter"
+          className={classNames.join(' ')}
+        >
+          <div>
+            <FilterIcon />
 
-        <BreadcrumbChevron />
+            <BreadcrumbChevron />
 
-        {isAnyFilterSet && (
-          <CombinedIcon
-            {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
-          />
-        )}
+            {isAnyFilterSet && (
+              <CombinedIcon
+                {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
+              />
+            )}
 
-        <Caption>
-          {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
-        </Caption>
-      </div>
-    </MapButton>
+            <Caption>
+              {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
+            </Caption>
+          </div>
+        </MapButton>
+      ) : null}
+    </>
   );
 }
 
@@ -69,7 +74,8 @@ const StyledFilterButton = styled(FilterButton)`
   }
   font-size: 1.2rem;
 
-  top: 120px;
+  top: 60px;
+  left: 140px;
   width: auto;
   max-width: -webkit-min-content;
   min-height: 50px;

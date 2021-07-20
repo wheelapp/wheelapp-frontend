@@ -23,7 +23,7 @@ import Address from '../NodeToolbar/Address';
 import ErrorBoundary from '../ErrorBoundary';
 import { getBrowserLocaleStrings } from '../../lib/i18n';
 import { SearchResultCollection, SearchResultFeature, SearchResultProperties } from '../../lib/searchPlaces';
-import StyledSearchButton from './OpenOmnibarButton';
+import StyledSearchButton from './SearchButton';
 import CloseLink from '../CloseLink';
 import { t } from 'ttag';
 import { handleBooleanChange } from "@blueprintjs/docs-theme";
