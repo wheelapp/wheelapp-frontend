@@ -548,14 +548,9 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     const { routeName, inEmbedMode } = this.props;
 
-    const shouldStartInSearch = routeName === 'map' && !inEmbedMode;
-
     if (isFirstStart()) {
       this.setState({ isOnboardingVisible: true });
-    } else if (shouldStartInSearch) {
-      this.openSearch(true);
-    }
-
+    } 
     this.setupMappingEvents();
 
     trackingEventBackend.track(this.props.app, {
@@ -1201,9 +1196,7 @@ class App extends React.Component<Props, State> {
     const isFilterToolbarVisible = this.state.isFilterToolbarVisible;
     const isMappingEventsToolbarVisible = this.state.isMappingEventsToolbarVisible;
     const isMappingEventToolbarVisible = this.state.isMappingEventToolbarVisible;
-    const isSearchButtonVisible =
-      // !isFilterToolbarVisible && 
-      !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
+    const isSearchButtonVisible = !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
 
     const extraProps = {
       isNodeRoute,
