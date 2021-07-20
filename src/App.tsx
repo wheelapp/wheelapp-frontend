@@ -694,7 +694,7 @@ class App extends React.Component<Props, State> {
 
   onClickFilterButton = () => this.openFilterToolbar();
   
-  onFilterToolbarClose = () => {
+  onSearchOmnibarClose = () => {
     this.closeFilterToolbar();
 
     if (this.mainView) this.mainView.focusMap();
@@ -1282,7 +1282,7 @@ class App extends React.Component<Props, State> {
           onOpenReportMode={this.onOpenReportMode}
           onCloseNodeToolbar={this.onCloseNodeToolbar}
           onCloseOnboarding={this.onCloseOnboarding}
-          onFilterToolbarClose={this.onFilterToolbarClose}
+          onSearchOmnibarClose={this.onSearchOmnibarClose}
           onCloseModalDialog={this.onCloseModalDialog}
           onOpenWheelchairAccessibility={this.onOpenWheelchairAccessibility}
           onOpenToiletAccessibility={this.onOpenToiletAccessibility}

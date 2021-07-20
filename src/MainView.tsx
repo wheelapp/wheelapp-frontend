@@ -88,7 +88,7 @@ type Props = {
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
 
   onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
-  onFilterToolbarClose: () => void,
+  onSearchOmnibarClose: () => void,
   onClickFilterButton: () => void,
   onToggleMainMenu: () => void,
   onMainMenuHomeClick: () => void,
@@ -414,7 +414,7 @@ class MainView extends React.Component<Props, State> {
         onSearchResultClick={this.props.onSearchResultClick}
         searchResults={this.props.searchResults}
         categories={this.props.categories}
-        onClose={this.props.onFilterToolbarClose}
+        onClose={this.props.onSearchOmnibarClose}
       ></SearchOmnibar>
     );
   }
