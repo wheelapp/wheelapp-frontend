@@ -15,7 +15,7 @@ import ErrorBoundary from '../ErrorBoundary';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
-  hidden: boolean,
+  // hidden: boolean,
   inert: boolean,
   category: null | string,
   showCategoryMenu?: boolean,
@@ -219,7 +219,12 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
 
   render() {
     // const { isLoading, searchResults } = this.state;
-    const { searchQuery, hidden, inert, isExpanded } = this.props;
+    const {
+      searchQuery,
+      // hidden,
+      inert,
+      isExpanded,
+    } = this.props;
 
     let filterMenu = null;
 
@@ -231,7 +236,7 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
 
     return (
       <StyledToolbar
-        hidden={hidden}
+        // hidden={hidden}
         inert={inert}
         minimalHeight={75}
         isSwipeable={false}

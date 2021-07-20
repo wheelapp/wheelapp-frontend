@@ -81,7 +81,6 @@ type Props = {
   isMainMenuOpen: boolean,
   isNotFoundVisible: boolean,
   modalNodeState: ModalNodeState,
-  isSearchBarVisible: boolean,
   isFilterToolbarExpanded: boolean,
   isSearchButtonVisible: boolean,
   isNodeToolbarDisplayed: boolean,
@@ -374,7 +373,6 @@ class MainView extends React.Component<Props, State> {
       <FilterToolbar
         ref={filterToolbar => (this.filterToolbar = filterToolbar)}
         categories={this.props.categories}
-        hidden={!this.props.isSearchBarVisible}
         inert={isInert}
         category={this.props.category}
         showCategoryMenu={!this.props.disableWheelmapSource}
@@ -419,8 +417,6 @@ class MainView extends React.Component<Props, State> {
         searchResults={this.props.searchResults}
         categories={this.props.categories}
         onClose={this.props.onFilterToolbarClose}
-        hidden={this.props.isSearchBarVisible}
-        // ariaRole="searchbox"
       ></SearchOmnibar>
     );
   }
@@ -692,7 +688,6 @@ class MainView extends React.Component<Props, State> {
       isMappingEventWelcomeDialogVisible,
       isNotFoundVisible,
       isMainMenuOpen,
-      isSearchBarVisible,
       isSearchButtonVisible,
       isNodeToolbarDisplayed: isNodeToolbarVisible,
       isMappingEventsToolbarVisible,
@@ -713,7 +708,6 @@ class MainView extends React.Component<Props, State> {
       className,
       isDialogVisible ? 'is-dialog-visible' : null,
       isMainMenuOpen ? 'is-main-menu-open' : null,
-      isSearchBarVisible ? 'is-search-bar-visible' : null,
       isNodeToolbarVisible ? 'is-node-toolbar-visible' : null,
       modalNodeState ? 'is-modal' : null,
       isReportMode ? 'is-report-mode' : null,

@@ -37,7 +37,7 @@ type Props = {
   searchResults: SearchResultCollection | Promise<SearchResultCollection>
   categories: CategoryLookupTables,
   onClose: () => void,
-  hidden: boolean,
+  // hidden: boolean,
   lat: number | null,
   lon: number | null,
   zoom: number | null,
