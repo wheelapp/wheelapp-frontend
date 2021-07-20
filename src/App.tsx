@@ -60,7 +60,6 @@ import { createGlobalStyle } from 'styled-components';
 import { ElasticOrPhotonFeature } from './components/SearchFilter/SearchOmnibar';
 
 import { OmnibarIsOpenContextProvider } from './components/Contexts/OmnibarContext';
-import { FilterToolbarIsOpenContextProvider, useFilterToolbarIsOpenContext, useUpdateFilterToolbarIsOpenContext } from './components/Contexts/FilterToolbarContext';
 
 export type LinkData = {
   label: LocalizedString,
@@ -664,7 +663,7 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.replace('mappingEventDetail', params);
   };
 
-  openSearch(replace: boolean = false) {
+  openFilterToolbar(replace: boolean = false) {
     if (this.props.routeName === 'search') {
       return;
     }
@@ -683,7 +682,7 @@ class App extends React.Component<Props, State> {
 
   }
 
-  closeSearch() {
+  closeFilterToolbar() {
     if (this.props.routeName !== 'search') {
       return;
     }
@@ -693,8 +692,13 @@ class App extends React.Component<Props, State> {
     this.props.routerHistory.push('map', params);
   }
 
-  onClickFilterButton = () => this.openSearch();
+  onClickFilterButton = () => this.openFilterToolbar();
+  
+  onFilterToolbarClose = () => {
+    this.closeFilterToolbar();
 
+    if (this.mainView) this.mainView.focusMap();
+  };
 
   onToggleMainMenu = (isMainMenuOpen: boolean) => {
     this.setState({ isMainMenuOpen });
@@ -731,7 +735,7 @@ class App extends React.Component<Props, State> {
 
   onMapClick = () => {
     if (this.state.isFilterToolbarExpanded) {
-      this.closeSearch();
+      this.closeFilterToolbar();
       this.mainView && this.mainView.focusMap();
     }
   };
@@ -1075,25 +1079,20 @@ class App extends React.Component<Props, State> {
 
   };
 
-  onFilterToolbarClose = () => {
-    this.closeSearch();
+  // DELETE was old onSearchBarSubmit not needed
+  // onFilterToolbarSubmit = (searchQuery: string) => {
+  //   // Enter a command like `locale:de_DE` to set a new locale.
+  //   const setLocaleCommandMatch = searchQuery.match(/^locale:(\w\w(?:_\w\w))/);
 
-    if (this.mainView) this.mainView.focusMap();
-  };
+  //   if (setLocaleCommandMatch) {
+  //     const { routeName, routerHistory } = this.props;
+  //     const params = this.getCurrentParams();
 
-  onFilterToolbarSubmit = (searchQuery: string) => {
-    // Enter a command like `locale:de_DE` to set a new locale.
-    const setLocaleCommandMatch = searchQuery.match(/^locale:(\w\w(?:_\w\w))/);
+  //     params.locale = setLocaleCommandMatch[1];
 
-    if (setLocaleCommandMatch) {
-      const { routeName, routerHistory } = this.props;
-      const params = this.getCurrentParams();
-
-      params.locale = setLocaleCommandMatch[1];
-
-      routerHistory.push(routeName, params);
-    }
-  };
+  //     routerHistory.push(routeName, params);
+  //   }
+  // };
 
   onOpenWheelchairAccessibility = () => {
     if (this.props.featureId) {
@@ -1265,9 +1264,6 @@ class App extends React.Component<Props, State> {
       >
         <GlobalStyle />
         <OmnibarIsOpenContextProvider> {/* context for the isOpen flag of the Omnibar */}
-        <FilterToolbarIsOpenContextProvider>
-
-
         <MainView
           {...extraProps}
           ref={mainView => {
@@ -1287,7 +1283,6 @@ class App extends React.Component<Props, State> {
           onCloseNodeToolbar={this.onCloseNodeToolbar}
           onCloseOnboarding={this.onCloseOnboarding}
           onFilterToolbarClose={this.onFilterToolbarClose}
-          onFilterToolbarSubmit={this.onFilterToolbarSubmit}
           onCloseModalDialog={this.onCloseModalDialog}
           onOpenWheelchairAccessibility={this.onOpenWheelchairAccessibility}
           onOpenToiletAccessibility={this.onOpenToiletAccessibility}
@@ -1319,7 +1314,6 @@ class App extends React.Component<Props, State> {
           onMappingEventWelcomeDialogOpen={this.onMappingEventWelcomeDialogOpen}
           onMappingEventWelcomeDialogClose={this.onMappingEventWelcomeDialogClose}
         />
-         </FilterToolbarIsOpenContextProvider>
         </OmnibarIsOpenContextProvider>
       </RouteProvider>
     );
