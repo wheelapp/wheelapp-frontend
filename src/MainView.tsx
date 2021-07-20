@@ -88,7 +88,6 @@ type Props = {
   searchResults: SearchResultCollection | Promise<SearchResultCollection> | null,
 
   onSearchResultClick: (feature: SearchResultFeature | null, wheelmapFeature: WheelmapFeature | null, elasticFeature: ElasticOrPhotonFeature | null) => void,
-  onFilterToolbarClick: () => void,
   onFilterToolbarClose: () => void,
   onFilterToolbarSubmit: (searchQuery: string) => void,
   onClickFilterButton: () => void,

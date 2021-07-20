@@ -1075,10 +1075,6 @@ class App extends React.Component<Props, State> {
 
   };
 
-  onFilterToolbarClick = () => {
-    this.openSearch();
-  };
-
   onFilterToolbarClose = () => {
     this.closeSearch();
 
@@ -1290,7 +1286,6 @@ class App extends React.Component<Props, State> {
           onOpenReportMode={this.onOpenReportMode}
           onCloseNodeToolbar={this.onCloseNodeToolbar}
           onCloseOnboarding={this.onCloseOnboarding}
-          onFilterToolbarClick={this.onFilterToolbarClick}
           onFilterToolbarClose={this.onFilterToolbarClose}
           onFilterToolbarSubmit={this.onFilterToolbarSubmit}
           onCloseModalDialog={this.onCloseModalDialog}
