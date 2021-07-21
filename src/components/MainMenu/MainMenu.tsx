@@ -296,16 +296,6 @@ const MainMenu = (props: Props) => {
           >
             <div>
               <FilterIcon />
-
-              {/* {isAnyFilterSet && (
-                <CombinedIcon
-                  {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
-                />
-              )} */}
-              {/* 
-              <Caption>
-                {category ? Categories.translatedRootCategoryName(category) : allPlacesCaption}
-              </Caption> */}
             </div>
           </button>
         </div>

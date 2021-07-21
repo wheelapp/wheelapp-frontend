@@ -228,7 +228,6 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
 
     let filterMenu = null;
 
-    // create FilterPanel Logic and Filter Button buttonpressed indicator and remove the below if clause logic
     if (searchQuery) {
     } else {
       filterMenu = this.renderFilters();
@@ -236,7 +235,6 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
 
     return (
       <StyledToolbar
-        // hidden={hidden}
         inert={inert}
         minimalHeight={75}
         isSwipeable={false}
