@@ -161,37 +161,35 @@ const StyledToolbar = styled(Toolbar)`
   }
 `;
 
-export default class FilterToolbar extends React.PureComponent<Props, State> {
-  props: Props;
+const FilterToolbar = (props: Props) => {
+  const [isCategoryFocused, setIsCategoryFocused] = React.useState<boolean>(false);
 
-  state: State = {
-    isCategoryFocused: false,
-  };
+  React.useEffect(() => {}, []);
 
-  renderCategoryMenu() {
-    if (!this.props.category && !this.props.isExpanded) return null;
-    if (!this.props.showCategoryMenu) return null;
+  const renderCategoryMenu = () => {
+    if (!props.category && !props.isExpanded) return null;
+    if (!props.showCategoryMenu) return null;
 
     return (
       <CategoryMenu
-        onFocus={() => this.setState({ isCategoryFocused: true })}
+        onFocus={() => setIsCategoryFocused(true)}
         onBlur={() => {
-          setTimeout(() => this.setState({ isCategoryFocused: false }));
+          setTimeout(() => setIsCategoryFocused(false));
         }}
-        category={this.props.category}
-        accessibilityFilter={this.props.accessibilityFilter}
+        category={props.category}
+        accessibilityFilter={props.accessibilityFilter}
       />
     );
-  }
+  };
 
-  renderAccessibilityFilterToolbar() {
+  const renderAccessibilityFilterToolbar = () => {
     const {
       accessibilityFilter,
       isExpanded,
       toiletFilter,
       onAccessibilityFilterButtonClick,
       category,
-    } = this.props;
+    } = props;
 
     if (!isAccessibilityFiltered(accessibilityFilter) && !isExpanded) return null;
 
@@ -202,53 +200,52 @@ export default class FilterToolbar extends React.PureComponent<Props, State> {
         category={category}
         onButtonClick={onAccessibilityFilterButtonClick}
         onBlur={() => {
-          setTimeout(() => this.setState({ isCategoryFocused: false }));
+          setTimeout(() => setIsCategoryFocused(false));
         }}
       />
     );
-  }
+  };
 
-  renderFilters() {
+  const renderFilters = () => {
     return (
       <React.Fragment>
-        {this.renderCategoryMenu()}
-        {this.renderAccessibilityFilterToolbar()}
+        {renderCategoryMenu()}
+        {renderAccessibilityFilterToolbar()}
       </React.Fragment>
     );
+  };
+
+  const { searchQuery, hidden, inert, isExpanded } = props;
+
+  let filterMenu = null;
+
+  if (searchQuery) {
+  } else {
+    filterMenu = renderFilters();
   }
 
-  render() {
-    // const { isLoading, searchResults } = this.state;
-    const { searchQuery, hidden, inert, isExpanded } = this.props;
+  return (
+    <StyledToolbar
+      inert={inert}
+      hidden={hidden}
+      minimalHeight={75}
+      isSwipeable={false}
+      enableTransitions={false}
+      minimalTopPosition={props.minimalTopPosition}
+      role="search"
+      className={isExpanded ? 'isExpanded' : null}
+    >
+      <ErrorBoundary>
+        <section
+        // onTouchStart={() =>  this.blur()}
+        >
+          {filterMenu}
+        </section>
 
-    let filterMenu = null;
+        {/* Touch event handler: remove? replace? */}
+      </ErrorBoundary>
+    </StyledToolbar>
+  );
+};
 
-    if (searchQuery) {
-    } else {
-      filterMenu = this.renderFilters();
-    }
-
-    return (
-      <StyledToolbar
-        inert={inert}
-        hidden={hidden}
-        minimalHeight={75}
-        isSwipeable={false}
-        enableTransitions={false}
-        minimalTopPosition={this.props.minimalTopPosition}
-        role="search"
-        className={isExpanded ? 'isExpanded' : null}
-      >
-        <ErrorBoundary>
-          <section
-          // onTouchStart={() =>  this.blur()}
-          >
-            {filterMenu}
-          </section>
-
-          {/* Touch event handler: remove? replace? */}
-        </ErrorBoundary>
-      </StyledToolbar>
-    );
-  }
-}
+export default FilterToolbar;
