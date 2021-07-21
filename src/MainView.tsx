@@ -82,6 +82,7 @@ type Props = {
   isNotFoundVisible: boolean,
   modalNodeState: ModalNodeState,
   isFilterToolbarExpanded: boolean,
+  isFilterToolbarVisible: boolean,
   isSearchButtonVisible: boolean,
   isNodeToolbarDisplayed: boolean,
   shouldLocateOnStart: boolean,
@@ -371,6 +372,7 @@ class MainView extends React.Component<Props, State> {
       <FilterToolbar
         ref={filterToolbar => (this.filterToolbar = filterToolbar)}
         categories={this.props.categories}
+        hidden={!this.props.isFilterToolbarVisible}
         inert={isInert}
         category={this.props.category}
         showCategoryMenu={!this.props.disableWheelmapSource}
@@ -698,6 +700,7 @@ class MainView extends React.Component<Props, State> {
       isPhotoUploadInstructionsToolbarVisible,
       photoMarkedForReport,
       isReportMode,
+      isFilterToolbarVisible,
       inEmbedMode,
     } = this.props;
 
@@ -711,6 +714,7 @@ class MainView extends React.Component<Props, State> {
       isDialogVisible ? 'is-dialog-visible' : null,
       isMainMenuOpen ? 'is-main-menu-open' : null,
       isNodeToolbarVisible ? 'is-node-toolbar-visible' : null,
+      isFilterToolbarVisible ? 'is-filter-toolbar-visible' : null,
       modalNodeState ? 'is-modal' : null,
       isReportMode ? 'is-report-mode' : null,
       inEmbedMode ? 'in-embed-mode' : null,
@@ -734,7 +738,7 @@ class MainView extends React.Component<Props, State> {
           <div className="behind-backdrop">
             {inEmbedMode && this.renderWheelmapHomeLink()}
             {!inEmbedMode && isMainMenuInBackground && this.renderMainMenu()}
-            {/* {!inEmbedMode && this.renderFilterToolbar(filterToolbarIsInert)} */}
+            {!inEmbedMode && this.renderFilterToolbar(filterToolbarIsInert)}
             {isNodeToolbarVisible && !modalNodeState && this.renderNodeToolbar(isNodeRoute)}
             {isMappingEventsToolbarVisible && this.renderMappingEventsToolbar()}
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
@@ -742,7 +746,7 @@ class MainView extends React.Component<Props, State> {
             {!inEmbedMode && 
             // isSearchButtonVisible && 
             this.renderFilterButton()}
-            {this.renderFilterToolbar(filterToolbarIsInert)}
+            {/* {this.renderFilterToolbar(filterToolbarIsInert)} */}
             {this.renderSearchOmnibar()}
             {this.renderMap()}
           </div>

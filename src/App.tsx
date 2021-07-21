@@ -694,12 +694,13 @@ class App extends React.Component<Props, State> {
 
   toogleFilterToolbar = () => {
     this.setState(state => ({
-      isFilterToolbarExpanded: !state.isFilterToolbarExpanded
+      isFilterToolbarExpanded: !state.isFilterToolbarExpanded,
+      isFilterToolbarVisible: !state.isFilterToolbarVisible
     }))
   };
 
   onClickFilterButton = () => {
-    if(this.state.isFilterToolbarExpanded){
+    if(this.state.isFilterToolbarExpanded && this.state.isFilterToolbarVisible){
       this.toogleFilterToolbar();
       this.closeFilterToolbar();
       if (this.mainView) this.mainView.focusMap();
@@ -1177,7 +1178,7 @@ class App extends React.Component<Props, State> {
     const isFilterToolbarVisible = this.state.isFilterToolbarVisible;
     const isMappingEventsToolbarVisible = this.state.isMappingEventsToolbarVisible;
     const isMappingEventToolbarVisible = this.state.isMappingEventToolbarVisible;
-    const isSearchButtonVisible = !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
+    const isSearchButtonVisible = !isFilterToolbarVisible && !isMappingEventsToolbarVisible && !isMappingEventToolbarVisible;
 
     const extraProps = {
       isNodeRoute,
