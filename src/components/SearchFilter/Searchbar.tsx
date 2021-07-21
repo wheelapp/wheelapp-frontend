@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import { ItemRenderer, Omnibar } from '@blueprintjs/select';
-import { MenuItem, HotkeysTarget2,Switch, ControlGroup } from '@blueprintjs/core';
+import { MenuItem, HotkeysTarget2, Switch, ControlGroup } from '@blueprintjs/core';
 import { createGlobalStyle } from 'styled-components';
 import Categories, { getCategoryId, CategoryLookupTables } from '../../lib/Categories';
 import Icon from '../Icon';
@@ -293,7 +293,10 @@ const fetcher = (url: string) =>
     };
   
     return (
-      <HotkeysTarget2
+      <>
+      
+      {/* hotkeystarget throws reference error, window not defined, ssr does not seem to work properly.  */}
+      {/* <HotkeysTarget2
         hotkeys={[
           {
             combo: 'shift + o',
@@ -303,7 +306,7 @@ const fetcher = (url: string) =>
             preventDefault: true,
           },
         ]}
-      >
+      > */}
         <div>
           <span>
             <StyledSearchButton onClick={handleClick} />
@@ -343,7 +346,8 @@ const fetcher = (url: string) =>
           ></ResultsOmnibar>
           </ErrorBoundary>
         </div>
-      </HotkeysTarget2>
+      {/* </HotkeysTarget2> */}
+      </>
     );
   };
 
