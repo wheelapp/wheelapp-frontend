@@ -22,6 +22,8 @@ import SearchIcon from '../SearchFilter/SearchIcon';
 import { isOnSmallViewport } from '../../lib/ViewportSize';
 import FilterIcon from '../SearchFilter/FilterIcon';
 import CombinedIcon from '../SearchFilter/CombinedIcon';
+import { isAccessibilityFiltered, YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
+import { BreadcrumbChevron } from '../icons/ui-elements';
 
 type State = {
   isMenuButtonVisible: boolean,
@@ -44,6 +46,9 @@ type Props = {
   claim: LocalizedString,
   links: Array<LinkData>,
   onClickFilterButton: () => void,
+  category: string | null,
+  accessibilityFilter: YesNoLimitedUnknown[],
+  toiletFilter: YesNoUnknown[],
 };
 
 function MenuIcon(props) {
@@ -285,6 +290,8 @@ const MainMenu = (props: Props) => {
   };
 
   const renderFilterButtonOnSmallViewport = () => {
+    const { toiletFilter, accessibilityFilter, category } = props;
+    const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
     return (
       <>
         <div className="filter-on-small-vp">
@@ -295,7 +302,15 @@ const MainMenu = (props: Props) => {
             className="filter btn-unstyled"
           >
             <div>
-              <FilterIcon />
+              {isAnyFilterSet ? (
+                <>
+                  <CombinedIcon
+                    {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
+                  />
+                </>
+              ) : (
+                <FilterIcon />
+              )}
             </div>
           </button>
         </div>

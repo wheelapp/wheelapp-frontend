@@ -468,6 +468,9 @@ class MainView extends React.Component<Props, State> {
         lon={this.props.lon}
         zoom={this.props.zoom}
         onClickFilterButton={this.props.onClickFilterButton}
+        category={this.props.category}
+        accessibilityFilter={this.props.accessibilityFilter}
+        toiletFilter={this.props.toiletFilter}
       />
     );
   }
