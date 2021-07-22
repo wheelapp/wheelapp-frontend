@@ -12,6 +12,7 @@ import { isAccessibilityFiltered, WheelmapFeature } from '../../lib/Feature';
 import { PlaceFilter } from './AccessibilityFilterModel';
 import { CategoryLookupTables } from '../../lib/Categories';
 import ErrorBoundary from '../ErrorBoundary';
+import { isOnSmallViewport } from '../../lib/ViewportSize';
 
 export type Props = PlaceFilter & {
   categories: CategoryLookupTables,
@@ -39,7 +40,11 @@ const StyledToolbar = styled(Toolbar)`
   border-radius: 8px;
   bottom: auto !important;
   //top: 50px;
-  top: 120px !important;
+  top: 120px;
+
+  .on-small-vp {
+    top: 50px !important;
+  }
 
   .search-results {
     padding: 0 10px 5px 10px;
@@ -224,6 +229,8 @@ const FilterToolbar = (props: Props) => {
     filterMenu = renderFilters();
   }
 
+  const classNames = [isOnSmallViewport() ? 'on-small-vp' : null, isExpanded ? 'isExpanded' : null];
+
   return (
     <StyledToolbar
       inert={inert}
@@ -233,7 +240,7 @@ const FilterToolbar = (props: Props) => {
       enableTransitions={false}
       minimalTopPosition={props.minimalTopPosition}
       role="search"
-      className={isExpanded ? 'isExpanded' : null}
+      className={classNames.join(' ')}
     >
       <ErrorBoundary>
         <section
