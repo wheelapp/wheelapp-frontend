@@ -27,7 +27,7 @@ const Caption = styled.div.attrs({ className: 'caption' })`
 `;
 
 function FilterButton(props: Props) {
-  const classNames = ['btn-unstyled', isOnSmallViewport() ? 'filter-button-on-small-vp' : null, 'filter-button', props.className];
+  const classNames = ['btn-unstyled', 'filter-button', props.className];
 
   const { toiletFilter, accessibilityFilter, category } = props;
   const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
@@ -73,6 +73,7 @@ const StyledFilterButton = styled(FilterButton)`
     /* margin-right: 80px; */
     align-items: right;
   }
+  top: 120px;
   font-size: 1.2rem;
 
   left: 10px;
@@ -92,13 +93,8 @@ const StyledFilterButton = styled(FilterButton)`
     opacity: 0.5;
   } */
 
-
-  .filter-button-on-small-vp {
-    top:60px !important;
-  }
-
-  .filter-button {
-    top: 120px;
+  @media (max-width: 512px) {
+    top: 60px;
   }
 
   svg.filter-icon {
