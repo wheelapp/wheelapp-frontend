@@ -32,7 +32,7 @@ function FilterButton(props: Props) {
   const { toiletFilter, accessibilityFilter, category } = props;
   const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
   // translator: Shown in collapsed search/filter combi button when there is no category filter set
-  const allPlacesCaption = t`All Places`;
+  const allPlacesCaption = t`Alle Orte`;
 
   return (
     <>
