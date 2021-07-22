@@ -7,7 +7,7 @@ import { YesNoLimitedUnknown, YesNoUnknown } from '../../lib/Feature';
 import { isAccessibilityFiltered } from '../../lib/Feature';
 import Categories from '../../lib/Categories';
 import CombinedIcon from './CombinedIcon';
-import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+//import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
 import FilterIcon from './FilterIcon';
 import { isOnSmallViewport } from '../../lib/ViewportSize';
 
@@ -27,16 +27,16 @@ const Caption = styled.div.attrs({ className: 'caption' })`
 `;
 
 function FilterButton(props: Props) {
-  const classNames = ['btn-unstyled', 'filter-button', props.className];
+  const classNames = ['btn-unstyled', isOnSmallViewport() ? 'filter-button-on-small-vp' : null, 'filter-button', props.className];
 
   const { toiletFilter, accessibilityFilter, category } = props;
   const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
   // translator: Shown in collapsed search/filter combi button when there is no category filter set
-  const allPlacesCaption = t`Filter`;
+  const allPlacesCaption = t`All Places`;
 
   return (
     <>
-      {!isOnSmallViewport() ? (
+      {
         <MapButton
           {...props}
           aria-label={t`Filter`}
@@ -46,7 +46,7 @@ function FilterButton(props: Props) {
           <div>
             <FilterIcon />
 
-            <BreadcrumbChevron />
+            {/* <BreadcrumbChevron /> */}
 
             {isAnyFilterSet && (
               <CombinedIcon
@@ -59,7 +59,7 @@ function FilterButton(props: Props) {
             </Caption>
           </div>
         </MapButton>
-      ) : null}
+      }
     </>
   );
 }
@@ -70,12 +70,12 @@ const StyledFilterButton = styled(FilterButton)`
   > div {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* margin-right: 80px; */
+    align-items: right;
   }
   font-size: 1.2rem;
 
-  top: 60px;
-  left: 140px;
+  left: 10px;
   width: auto;
   max-width: -webkit-min-content;
   min-height: 50px;
@@ -83,18 +83,29 @@ const StyledFilterButton = styled(FilterButton)`
   margin-top: env(safe-area-inset-top);
   margin-left: constant(safe-area-inset-left);
   margin-left: env(safe-area-inset-left);
+  white-space: nowrap;
 
-  .breadcrumb-chevron {
+  /* .breadcrumb-chevron {
     width: 24px;
     height: 40px;
     margin-right: 10px;
     opacity: 0.5;
+  } */
+
+
+  .filter-button-on-small-vp {
+    top:60px !important;
+  }
+
+  .filter-button {
+    top: 120px;
   }
 
   svg.filter-icon {
     width: 20px;
     height: 20px;
     margin-left: 0.75rem;
+    margin-right: 10px;
     path {
       fill: #334455;
     }

@@ -192,7 +192,7 @@ class MainView extends React.Component<Props, State> {
 
   lastFocusedElement: HTMLElement | null;
   nodeToolbar: NodeToolbarFeatureLoader | null;
-  filterToolbar: FilterToolbar | null;
+  //filterToolbar: FilterToolbar | null;
   photoUploadInstructionsToolbar: PhotoUploadInstructionsToolbar | null;
 
   resizeListener = () => {
@@ -370,7 +370,7 @@ class MainView extends React.Component<Props, State> {
   renderFilterToolbar(isInert: boolean) {
     return (
       <FilterToolbar
-        ref={filterToolbar => (this.filterToolbar = filterToolbar)}
+       // ref={filterToolbar => (this.filterToolbar = filterToolbar)}
         categories={this.props.categories}
         hidden={!this.props.isFilterToolbarVisible}
         inert={isInert}
@@ -744,7 +744,7 @@ class MainView extends React.Component<Props, State> {
             {isMappingEventToolbarVisible && this.renderMappingEventToolbar()}
             {!isNodeToolbarVisible && this.renderClusterPanel()}
             {!inEmbedMode && 
-            // isSearchButtonVisible && 
+            // isSearchButtonVisible &&
             this.renderFilterButton()}
             {/* {this.renderFilterToolbar(filterToolbarIsInert)} */}
             {this.renderSearchOmnibar()}

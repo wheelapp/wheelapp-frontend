@@ -4,7 +4,7 @@ import MapButton from '../MapButton';
 import { t } from 'ttag';
 import styled from 'styled-components';
 
-import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
+//import BreadcrumbChevron from '../icons/ui-elements/BreadcrumbChevron';
 import { hasBigViewport, isOnSmallViewport } from '../../lib/ViewportSize';
 
 type Props = {
@@ -36,7 +36,7 @@ function SearchButton(props: Props) {
         >
           <div>
             <SearchIcon />
-            <BreadcrumbChevron />
+            {/* <BreadcrumbChevron /> */}
             <Caption>{searchPlacesCaption}</Caption>
           </div>
         </MapButton>
@@ -51,7 +51,8 @@ const StyledSearchButton = styled(SearchButton)`
   > div {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* margin-right: 80px; */
+    align-items: flex;
   }
   font-size: 1.2rem;
 
@@ -64,17 +65,18 @@ const StyledSearchButton = styled(SearchButton)`
   margin-left: constant(safe-area-inset-left);
   margin-left: env(safe-area-inset-left);
 
-  .breadcrumb-chevron {
+  /* .breadcrumb-chevron {
     width: 24px;
     height: 40px;
     margin-right: 10px;
     opacity: 0.5;
-  }
+  } */
 
   svg.search-icon {
     width: 20px;
     height: 20px;
     margin-left: 0.75rem;
+    margin-right: 10px;
     path {
       fill: #334455;
     }

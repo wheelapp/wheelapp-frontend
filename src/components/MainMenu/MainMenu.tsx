@@ -289,34 +289,34 @@ const MainMenu = (props: Props) => {
     // we may need an context hook here?
   };
 
-  const renderFilterButtonOnSmallViewport = () => {
-    const { toiletFilter, accessibilityFilter, category } = props;
-    const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
-    return (
-      <>
-        <div className="filter-on-small-vp">
-          <button
-            onClick={props.onClickFilterButton}
-            aria-label={t`Filter`}
-            aria-controls="filter"
-            className="filter btn-unstyled"
-          >
-            <div>
-              {isAnyFilterSet ? (
-                <>
-                  <CombinedIcon
-                    {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
-                  />
-                </>
-              ) : (
-                <FilterIcon />
-              )}
-            </div>
-          </button>
-        </div>
-      </>
-    );
-  };
+  // const renderFilterButtonOnSmallViewport = () => {
+  //   const { toiletFilter, accessibilityFilter, category } = props;
+  //   const isAnyFilterSet = isAccessibilityFiltered(accessibilityFilter) || category;
+  //   return (
+  //     <>
+  //       <div className="filter-on-small-vp">
+  //         <button
+  //           onClick={props.onClickFilterButton}
+  //           aria-label={t`Filter`}
+  //           aria-controls="filter"
+  //           className="filter btn-unstyled"
+  //         >
+  //           <div>
+  //             {isAnyFilterSet ? (
+  //               <>
+  //                 <CombinedIcon
+  //                   {...{ toiletFilter, accessibilityFilter, category, isMainCategory: true }}
+  //                 />
+  //               </>
+  //             ) : (
+  //               <FilterIcon />
+  //             )}
+  //           </div>
+  //         </button>
+  //       </div>
+  //     </>
+  //   );
+  // };
 
   const classList = [
     props.className,
@@ -334,7 +334,7 @@ const MainMenu = (props: Props) => {
         <GlobalActivityIndicator className="activity-indicator" />
 
         {isOnSmallViewport() ? renderSearchButtonOnSmallViewport() : null}
-        {isOnSmallViewport() ? renderFilterButtonOnSmallViewport() : null}
+        {/* {isOnSmallViewport() ? renderFilterButtonOnSmallViewport() : null} */}
         <div id="main-menu" role="menu">
           <AppContextConsumer>
             {appContext => renderAppLinks(appContext.baseUrl)}
@@ -467,18 +467,18 @@ const StyledMainMenu = styled(MainMenu)`
 
   button.search {
     position: fixed;
-    margin-right: 100px;
+    margin-right: 70px;
     top: 0;
     top: constant(safe-area-inset-top);
     top: env(safe-area-inset-top);
     right: 0;
     right: constant(safe-area-inset-right);
     right: env(safe-area-inset-right);
-    width: 50px;
+    width: 70px;
     height: 50px;
   }
 
-  button.filter {
+  /* button.filter {
     position: fixed;
     margin-right: 94px;
     top: 0;
@@ -490,7 +490,7 @@ const StyledMainMenu = styled(MainMenu)`
     width: 50px;
     height: 50px;
     margin-right: 50px;
-  }
+  } */
 
   button.menu {
     position: fixed;
@@ -500,7 +500,7 @@ const StyledMainMenu = styled(MainMenu)`
     right: 0;
     right: constant(safe-area-inset-right);
     right: env(safe-area-inset-right);
-    width: 50px;
+    width: 70px;
     height: 50px;
     display: flex;
     align-items: center;
