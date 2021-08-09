@@ -39,12 +39,6 @@ const StyledToolbar = styled(Toolbar)`
   border-top: none;
   border-radius: 8px;
   bottom: auto !important;
-  //top: 50px;
-  top: 120px;
-
-  .on-small-vp {
-    top: 50px !important;
-  }
 
   .search-results {
     padding: 0 10px 5px 10px;
@@ -111,7 +105,11 @@ const StyledToolbar = styled(Toolbar)`
 
     border-top: 0;
     position: fixed;
-    top: 0;
+
+    &.on-small-vp {
+      top: 50px !important;
+    }
+
     width: 100%;
     max-height: 100%;
     right: 0;
@@ -128,7 +126,6 @@ const StyledToolbar = styled(Toolbar)`
     border-radius: 0;
 
     .isExpanded {
-      top: 60px;
       left: 10px;
       width: calc(100% - 80px);
       max-height: 100%;
