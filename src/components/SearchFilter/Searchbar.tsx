@@ -4,8 +4,8 @@ import useSWR from 'swr';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import { ItemRenderer, Omnibar } from '@blueprintjs/select';
-import { MenuItem, HotkeysTarget2, Switch, ControlGroup } from '@blueprintjs/core';
-import { createGlobalStyle } from 'styled-components';
+import { MenuItem, HotkeysTarget2, Switch, ControlGroup, Classes } from '@blueprintjs/core';
+import styled, { createGlobalStyle } from 'styled-components';
 import Categories, { getCategoryId, CategoryLookupTables } from '../../lib/Categories';
 import Icon from '../Icon';
 
@@ -89,6 +89,22 @@ export type ElasticOrPhotonFeature =
     };
 
 const ResultsOmnibar = Omnibar.ofType<any>();
+
+const StyledSearchbar = styled(ResultsOmnibar)`
+  @media (max-width: 512px), (max-height: 512px){
+    &.bp3-omnibar .bp3-input-group.bp3-large .bp3-input{
+      height: 50px !important;
+
+    }
+    &.search-small-vp{
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+      
+    }
+  }
+`;
 
 const PushBlueprintjsPortalToTop = createGlobalStyle`
   .bp3-portal {
@@ -313,7 +329,8 @@ const fetcher = (url: string) =>
           </span>
           <PushBlueprintjsPortalToTop />
           <ErrorBoundary>
-          <ResultsOmnibar
+          <StyledSearchbar
+            className="search-small-vp"
             inputProps={ {
               rightElement : 
               <ControlGroup
@@ -343,7 +360,7 @@ const fetcher = (url: string) =>
             itemRenderer={resultItemRenderer}
             onItemSelect={handleItemSelect}
             onQueryChange={handleChange} 
-          ></ResultsOmnibar>
+          ></StyledSearchbar>
           </ErrorBoundary>
         </div>
       {/* </HotkeysTarget2> */}
