@@ -368,7 +368,7 @@ class MainView extends React.Component<Props, State> {
   }
 
   renderFilterToolbar(isInert: boolean) {
-    return (
+    return ( 
       <FilterToolbar
         // ref={filterToolbar => (this.filterToolbar = filterToolbar)}
         categories={this.props.categories}
