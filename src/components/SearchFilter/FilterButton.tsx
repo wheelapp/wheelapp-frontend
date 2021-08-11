@@ -102,6 +102,8 @@ const StyledFilterButton = styled(FilterButton)`
     height: 20px;
     margin-left: 0.75rem;
     margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     path {
       fill: #334455;
     }
