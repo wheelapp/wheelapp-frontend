@@ -70,7 +70,6 @@ const StyledFilterButton = styled(FilterButton)`
   > div {
     display: flex;
     flex-direction: row;
-    /* margin-right: 80px; */
     align-items: right;
   }
   top: 120px;

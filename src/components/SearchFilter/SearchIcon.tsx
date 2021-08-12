@@ -3,8 +3,8 @@ import * as React from 'react';
 export default function SearchIcon(props: any) {
   return (
     <svg
-      width="15px"
-      height="15px"
+      width="20px"
+      height="20px"
       viewBox="0 0 15 15"
       version="1.1"
       className="search-icon"

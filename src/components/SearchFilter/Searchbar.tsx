@@ -94,16 +94,12 @@ const StyledSearchbar = styled(ResultsOmnibar)`
   @media (max-width: 512px), (max-height: 512px){
     &.bp3-omnibar .bp3-input-group.bp3-large .bp3-input{
       height: 50px !important;
-
     }
     &.search-small-vp{
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-
-      
     }
-
   }
 `;
 
