@@ -51,7 +51,8 @@ const StyledSearchButton = styled(SearchButton)`
   > div {
     display: flex;
     flex-direction: row;
-    /* margin-right: 80px; */
+    margin-right: 80px;
+    margin: 16px !important;
     align-items: flex;
   }
   font-size: 1.2rem;
@@ -75,7 +76,7 @@ const StyledSearchButton = styled(SearchButton)`
   svg.search-icon {
     width: 20px;
     height: 20px;
-    margin-left: 0.75rem;
+    margin-left: 0px;
     margin-right: 10px;
     path {
       fill: #334455;

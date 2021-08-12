@@ -103,6 +103,7 @@ const StyledSearchbar = styled(ResultsOmnibar)`
 
       
     }
+
   }
 `;
 
@@ -118,8 +119,13 @@ const PushBlueprintjsPortalToTop = createGlobalStyle`
       width: 100vw !important;
       max-height: 100vh;
     }
+    &.bp3-control-group{
+      margin-top: 6px !important;
+    }
+    &.bp3-icon.bp3-icon-search {
+      margin: 16px !important;
+    }
   }
-
 `;
 
 const bodyAtQueryTime = (actualQuery: string, isNearby: boolean, lat: number, lon: number) => {
@@ -206,7 +212,7 @@ const fetcher = (url: string) =>
     // sending 'GET' request with body in browsers can lead to undefined behavior. elastic supports parsing the body into the 'source=' query parameter instead of the 'q=' query parameter
     const { data, error } = useSWR(
       '/api/search/accessibility-cloud.placeinfos/_search?source_content_type=application/json&source=' 
-      + bodyAtQueryTime(props.query, isNearbySearch, props.lat, props.lon), 
+      + bodyAtQueryTime(props.query, isNearbySearch, props.lat, props.lon),
       fetcher 
       );
   
@@ -342,13 +348,13 @@ const fetcher = (url: string) =>
                   }
                 }
               >
-                <Switch label="Near current position" checked={isNearbySearch} onChange={handleNearbySearchChange} />
+                <Switch label={t`Nearby`} checked={isNearbySearch} onChange={handleNearbySearchChange} />
               </ControlGroup>
             }
             }
             query={query}
             isOpen={isOpen}
-            noResults={<MenuItem disabled={true} text="No results." />}
+            noResults={<MenuItem disabled={true} text={t`No results.`} />}
             onClose={handleClose}
             items={
               mergeElasticSearchresultsWithPhotonAPISearchresults(
