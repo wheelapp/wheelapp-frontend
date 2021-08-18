@@ -62,11 +62,12 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /
 # TODO: Add PGP public keys in docker container directly as the keyserver connection is flaky.
 # This is a single point of failure for many container based build processes currently, GitHub is
 # full of issues about this.
-
+# hkp://keyserver.ubuntu.com:80
 RUN mkdir -p ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
   && \
   ( \
-  gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$TINI_GPG_KEY" ||\
+  gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$TINI_GPG_KEY" ||\
+  # gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$TINI_GPG_KEY" ||\
   gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$TINI_GPG_KEY" || \
   gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$TINI_GPG_KEY" \
   ) \
