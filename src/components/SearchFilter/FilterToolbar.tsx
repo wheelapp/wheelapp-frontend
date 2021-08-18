@@ -106,8 +106,10 @@ const StyledToolbar = styled(Toolbar)`
     border-top: 0;
     position: fixed;
 
+
     &.on-small-vp {
       top: 120px !important;
+      /* font-size: 1.0rem !important; */
     }
 
     width: 100%;
