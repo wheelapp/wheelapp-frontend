@@ -19,9 +19,14 @@ exports.config = {
   ],
 
   updateJob: false,
-  specs: ['./tests/specs/**/*.js'],
-  // specs: [ './tests/specs/**/basics.js'],
-  // specs: [ './tests/specs/**/search-by-name-omnibar.js'],
+  // specs: ['./tests/specs/**/*.js'],
+  // specs: ['./tests/specs/**/basics.js'],
+  // specs: ['./tests/specs/**/search-by-name.js'],
+  // specs: ['./tests/specs/**/onboarding.js'],
+  // specs: ['./tests/specs/**/click-on-nearby-button.js'],
+  // specs: ['./tests/specs/**/searchName.js'],
+  specs: ['./tests/specs/**/basicSearch.js'],
+
   exclude: [],
   maxInstances: 2,
 

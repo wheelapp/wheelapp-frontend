@@ -88,7 +88,7 @@
     "underscore.string": "^3.3.5",
     "unfetch": "^3.1.2",
     "uuid": "^8.3.1",
-    "webdriverio": "^5.6.3",
+    "webdriverio": "^6.0.0",
     "webpack": "^5.24.2",
     "webpack-log": "^3.0.1"
   },

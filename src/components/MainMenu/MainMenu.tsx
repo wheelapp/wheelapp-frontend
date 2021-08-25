@@ -276,7 +276,7 @@ const MainMenu = (props: Props) => {
       <>
         <div className="search-on-small-vp">
           <button
-            className="search btn-unstyled" // TODO use btn-unstyled later once it fits
+            className="search btn-unstyled omnisearchbar-button" // TODO use btn-unstyled later once it fits
             onClick={handleClick}
             aria-label={t`search`}
             aria-controls="search"
