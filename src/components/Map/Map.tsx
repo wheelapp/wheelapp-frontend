@@ -343,7 +343,8 @@ export default class Map extends React.Component<Props, State> {
 
     const basemapLayer = L.mapboxGL({
       accessToken: env.REACT_APP_MAPBOX_GL_ACCESS_TOKEN,
-      style: 'mapbox://styles/sozialhelden/cko1h26xf0tg717qieiftte7q',
+      //style: 'mapbox://styles/sozialhelden/cko1h26xf0tg717qieiftte7q',
+      style: '/map/osm-bright-gl-style.json',
     });
 
     map.addLayer(basemapLayer);
