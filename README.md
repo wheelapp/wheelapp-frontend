@@ -20,6 +20,8 @@ Prepare your development environment:
 # Environment variables
 cp .env.example .env
 
+# modify REACT_APP_ACCESSIBILITY_CLOUD_APP_TOKEN, REACT_APP_MAPBOX_GL_ACCESS_TOKEN, etc. – see below
+
 # npm dependencies
 npm install
 
