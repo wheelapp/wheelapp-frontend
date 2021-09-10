@@ -23,7 +23,7 @@ export default class MappingEventsCache extends URLDataCache<
   baseUrl = env.REACT_APP_ACCESSIBILITY_CLOUD_UNCACHED_BASE_URL || '';
 
   async getMappingEvents(app: App, useCache = true): Promise<MappingEvent[]> {
-    const url = `${this.baseUrl}/mapping-events.json?appToken=${app.tokenString}&includeRelated=images`;
+    const url = `${this.baseUrl}/mapping-events.json?appToken=${app.tokenString || env.REACT_APP_ACCESSIBILITY_CLOUD_APP_TOKEN}&includeRelated=images`;
     const data = await this.getData(url, {
       useCache,
     }) as MappingEventsListResult;
