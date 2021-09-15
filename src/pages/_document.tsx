@@ -49,6 +49,7 @@ export default class MyDocument extends Document<any> {
                 https://api.tiles.mapbox.com
                 https://events.mapbox.com
                 https://api.maptiler.com
+                https://openmaptiles.github.io
                 ${env.REACT_APP_LEGACY_API_BASE_URL || ''}
                 ${env.REACT_APP_ACCESSIBILITY_CLOUD_BASE_URL || ''}
                 ${env.REACT_APP_ACCESSIBILITY_CLOUD_UNCACHED_BASE_URL || ''}
