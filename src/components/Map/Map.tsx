@@ -2,6 +2,8 @@ import L from 'leaflet';
 import 'mapbox-gl';
 import 'mapbox-gl/src/css/mapbox-gl.css';
 import 'mapbox-gl-leaflet';
+import 'leaflet-routing-machine';
+import '@gegeweb/leaflet-routing-machine-openroute';
 
 import { GestureHandling } from 'leaflet-gesture-handling';
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
@@ -298,6 +300,25 @@ export default class Map extends React.Component<Props, State> {
 
   componentDidMount() {
     const initialMapState = Map.getMapStateFromProps(null, this.state, this.props);
+    const apiKey = 'XXX';
+    const osrRouter = new L.Routing.OpenRouteService(apiKey, {
+        "timeout": 30 * 1000, // 30",
+        "format": "json",                           // default, gpx not yet supported
+        "host": "https://api.openrouteservice.org", // default if not setting
+        "service": "directions",                    // default (for routing)
+        "api_version": "v2",                        // default
+        "profile": "wheelchair",                  // default
+        "routingQueryParams": {
+            "attributes": [
+                "avgspeed",
+                "percentage"
+            ],
+            "language": "de-de",
+            "maneuvers": "true",
+            "preference": "recommended",
+        }
+    });
+    
     const map: L.Map = L.map(this.mapElement, {
       maxZoom: this.props.maxZoom,
       center: initialMapState.center,
@@ -310,6 +331,19 @@ export default class Map extends React.Component<Props, State> {
     if (!map) {
       throw new Error('Could not initialize map component.');
     }
+    
+    L.Routing.control({
+        waypoints: [
+            L.latLng(48.14754, 11.55856),
+            L.latLng(48.1430, 11.5523)
+        ],
+        router: osrRouter,
+        formatter: L.routing.formatterORS({
+            language: 'de',     // language of instructions & control ui
+            steptotext: true,   // force using internal formatter instead of ORS instructions
+        }),
+        routeWhileDragging: true,
+    }).addTo(map);
 
     if (initialMapState.bounds) {
       map.fitBounds(initialMapState.bounds, {
